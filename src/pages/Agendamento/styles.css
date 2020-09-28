@@ -1,0 +1,69 @@
+.agendamentoContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.agendamentoContainer .pacienteContainer {
+  width: 100%;
+  text-align: center;
+}
+.agendamentoContainer .pacienteContainer h1 {
+  margin-bottom: 1rem;
+}
+.agendamentoContainer .pacienteContainer .pacienteContent {
+  width: 100%;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.agendamentoContainer .pacienteContainer .pacienteContent input {
+  width: 99%;
+  border: 0;
+  border-bottom: 1px solid black;
+  padding: 10px;
+  font: 600 2rem Archivo;
+  margin-bottom: 2rem;
+}
+.agendamentoContainer .pacienteContainer .pacienteContent ul {
+  background: #fff;
+  list-style: none;
+  width: 99%;
+  font: 600 2.4rem Poppins;
+  overflow: hidden;
+  overflow-y: scroll;
+  border: 1px solid black;
+}
+input[type='radio'] {
+  display: none;
+}
+/* .agendamentoContainer .pacienteContainer .pacienteContent ul .list {
+  display: none;
+} */
+.regular-radio:checked + label:after {
+  content: '\2714';
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  margin-left: 3rem;
+  color: red;
+  padding: 0 6px 0 0;
+}
+.regular-radio:checked + label {
+  color: #99a1a7;
+}
+.agendamentoContainer .pacienteContainer .pacienteContent .button {
+  width: 40%;
+  font: 400 1.3rem Archivo;
+}
+.agendamentoContainer .grupo-btn {
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.agendamentoContainer .grupo-btn .button {
+  width: 40%;
+}
