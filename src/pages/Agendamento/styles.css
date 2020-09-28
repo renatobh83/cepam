@@ -34,16 +34,20 @@
   font: 600 2.4rem Poppins;
   overflow: hidden;
   overflow-y: scroll;
-  border: 1px solid black;
 }
-input[type='radio'] {
+
+.agendamentoContainer
+  .pacienteContainer
+  .pacienteContent
+  ul::-webkit-scrollbar {
   display: none;
 }
-/* .agendamentoContainer .pacienteContainer .pacienteContent ul .list {
+input[type="radio"] {
   display: none;
-} */
+}
+
 .regular-radio:checked + label:after {
-  content: '\2714';
+  content: "\2714";
   display: inline-block;
   position: absolute;
   left: 0;

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import ModalConfirm from './ModalConfirm';
+import React, { useEffect, useState } from "react";
+import { FiCloudLightning } from "react-icons/fi";
+import { useHistory } from "react-router-dom";
+import ModalConfirm from "./ModalConfirm";
 
-export default function ScreenAgendamento({ isPaciente }) {
+export default function ScreenAgendamento({ isPaciente, pacienteFromForm }) {
   const history = useHistory();
   const [proximo, setProximo] = useState(false);
   const [paciente, setPaciente] = useState({
@@ -64,10 +65,13 @@ export default function ScreenAgendamento({ isPaciente }) {
   };
 
   // Cancelar processo de agendamento
-  const handleCancelar = () => history.push('/');
+  const handleCancelar = () => history.push("/");
 
   useEffect(() => {
     if (isPaciente) {
+      if (pacienteFromForm !== undefined) {
+        console.log(pacienteFromForm);
+      }
       setPaciente({ ...paciente, selected: true });
     }
   }, []);
@@ -108,75 +112,68 @@ export default function ScreenAgendamento({ isPaciente }) {
 }
 // Component pesquisa paciente
 const ChoosePaciente = ({ setPaciente }) => {
+  const history = useHistory();
+  const [pacientes, setPacientes] = useState([
+    { _id: 1, name: "Renato" },
+    { _id: 2, name: "Gabriel" },
+  ]);
+  const [searchPaciente, setSearchPaciente] = useState(null);
+  const [pSelecionado, setPSelecionado] = useState(null);
   const onChangePaciente = (e) => {
     if (e.target.checked) {
       setPaciente(e.target.value);
+      setPSelecionado(e.target.value);
     } else {
       setPaciente(null);
+      setPSelecionado(null);
     }
   };
+
+  const handleChangePesquisa = (e) => {
+    setSearchPaciente(e.target.value);
+  };
+  const handleEditNewPaciente = () => {
+    history.push("/pacienteForm", { paciente: pSelecionado });
+  };
+  const filterSearch = !searchPaciente
+    ? pacientes
+    : pacientes.filter((paciente) =>
+        paciente.name.toLowerCase().includes(searchPaciente.toLocaleLowerCase())
+      );
   return (
     <div className="pacienteContainer">
       <h1>Pesquisa de paciente</h1>
       <div className="pacienteContent">
         <input
           type="search"
+          value={searchPaciente}
           name="pesquisapaciente"
           id="pesquisapaciente"
           placeholder="Pesquisa"
+          onChange={handleChangePesquisa}
         />
         <ul>
-          <li>
-            <input
-              type="radio"
-              name="paciente"
-              id="paciente._id"
-              className="regular-radio"
-              //   value={paciente._id}
-              // onChange={(e) => selectPaciente(e.target.value)}
-            />
+          {filterSearch.map((paciente) => (
+            <li key={paciente._id}>
+              <input
+                type="radio"
+                name="paciente"
+                id={paciente._id}
+                className="regular-radio"
+                value={paciente._id}
+                onChange={onChangePaciente}
+              />
 
-            <label htmlFor="paciente._id">
-              Ha
-              {/* {paciente.name} - {paciente.dtNascimento} - */}
-              {/* {paciente.email} */}
-            </label>
-          </li>
-          <li>
-            <input
-              type="radio"
-              name="paciente"
-              id="paciente._ide"
-              className="regular-radio"
-              //   value={paciente._id}
-              // onChange={(e) => selectPaciente(e.target.value)}
-            />
-
-            <label htmlFor="paciente._ide">
-              He
-              {/* {paciente.name} - {paciente.dtNascimento} - */}
-              {/* {paciente.email} */}
-            </label>
-          </li>
-          <li>
-            <input
-              type="radio"
-              name="paciente"
-              id="paciente._idr"
-              className="regular-radio"
-              //   value={paciente._id}
-              // onChange={(e) => selectPaciente(e.target.value)}
-            />
-
-            <label htmlFor="paciente.idr">
-              Har
-              {/* {paciente.name} - {paciente.dtNascimento} - */}
-              {/* {paciente.email} */}
-            </label>
-          </li>
+              <label htmlFor={paciente._id}>{paciente.name}</label>
+            </li>
+          ))}
         </ul>
-        <button type="submit" className="button">
-          Editar Cadastro
+        <button
+          type="submit"
+          className="button"
+          onClick={handleEditNewPaciente}
+        >
+          {pSelecionado !== null ? "Editar Cadastro " : "Novo cadastro"}
         </button>
       </div>
     </div>

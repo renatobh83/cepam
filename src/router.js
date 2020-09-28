@@ -1,12 +1,13 @@
-import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Loading from './components/Loading';
+import React from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import Loading from "./components/Loading";
 
-import Login from './pages/Login/';
-import { useAppContext } from './store/context';
-import Main from './pages/Main/index';
-import Header from './pages/Header';
-import Agendamento from './pages/Agendamento';
+import Login from "./pages/Login/";
+import { useAppContext } from "./store/context";
+import Main from "./pages/Main/index";
+import Header from "./pages/Header";
+import Agendamento from "./pages/Agendamento";
+import Pacientes from "./pages/Pacientes";
 
 function Router() {
   const { isLoading, isAuthenticated } = useAppContext();
@@ -27,6 +28,7 @@ function Router() {
         <Header />
         <Route path="/" exact component={Main} />
         <Route path="/agendar" exact component={Agendamento} />
+        <Route path="/pacienteForm" exact component={Pacientes} />
       </>
     );
   };
