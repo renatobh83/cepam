@@ -48,8 +48,8 @@ body {
 }
 body {
   background: var(--color-background);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -104,4 +104,58 @@ body {
   width: 100%;
   justify-content: center;
   align-items: center;
+  font: 500 1.6rem Archivo;
+}
+
+.floating-label-input {
+  position: relative;
+  height: 60px;
+  width: 100%;
+}
+.floating-label-input input {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: transparent;
+  border: 0 none;
+  outline: none;
+  vertical-align: middle;
+  font: 700 2rem Archivo;
+  padding-top: 10px;
+}
+.floating-label-input label {
+  position: absolute;
+  top: calc(50% - 5px);
+  font-size: 22px;
+  left: 0;
+  color: #000;
+  transition: all 0.3s;
+}
+.floating-label-input input:focus ~ label,
+.floating-label-input input:focus ~ label,
+.floating-label-input input:valid ~ label {
+  top: 0;
+  font-size: 15px;
+  color: #33bb55;
+}
+.floating-label-input .line {
+  position: absolute;
+  height: 1px;
+  width: 100%;
+  bottom: 0;
+  background: #000;
+  left: 0;
+}
+.floating-label-input .line:after {
+  content: '';
+  display: block;
+  width: 0;
+  background: #33bb55;
+  height: 1px;
+  transition: all 0.5s;
+}
+.floating-label-input input:focus ~ .line:after,
+.floating-label-input input:focus ~ .line:after,
+.floating-label-input input:valid ~ .line:after {
+  width: 100%;
 }

@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { useAppContext } from '../../store/context';
 import Loading from '../../components/Loading';
 import './styles.css';
-import Agendamento from '../Agendamento';
-import ModalConfirm from '../../components/ModalConfirm';
 import { useHistory } from 'react-router-dom';
 
 function Main() {

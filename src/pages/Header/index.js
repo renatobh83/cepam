@@ -73,7 +73,7 @@ function Header() {
                 Profile
               </DropdownItem>
               <DropdownItem divider />
-              <DropdownItem fontSize={32}>
+              <DropdownItem fontSize={32} onClick={() => logout()}>
                 <FiLogOut size={30} className="mr-2" />
                 Logout
               </DropdownItem>

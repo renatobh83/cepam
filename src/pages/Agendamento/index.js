@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import Loading from "../../components/Loading";
-import { useAppContext } from "../../store/context";
+import Loading from '../../components/Loading';
+import { useAppContext } from '../../store/context';
 
-import "./styles.css";
+import './styles.css';
 
-import ScreenAgendamento from "../../components/ScreenAgendamento";
+import ScreenAgendamento from '../../components/ScreenAgendamento';
 
 function Agendamento() {
   const { isLoading } = useAppContext();
-  const [paciente] = useState(true);
+  const [paciente] = useState(false);
 
   if (isLoading) {
     return <Loading />;

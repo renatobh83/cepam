@@ -5,21 +5,21 @@
   justify-content: center;
   align-items: center;
 }
-.agendamentoContainer .pacienteContainer {
+.agendamentoContainer .screenContainer {
   width: 100%;
   text-align: center;
 }
-.agendamentoContainer .pacienteContainer h1 {
+.agendamentoContainer .screenContainer h1 {
   margin-bottom: 1rem;
 }
-.agendamentoContainer .pacienteContainer .pacienteContent {
+.agendamentoContainer .screenContainer .screenContent {
   width: 100%;
   height: 400px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-.agendamentoContainer .pacienteContainer .pacienteContent input {
+.agendamentoContainer .screenContainer .screenContent input {
   width: 99%;
   border: 0;
   border-bottom: 1px solid black;
@@ -27,27 +27,47 @@
   font: 600 2rem Archivo;
   margin-bottom: 2rem;
 }
-.agendamentoContainer .pacienteContainer .pacienteContent ul {
+.agendamentoContainer .screenContainer .screenContent ul {
   background: #fff;
   list-style: none;
   width: 99%;
   font: 600 2.4rem Poppins;
   overflow: hidden;
   overflow-y: scroll;
+  position: relative;
 }
-
-.agendamentoContainer
-  .pacienteContainer
-  .pacienteContent
-  ul::-webkit-scrollbar {
+.agendamentoContainer .screenContainer .screenContent ul li {
+  padding: 10px 0;
+  /* padding: 1.2rem; */
+  text-align: center;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+.agendamentoContainer .screenContainer .screenContent ul::-webkit-scrollbar {
   display: none;
 }
-input[type="radio"] {
+input[type='radio'],
+input[type='checkbox'] {
   display: none;
 }
-
+.examesSelecionados {
+  width: 100%;
+  font: 600 2rem Archivo;
+}
+.examesSelecionados strong {
+  color: var(--button-hover);
+}
+.examesSelecionados .examesSelect {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+.examesSelecionados .examesSelect .content {
+  margin: 0 auto;
+}
 .regular-radio:checked + label:after {
-  content: "\2714";
+  content: '\2714';
   display: inline-block;
   position: absolute;
   left: 0;
@@ -58,7 +78,7 @@ input[type="radio"] {
 .regular-radio:checked + label {
   color: #99a1a7;
 }
-.agendamentoContainer .pacienteContainer .pacienteContent .button {
+.agendamentoContainer .screenContainer .screenContent .button {
   width: 40%;
   font: 400 1.3rem Archivo;
 }
@@ -70,4 +90,34 @@ input[type="radio"] {
 }
 .agendamentoContainer .grupo-btn .button {
   width: 40%;
+}
+
+.screenContainer .screenCardContent {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  font: 600 2rem Archivo;
+  object-fit: cover;
+}
+.screenContainer .screenCardContent .cardHorarios {
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.37);
+  transition: all 0.4s;
+}
+.screenContainer .screenCardContent .cardHorarios:hover {
+  box-shadow: 0px 35px 77px -17px rgba(0, 0, 0, 0.64);
+  transform: scale(1.05);
+}
+.screenContainer .screenCardContent .cardHorarios label {
+  width: 100%;
+  margin: 0;
+}
+input:checked ~ .dados {
+  filter: brightness(75%);
+  color: var(--black);
+  box-shadow: 0px 35px 77px -17px rgba(0, 0, 0, 0.64);
+  background: rgb(0, 255, 203);
+}
+.dados {
+  width: 100%;
 }

@@ -1,0 +1,13 @@
+.groupInputs {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.groupInputs input {
+  width: 30%;
+}
+.groupInputs button {
+  height: 50px;
+  width: 40%;
+}
