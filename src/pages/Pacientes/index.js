@@ -3,8 +3,12 @@ import ScreenAgendamento from '../../components/ScreenAgendamento';
 
 import './styles.css';
 import { useHistory } from 'react-router-dom';
+import { useAppContext } from '../../store/context';
+import Loading from '../../components/Loading';
+import InputMask from 'react-input-mask';
 
 function Pacientes(props) {
+  const { isLoading } = useAppContext();
   const history = useHistory();
   const [name, setName] = useState('');
   const [telefone, setTelefone] = useState('');
@@ -12,6 +16,7 @@ function Pacientes(props) {
   const [dtNascimento, setDtNascimento] = useState('');
   const [prosseguir, setProsseguir] = useState(false);
   const [paciente, setPaciente] = useState({});
+
   const loadDate = useCallback(() => {
     if (props.location.state.pacienteEdit) {
       setName(props.location.state.pacienteEdit.name);
@@ -36,6 +41,9 @@ function Pacientes(props) {
   useEffect(() => {
     loadDate();
   }, []);
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div className="agendamentoContainer">
       {!prosseguir && (
@@ -65,8 +73,8 @@ function Pacientes(props) {
           </div>
           <div className="groupInputs">
             <div className="floating-label-input">
-              <input
-                // mask="(99)99999-9999"
+              <InputMask
+                mask="(99)99999-9999"
                 type="text"
                 id="dtNascimento"
                 inputMode="numeric"
@@ -78,8 +86,8 @@ function Pacientes(props) {
               <span className="line"></span>
             </div>
             <div className="floating-label-input">
-              <input
-                // mask="(99)99999-9999"
+              <InputMask
+                mask="(99)99999-9999"
                 type="text"
                 id="telefone"
                 inputMode="numeric"

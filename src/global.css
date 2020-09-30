@@ -159,3 +159,20 @@ body {
 .floating-label-input input:valid ~ .line:after {
   width: 100%;
 }
+
+.forms h2 {
+  font: 500 3.4rem Poppins;
+  color: var(--color-small-info);
+  text-align: center;
+  margin-bottom: 0.8rem;
+}
+
+.forms .inputGroup {
+  display: flex;
+  justify-content: space-between;
+}
+.forms .inputGroup button {
+  width: 40%;
+  height: 40px;
+  position: relative;
+}

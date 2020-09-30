@@ -58,7 +58,13 @@ function Header() {
                   </Link>
                 </NavLink>
               </DropdownItem>
-              <DropdownItem>Option 2</DropdownItem>
+              <DropdownItem>
+                <NavLink>
+                  <Link className="link" tag={RouterNavLink} to="/grupos">
+                    Grupos
+                  </Link>
+                </NavLink>
+              </DropdownItem>
               <DropdownItem divider />
               <DropdownItem>Reset</DropdownItem>
             </DropdownMenu>

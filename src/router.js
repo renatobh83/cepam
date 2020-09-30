@@ -10,6 +10,7 @@ import Agendamento from './pages/Agendamento';
 import Pacientes from './pages/Pacientes';
 import Usuarios from './pages/Ususarios/index';
 import Callback from './utils/callback';
+import Grupos from './pages/Grupos/index';
 
 function Router() {
   const { isLoading, isAuthenticated } = useAppContext();
@@ -28,11 +29,12 @@ function Router() {
     return (
       <>
         <Header />
+        <Route path="/callback" exact component={Callback} />
         <Route path="/" exact component={Main} />
         <Route path="/agendar" exact component={Agendamento} />
         <Route path="/pacienteForm" exact component={Pacientes} />
         <Route path="/usuarios" exact component={Usuarios} />
-        <Route path="/callback" exact component={Callback} />
+        <Route path="/grupos" exact component={Grupos} />
       </>
     );
   };

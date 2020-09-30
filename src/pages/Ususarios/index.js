@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import InputForm from '../../components/InputForm';
 
 import './styles.css';
 
@@ -119,6 +120,7 @@ const FormUser = ({ close, newUser, editUser }) => {
         ativo: userAtivo,
       };
     }
+
     newUser(data);
   };
   const closeForm = () => close();
@@ -134,7 +136,7 @@ const FormUser = ({ close, newUser, editUser }) => {
     dateUserEdit();
   }, []);
   return (
-    <form className="userForm" onSubmit={handleSubmit}>
+    <form className="forms" onSubmit={handleSubmit}>
       <h2>Cadastro novo usuario</h2>
       {editUser && (
         <div className="flagAtivo">
@@ -148,47 +150,32 @@ const FormUser = ({ close, newUser, editUser }) => {
         </div>
       )}
 
-      <div className="userInputGroup">
-        <div className="floating-label-input">
-          <input
-            type="text"
-            id="nome"
-            required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <label htmlFor="nome">Nome completo</label>
-          <span className="line"></span>
-        </div>
+      <div className="inputGroup">
+        <InputForm
+          id="nome"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          label="Nome completo"
+        />
       </div>
-      <div className="userInputGroup">
-        <div className="floating-label-input">
-          <input
-            type="text"
-            id="username"
-            required
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <label htmlFor="username">Usuario</label>
-          <span className="line"></span>
-        </div>
+      <div className="inputGroup">
+        <InputForm
+          id="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          label="Ususario"
+        />
       </div>
-      <div className="userInputGroup">
-        <div className="floating-label-input">
-          <input
-            type="email"
-            id="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <label htmlFor="email">E-mail</label>
-          <span className="line"></span>
-        </div>
+      <div className="inputGroup">
+        <InputForm
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          label="email"
+        />
       </div>
 
-      <div className="userInputGroup">
+      <div className="inputGroup">
         {/* <select */}
         {/* // name="grupo" */}
         {/* // id="grupo" */}
@@ -203,19 +190,16 @@ const FormUser = ({ close, newUser, editUser }) => {
         {/* </select> */}
         {/* {!u && ( */}
         <div className="floating-label-input">
-          <input
-            type="password"
-            id="password"
-            required
+          <InputForm
+            id="senha"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
+            label="senha"
           />
-          <label htmlFor="password">Senha</label>
-          <span className="line"></span>
         </div>
         {/* )} */}
       </div>
-      <div className="userInputGroup">
+      <div className="inputGroup">
         <button type="submit" className="button">
           Gravar
         </button>
