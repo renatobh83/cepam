@@ -8,7 +8,8 @@ ReactDOM.render(
   <AppContext
     domain={process.env.REACT_APP_DOMAIN}
     client_id={process.env.REACT_APP_CLIENT_ID}
-    redirect_uri={window.location.origin}
+    redirect_uri={process.env.REACT_APP_CALLBACK}
+    // redirect_uri={window.location.origin}
     cacheLocation="localstorage"
     useRefreshTokens="true"
   >

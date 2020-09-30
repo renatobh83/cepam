@@ -1,13 +1,15 @@
-import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import Loading from "./components/Loading";
+import React from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Loading from './components/Loading';
 
-import Login from "./pages/Login/";
-import { useAppContext } from "./store/context";
-import Main from "./pages/Main/index";
-import Header from "./pages/Header";
-import Agendamento from "./pages/Agendamento";
-import Pacientes from "./pages/Pacientes";
+import Login from './pages/Login/';
+import { useAppContext } from './store/context';
+import Main from './pages/Main/index';
+import Header from './pages/Header';
+import Agendamento from './pages/Agendamento';
+import Pacientes from './pages/Pacientes';
+import Usuarios from './pages/Ususarios/index';
+import Callback from './utils/callback';
 
 function Router() {
   const { isLoading, isAuthenticated } = useAppContext();
@@ -29,6 +31,8 @@ function Router() {
         <Route path="/" exact component={Main} />
         <Route path="/agendar" exact component={Agendamento} />
         <Route path="/pacienteForm" exact component={Pacientes} />
+        <Route path="/usuarios" exact component={Usuarios} />
+        <Route path="/callback" exact component={Callback} />
       </>
     );
   };

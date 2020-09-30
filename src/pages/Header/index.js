@@ -45,17 +45,19 @@ function Header() {
               </Link>
             </NavLink>
           </NavItem>
-          <NavItem>
-            <NavLink href="https://github.com/reactstrap/reactstrap">
-              GitHub
-            </NavLink>
-          </NavItem>
+
           <UncontrolledDropdown nav inNavbar>
             <DropdownToggle nav caret>
-              Options
+              Cadastros
             </DropdownToggle>
             <DropdownMenu right style={{ font: '600 1.3rem Archivo' }}>
-              <DropdownItem>Option 1</DropdownItem>
+              <DropdownItem>
+                <NavLink>
+                  <Link className="link" tag={RouterNavLink} to="/usuarios">
+                    Usuarios
+                  </Link>
+                </NavLink>
+              </DropdownItem>
               <DropdownItem>Option 2</DropdownItem>
               <DropdownItem divider />
               <DropdownItem>Reset</DropdownItem>

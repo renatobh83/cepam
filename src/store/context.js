@@ -21,6 +21,7 @@ export default function Provider({
   const [auth0Client, setAuth0] = useState();
   const [isLoading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState('');
 
   const init = useCallback(async () => {
     console.log('init');
@@ -34,6 +35,8 @@ export default function Provider({
     }
     const isAuthenticated = await auth0FromHook.isAuthenticated();
     if (isAuthenticated) {
+      const user = await auth0FromHook.getUser();
+      setUser(user);
       //   const { __raw: token } = await auth0FromHook.getIdTokenClaims();
       //   setToken(token);
       //   await getUserInMongo();
@@ -49,6 +52,8 @@ export default function Provider({
   const configObject = {
     isLoading,
     isAuthenticated,
+    user,
+    token: (...p) => auth0Client.getIdTokenClaims(...p),
     loginWithRedirect: (...p) => auth0Client.loginWithRedirect(...p),
     logout: (...p) => auth0Client.logout(...p),
   };
