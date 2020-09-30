@@ -1,3 +1,35 @@
 .mainGrupos {
   width: 100%;
 }
+.mainGrupos .listOfGroups {
+  display: flex;
+  flex-direction: column;
+}
+.mainGrupos .listOfGroups .button {
+  margin: 2rem 0;
+  height: 30px;
+  margin-right: auto;
+}
+
+.mainGrupos .listOfGroups ul li {
+  font: 500 2rem Archivo;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+}
+.mainGrupos .listOfGroups ul li span {
+  width: 20%;
+}
+.mainGrupos .listOfGroups ul li .groupBtn {
+  display: flex;
+  width: 80%;
+  justify-content: flex-end;
+}
+.mainGrupos .listOfGroups ul li .groupBtn button {
+  width: 35%;
+  margin: 0;
+  text-transform: none;
+  letter-spacing: 0;
+}
