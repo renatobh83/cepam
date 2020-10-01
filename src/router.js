@@ -12,6 +12,9 @@ import Usuarios from './pages/Ususarios/index';
 import Callback from './utils/callback';
 import Grupos from './pages/Grupos/index';
 import Setores from './pages/Setores/index';
+import Salas from './pages/Salas/index';
+import Procedimentos from './pages/Procedimentos/index';
+import Tabelas from './pages/Tabelas/index';
 
 function Router() {
   const { isLoading, isAuthenticated } = useAppContext();
@@ -37,6 +40,9 @@ function Router() {
         <Route path="/usuarios" exact component={Usuarios} />
         <Route path="/grupos" exact component={Grupos} />
         <Route path="/setor" exact component={Setores} />
+        <Route path="/salas" exact component={Salas} />
+        <Route path="/procedimentos" exact component={Procedimentos} />
+        <Route path="/tabelas" exact component={Tabelas} />
       </>
     );
   };

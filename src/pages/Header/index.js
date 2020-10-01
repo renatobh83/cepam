@@ -72,6 +72,31 @@ function Header() {
                   </Link>
                 </NavLink>
               </DropdownItem>
+              <DropdownItem>
+                <NavLink>
+                  <Link className="link" tag={RouterNavLink} to="/salas">
+                    Salas
+                  </Link>
+                </NavLink>
+              </DropdownItem>
+            </DropdownMenu>
+          </UncontrolledDropdown>
+          <UncontrolledDropdown>
+            <DropdownToggle nav caret>
+              Faturamento
+            </DropdownToggle>
+            <DropdownMenu right style={{ font: '600 1.3rem Archivo' }}>
+              <DropdownItem>
+                <NavLink>
+                  <Link
+                    className="link"
+                    tag={RouterNavLink}
+                    to="/procedimentos"
+                  >
+                    Procedimentos
+                  </Link>
+                </NavLink>
+              </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
         </Nav>

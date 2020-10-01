@@ -126,9 +126,9 @@ const FormSetor = ({ cancel, newSetor, editSetor }) => {
       <h2>Cadastro novo setor</h2>
       <form onSubmit={handleSubmit}>
         <InputForm
-          id="grupo"
+          id="setor"
           value={name}
-          label="Nome grupo"
+          label="Nome setor"
           onChange={handleSetName}
         />
         <div className="floating-label-input">
