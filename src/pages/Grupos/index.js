@@ -1,19 +1,24 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from 'react';
 
-import "./styles.css";
-import InputLabel from "../../components/InputLabel";
-import InputForm from "../../components/InputForm";
+import './styles.css';
+import InputLabel from '../../components/InputLabel';
+import InputForm from '../../components/InputForm';
+import ModalConfirm from '../../components/ModalConfirm';
 
 function Grupos() {
   const [newGroup, setNewGroup] = useState(false);
   const [groupEdit, setGroupEdit] = useState(null);
   const [grupos, setGrupos] = useState([
-    { _id: 1, name: "Admin" },
-    { _id: 2, name: "User" },
+    { _id: 1, name: 'Admin' },
+    { _id: 2, name: 'User' },
   ]);
   const groupToEdit = (e) => {
     setGroupEdit(e);
     setNewGroup(true);
+  };
+  const handleCancelar = () => {
+    setGroupEdit(null);
+    setNewGroup(false);
   };
   const handleNewGroup = () => setNewGroup(!newGroup);
   const createdGroup = (e) => {
@@ -25,7 +30,7 @@ function Grupos() {
     setGrupos(filterGroup);
   };
   return (
-    <div className="mainGrupos">
+    <div className="mainPage">
       {!newGroup && (
         <ListGroups
           grupos={grupos}
@@ -39,7 +44,7 @@ function Grupos() {
       )}
       {newGroup && (
         <FormGrupos
-          cancel={handleNewGroup}
+          cancel={handleCancelar}
           newGroup={createdGroup}
           editGroup={groupEdit}
         />
@@ -55,25 +60,31 @@ const ListGroups = ({ grupos, children, editGroup, deleteGrupo }) => {
     deleteGrupo(e);
   };
   return (
-    <div className="listOfGroups">
+    <div className="listPage">
       <h2>Grupos</h2>
       {children}
+
       <ul>
         {grupos.map((grupo) => (
           <li key={grupo._id}>
             <span className="descGrupo">{grupo.name}</span>
-            <div className="groupBtn">
-              <button className="button" onClick={() => groupForEdit(grupo)}>
-                Editar
-              </button>
-              <button
-                className="button button-danger"
-                onClick={() => apagarGrupo(grupo._id)}
-              >
-                {" "}
-                Apagar
-              </button>
-            </div>
+
+            <button className="button" onClick={() => groupForEdit(grupo)}>
+              Editar
+            </button>
+            <ModalConfirm
+              title="Confirma"
+              description="Confirma a exclusão do grupo"
+            >
+              {(confirm) => (
+                <button
+                  className="button button-danger"
+                  onClick={confirm(() => apagarGrupo(grupo._id))}
+                >
+                  Apagar
+                </button>
+              )}
+            </ModalConfirm>
           </li>
         ))}
       </ul>
@@ -81,7 +92,7 @@ const ListGroups = ({ grupos, children, editGroup, deleteGrupo }) => {
   );
 };
 const FormGrupos = ({ cancel, newGroup, editGroup }) => {
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const handleSetName = (e) => {
     setName(e.target.value);
   };

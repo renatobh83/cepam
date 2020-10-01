@@ -11,6 +11,7 @@ import Pacientes from './pages/Pacientes';
 import Usuarios from './pages/Ususarios/index';
 import Callback from './utils/callback';
 import Grupos from './pages/Grupos/index';
+import Setores from './pages/Setores/index';
 
 function Router() {
   const { isLoading, isAuthenticated } = useAppContext();
@@ -35,6 +36,7 @@ function Router() {
         <Route path="/pacienteForm" exact component={Pacientes} />
         <Route path="/usuarios" exact component={Usuarios} />
         <Route path="/grupos" exact component={Grupos} />
+        <Route path="/setor" exact component={Setores} />
       </>
     );
   };

@@ -65,8 +65,13 @@ function Header() {
                   </Link>
                 </NavLink>
               </DropdownItem>
-              <DropdownItem divider />
-              <DropdownItem>Reset</DropdownItem>
+              <DropdownItem>
+                <NavLink>
+                  <Link className="link" tag={RouterNavLink} to="/setor">
+                    Setores
+                  </Link>
+                </NavLink>
+              </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
         </Nav>

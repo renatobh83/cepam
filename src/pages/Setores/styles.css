@@ -1,0 +1,8 @@
+.mainPage .listPage ul li {
+  justify-content: flex-start;
+}
+.mainPage .listPage ul li h5 {
+  margin: 0;
+  font: 500 2rem Archivo;
+  margin-right: auto;
+}
