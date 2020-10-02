@@ -39,10 +39,8 @@ function Header() {
       <Collapse isOpen={isOpen} navbar>
         <Nav className="mr-auto" navbar>
           <NavItem>
-            <NavLink>
-              <Link className="link" tag={RouterNavLink} to="/">
-                Home
-              </Link>
+            <NavLink className="link" tag={RouterNavLink} to="/">
+              Home
             </NavLink>
           </NavItem>
 
@@ -52,31 +50,23 @@ function Header() {
             </DropdownToggle>
             <DropdownMenu right style={{ font: '600 1.3rem Archivo' }}>
               <DropdownItem>
-                <NavLink>
-                  <Link className="link" tag={RouterNavLink} to="/usuarios">
-                    Usuarios
-                  </Link>
+                <NavLink className="link" tag={RouterNavLink} to="/usuarios">
+                  Usuarios
                 </NavLink>
               </DropdownItem>
               <DropdownItem>
-                <NavLink>
-                  <Link className="link" tag={RouterNavLink} to="/grupos">
-                    Grupos
-                  </Link>
+                <NavLink className="link" tag={RouterNavLink} to="/grupos">
+                  Grupos
                 </NavLink>
               </DropdownItem>
               <DropdownItem>
-                <NavLink>
-                  <Link className="link" tag={RouterNavLink} to="/setor">
-                    Setores
-                  </Link>
+                <NavLink className="link" tag={RouterNavLink} to="/setor">
+                  Setores
                 </NavLink>
               </DropdownItem>
               <DropdownItem>
-                <NavLink>
-                  <Link className="link" tag={RouterNavLink} to="/salas">
-                    Salas
-                  </Link>
+                <NavLink className="link" tag={RouterNavLink} to="/salas">
+                  Salas
                 </NavLink>
               </DropdownItem>
             </DropdownMenu>
@@ -87,14 +77,12 @@ function Header() {
             </DropdownToggle>
             <DropdownMenu right style={{ font: '600 1.3rem Archivo' }}>
               <DropdownItem>
-                <NavLink>
-                  <Link
-                    className="link"
-                    tag={RouterNavLink}
-                    to="/procedimentos"
-                  >
-                    Procedimentos
-                  </Link>
+                <NavLink
+                  className="link"
+                  tag={RouterNavLink}
+                  to="/procedimentos"
+                >
+                  Procedimentos
                 </NavLink>
               </DropdownItem>
             </DropdownMenu>

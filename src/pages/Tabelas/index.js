@@ -3,20 +3,25 @@ import InputForm from '../../components/InputForm';
 
 import './styles.css';
 import InputMask from 'react-input-mask';
-import { FiTrash2 } from 'react-icons/fi';
+import { FiSearch, FiTrash2 } from 'react-icons/fi';
 
 function Tabelas() {
   const [novaTabela, setNovaTabela] = useState(false);
 
   const [tabelas, setTabelas] = useState([
-    {
-      _id: 1,
-      name: 'UNIMED',
-      exames: [{ name: 'Rx Torax' }, { name: 'Rx Punho' }],
-    },
-    { _id: 2, name: 'UNIMED-rio', exames: [] },
+    // {
+    //   _id: 1,
+    //   name: 'UNIMED',
+    //   exames: [
+    //     { _id: 1, name: 'Rx Torax' },
+    //     { _id: 2, name: 'Rx Punho' },
+    //   ],
+    // },
+    // { _id: 2, name: 'UNIMED-rio', exames: [] },
   ]);
   const handleCriarNovaTabela = (e) => {
+    console.log(typeof e);
+    e.forEach((a) => console.log(a));
     setTabelas([...tabelas, e]);
     handlelCancel();
   };
@@ -24,7 +29,7 @@ function Tabelas() {
   return (
     <div className="mainPage">
       {!novaTabela && (
-        <ListTabelas tabelas={tabelas}>
+        <ListTabelas tabelas={tabelas} att={handleCriarNovaTabela}>
           <button className="button" onClick={() => setNovaTabela(true)}>
             Nova tabela
           </button>
@@ -37,7 +42,7 @@ function Tabelas() {
   );
 }
 
-const ListTabelas = ({ children, tabelas }) => {
+const ListTabelas = ({ children, tabelas, att }) => {
   const [tabelaExames, setTabelaExames] = useState([]);
   const [cadastrar, setCadastrar] = useState(false);
   const handlOnSelect = (e) => {
@@ -45,6 +50,14 @@ const ListTabelas = ({ children, tabelas }) => {
     if (tabela) {
       setTabelaExames(tabela);
     }
+  };
+  const handleClose = () => {
+    setTabelaExames([]);
+    setCadastrar(false);
+  };
+
+  const atualizaTabela = (e) => {
+    att(e);
   };
 
   return (
@@ -73,23 +86,31 @@ const ListTabelas = ({ children, tabelas }) => {
 
           <ul>
             {tabelaExames.map((te) =>
-              te.exames.map((ex) => <li>{ex.name}</li>)
+              te.exames.map((ex) => <li key={ex._id}>{ex.name}</li>)
             )}
           </ul>
         </div>
       )}
-      {cadastrar && <InserirExame tabela={tabelaExames} />}
+      {cadastrar && (
+        <InserirExame
+          tabela={tabelaExames}
+          close={handleClose}
+          atualiza={atualizaTabela}
+        />
+      )}
     </div>
   );
 };
 
-const InserirExame = ({ tabela }) => {
-  console.log(tabela[0]);
+const InserirExame = ({ tabela, close, atualiza }) => {
   const [exames, setExames] = useState([
     { _id: 1, name: 'Rx Torax' },
     { _id: 2, name: 'Rx Torax pa' },
   ]);
   const [examesSelecionados, setExamesSelecionados] = useState([]);
+  const [filterSearch, setFilterSearch] = useState(null);
+
+  // cadastrar exame na tabela
   const insertExame = (e, x) => {
     if (x.target.checked) {
       setExamesSelecionados([...examesSelecionados, { exame: e, valor: null }]);
@@ -99,6 +120,13 @@ const InserirExame = ({ tabela }) => {
       deleteExame(e);
     }
   };
+
+  // pegar valor da pesquisa
+  const handleChange = (e) => {
+    setFilterSearch(e.target.value);
+  };
+
+  // apagar exame da tabela
   const deleteExame = (e) => {
     const newArray = examesSelecionados.filter(
       (ex) => ex.exame.name !== e.exame.name
@@ -106,11 +134,38 @@ const InserirExame = ({ tabela }) => {
     setExames([...exames, e.exame]);
     setExamesSelecionados(newArray);
   };
+  // Pegar preco do exame
+  const handleChangeInput = (e, index) => {
+    examesSelecionados[index].valor = e.target.value;
+  };
+  const handleSubmit = () => {
+    tabela[0].exames = examesSelecionados;
+    console.log(tabela);
+    atualiza(tabela);
+    close();
+  };
+
+  const result = !filterSearch
+    ? exames
+    : exames.filter((exame) =>
+        exame.name.toLowerCase().includes(filterSearch.toLocaleLowerCase())
+      );
 
   return (
     <div className="examesList">
+      <div className="buscarExame">
+        <input
+          type="search"
+          defaultValue={filterSearch}
+          placeholder="Procura"
+          onChange={handleChange}
+        />
+        <div className="icon">
+          <FiSearch size={30} />
+        </div>
+      </div>
       <ul>
-        {exames.map((exame) => (
+        {result.map((exame) => (
           <li key={exame._id}>
             <label htmlFor={exame._id}>
               <input
@@ -144,10 +199,10 @@ const InserirExame = ({ tabela }) => {
                 <InputMask
                   type="text"
                   id="valor"
-                  inputmode="decimal"
+                  inputMode="decimal"
                   defaultValue={examesSelecionados[index].valor}
                   placeholder="Valor"
-                  // onChange={(e) => handleChangeInput(e, index)}
+                  onChange={(e) => handleChangeInput(e, index)}
                   // onKeyPress={(e) => moeda(e.target.value)}
                 />
               </div>
@@ -156,14 +211,10 @@ const InserirExame = ({ tabela }) => {
         </div>
       )}
       <div className="inputGroup">
-        <button type="submit" className="button" onClick={() => {}}>
+        <button type="submit" className="button" onClick={handleSubmit}>
           Gravar
         </button>
-        <button
-          type="submit"
-          className="button button-danger"
-          onClick={() => {}}
-        >
+        <button type="submit" className="button button-danger" onClick={close}>
           Cancelar
         </button>
       </div>

@@ -4,6 +4,33 @@
   font: 700 1.2rem Archivo;
 }
 
+.listPage .buscarExame {
+  width: 100%;
+  margin-bottom: 2rem;
+  display: flex;
+}
+.listPage .buscarExame input {
+  font: 500 3rem Acrhivo;
+  padding: 1.17rem;
+  width: 90%;
+  height: 50px;
+  border: 0;
+  border-radius: 0.8rem 0 0 0.8rem;
+  -webkit-appearance: none;
+}
+.listPage .buscarExame .icon {
+  display: flex;
+  align-items: center;
+  border-collapse: separate;
+  justify-content: center;
+  border-radius: 0 0.8rem 0.8rem 0;
+  width: 10%;
+  border: 0;
+  height: 50px;
+  background: #fff;
+  transition: all 0.4s ease-in-out;
+}
+
 .listPage .examesList {
   display: flex;
   flex-direction: column;
