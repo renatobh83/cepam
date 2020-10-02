@@ -3,3 +3,48 @@
   letter-spacing: 0.5mm;
   font: 700 1.2rem Archivo;
 }
+
+.listPage .examesList {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.examesSelecionados {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: #fff;
+  border-top: 1px solid black;
+  margin-bottom: 2rem;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
+.examesSelecionados span {
+  padding: 10px 0;
+}
+.examesSelecionados .examesSelect {
+  display: flex;
+  font: 500 2.3rem Archivo;
+  align-items: center;
+  margin: 0 10px;
+}
+.examesSelecionados .examesSelect .contentExamInTable {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.examesSelecionados .examesSelect .contentExamInTable input {
+  width: 30%;
+  padding: 10px;
+  border: 0;
+  background: #fff;
+}
+.examesSelecionados .examesSelect .delete {
+  margin-right: 1rem;
+}
+.examesSelecionados .examesSelect .delete button:hover {
+  filter: opacity(0.6);
+}
