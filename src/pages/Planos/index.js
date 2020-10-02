@@ -146,17 +146,15 @@ const FormsPlanos = ({ config }) => {
               </option>
             ))} */}
           </select>
-          <label htmlFor="particular">
-            <input
-              type="checkbox"
-              style={{ display: 'block' }}
-              name="particular"
-              id="particular"
-              //   defaultChecked={particular}
-              //   onChange={(e) => setParticular(e.target.checked)}
-            />
-            Particular
-          </label>
+          <label htmlFor="particular">Particular</label>
+          <input
+            type="checkbox"
+            style={{ display: 'block' }}
+            name="particular"
+            id="particular"
+            //   defaultChecked={particular}
+            //   onChange={(e) => setParticular(e.target.checked)}
+          />
         </div>
         <div className="inputGroup">
           <button type="submit" className="button">
