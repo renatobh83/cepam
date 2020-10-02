@@ -1,13 +1,14 @@
-import React, { Children, useCallback, useEffect, useState } from 'react';
-import InputForm from '../../components/InputForm';
+import React, { Children, useCallback, useEffect, useState } from "react";
+import InputForm from "../../components/InputForm";
 
-import './styles.css';
-import InputMask from 'react-input-mask';
-import { FiSearch, FiTrash2 } from 'react-icons/fi';
+import "./styles.css";
+import InputMask from "react-input-mask";
+import { FiSearch, FiTrash2 } from "react-icons/fi";
+import { moeda } from "../../utils/formatCurrency";
 
 function Tabelas() {
   const [novaTabela, setNovaTabela] = useState(false);
-
+  const [tabelaSelect, setTabelaSelect] = useState(null);
   const [tabelas, setTabelas] = useState([
     // {
     //   _id: 1,
@@ -20,18 +21,27 @@ function Tabelas() {
     // { _id: 2, name: 'UNIMED-rio', exames: [] },
   ]);
   const handleCriarNovaTabela = (e) => {
-    console.log(typeof e);
-    e.forEach((a) => console.log(a));
     setTabelas([...tabelas, e]);
     handlelCancel();
   };
-  const handlelCancel = () => setNovaTabela(false);
+
+  const tabelaSelecionada = (e) => {
+    setTabelaSelect(e);
+  };
+
+  const handlelCancel = () => {
+    setTabelaSelect(null);
+    setNovaTabela(false);
+  };
   return (
     <div className="mainPage">
       {!novaTabela && (
-        <ListTabelas tabelas={tabelas} att={handleCriarNovaTabela}>
-          <button className="button" onClick={() => setNovaTabela(true)}>
-            Nova tabela
+        <ListTabelas tabelas={tabelas} tabelaSelect={tabelaSelecionada}>
+          <button
+            className={tabelaSelect ? "button edit" : "button"}
+            onClick={() => setNovaTabela(true)}
+          >
+            {tabelaSelect ? "Editar tabela" : "Nova tabela"}
           </button>
         </ListTabelas>
       )}
@@ -42,22 +52,23 @@ function Tabelas() {
   );
 }
 
-const ListTabelas = ({ children, tabelas, att }) => {
+const ListTabelas = ({ children, tabelas, tabelaSelect }) => {
   const [tabelaExames, setTabelaExames] = useState([]);
   const [cadastrar, setCadastrar] = useState(false);
   const handlOnSelect = (e) => {
     const tabela = tabelas.filter((ex) => ex._id === parseInt(e.target.value));
     if (tabela) {
       setTabelaExames(tabela);
+      tabelaSelect(tabela);
+    }
+    if (e.target.value === "#") {
+      tabelaSelect(null);
     }
   };
   const handleClose = () => {
     setTabelaExames([]);
+    tabelaSelect(null);
     setCadastrar(false);
-  };
-
-  const atualizaTabela = (e) => {
-    att(e);
   };
 
   return (
@@ -69,7 +80,7 @@ const ListTabelas = ({ children, tabelas, att }) => {
         <div className="forms">
           <div className="inputGroup">
             <select name="tabela" id="tabela" onChange={handlOnSelect}>
-              <option value="">Selecione uma tabela</option>
+              <option value="#">Selecione uma tabela</option>
               {tabelas.map((tabela) => (
                 <option key={tabela._id} value={tabela._id}>
                   {tabela.name}
@@ -79,33 +90,30 @@ const ListTabelas = ({ children, tabelas, att }) => {
 
             {tabelaExames.length > 0 && (
               <button className="button" onClick={() => setCadastrar(true)}>
-                Inserir/Excluir/Editar
+                Inserir/Excluir exames
               </button>
             )}
           </div>
 
-          <ul>
-            {tabelaExames.map((te) =>
-              te.exames.map((ex) => <li key={ex._id}>{ex.name}</li>)
-            )}
-          </ul>
+          {tabelaExames.map((te) =>
+            te.exames.map((ex) => (
+              <div className="tableProcContent" key={ex.exame._id}>
+                <span>{ex.exame.name}</span>
+                <span>{moeda(ex.valor)}</span>
+              </div>
+            ))
+          )}
         </div>
       )}
-      {cadastrar && (
-        <InserirExame
-          tabela={tabelaExames}
-          close={handleClose}
-          atualiza={atualizaTabela}
-        />
-      )}
+      {cadastrar && <InserirExame tabela={tabelaExames} close={handleClose} />}
     </div>
   );
 };
 
-const InserirExame = ({ tabela, close, atualiza }) => {
+const InserirExame = ({ tabela, close }) => {
   const [exames, setExames] = useState([
-    { _id: 1, name: 'Rx Torax' },
-    { _id: 2, name: 'Rx Torax pa' },
+    { _id: 1, name: "Rx Torax" },
+    { _id: 2, name: "Rx Torax pa" },
   ]);
   const [examesSelecionados, setExamesSelecionados] = useState([]);
   const [filterSearch, setFilterSearch] = useState(null);
@@ -140,9 +148,18 @@ const InserirExame = ({ tabela, close, atualiza }) => {
   };
   const handleSubmit = () => {
     tabela[0].exames = examesSelecionados;
-    console.log(tabela);
-    atualiza(tabela);
     close();
+  };
+  // Carrege exames ja inserido na tabela
+  const selectInitialExames = (e) => {
+    setExamesSelecionados(tabela[0].exames);
+    const getExames = tabela[0].exames.map((e) => e.exame);
+    const myArrayFiltered = e.filter((el) => {
+      return !getExames.some((f) => {
+        return f._id === el._id;
+      });
+    });
+    setExames(getExames.length === 0 ? e : myArrayFiltered);
   };
 
   const result = !filterSearch
@@ -150,7 +167,9 @@ const InserirExame = ({ tabela, close, atualiza }) => {
     : exames.filter((exame) =>
         exame.name.toLowerCase().includes(filterSearch.toLocaleLowerCase())
       );
-
+  useEffect(() => {
+    selectInitialExames(exames);
+  }, []);
   return (
     <div className="examesList">
       <div className="buscarExame">
@@ -183,13 +202,14 @@ const InserirExame = ({ tabela, close, atualiza }) => {
       </ul>
       {examesSelecionados.length > 0 && (
         <div className="examesSelecionados">
+          <h3>Exames ja inserido na tabela</h3>
           {examesSelecionados.map((exame, index) => (
             <div className="examesSelect" key={index}>
               <div className="delete">
                 <button>
                   <FiTrash2
                     size={15}
-                    color={'red'}
+                    color={"red"}
                     onClick={() => deleteExame(exame)}
                   />
                 </button>
@@ -222,7 +242,7 @@ const InserirExame = ({ tabela, close, atualiza }) => {
   );
 };
 const FormTabela = ({ cancel, create }) => {
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const handleSetName = (e) => {
     setName(e.target.value);
   };

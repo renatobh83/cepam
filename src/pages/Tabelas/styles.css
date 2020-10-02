@@ -47,7 +47,19 @@
   overflow: hidden;
   overflow-y: scroll;
 }
-
+.examesSelecionados::-webkit-scrollbar {
+  display: none;
+}
+.tableProcContent {
+  margin-top: 4rem;
+  width: 100%;
+  font: 600 3rem Archivo;
+  display: flex;
+  justify-content: space-between;
+}
+.edit {
+  background: var(--vibrant-magenta);
+}
 .examesSelecionados span {
   padding: 10px 0;
 }
@@ -71,6 +83,9 @@
 }
 .examesSelecionados .examesSelect .delete {
   margin-right: 1rem;
+  border: 0;
+  appearance: none;
+  outline: none;
 }
 .examesSelecionados .examesSelect .delete button:hover {
   filter: opacity(0.6);
