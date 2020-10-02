@@ -1,24 +1,22 @@
-import React, { Children, useCallback, useEffect, useState } from "react";
-import InputForm from "../../components/InputForm";
+import React, { Children, useCallback, useEffect, useState } from 'react';
+import InputForm from '../../components/InputForm';
 
-import "./styles.css";
-import InputMask from "react-input-mask";
-import { FiSearch, FiTrash2 } from "react-icons/fi";
-import { moeda } from "../../utils/formatCurrency";
+import './styles.css';
+import InputMask from 'react-input-mask';
+import { FiSearch, FiTrash2 } from 'react-icons/fi';
+import { moeda } from '../../utils/formatCurrency';
+import ModalConfirm from '../../components/ModalConfirm';
 
 function Tabelas() {
   const [novaTabela, setNovaTabela] = useState(false);
   const [tabelaSelect, setTabelaSelect] = useState(null);
   const [tabelas, setTabelas] = useState([
-    // {
-    //   _id: 1,
-    //   name: 'UNIMED',
-    //   exames: [
-    //     { _id: 1, name: 'Rx Torax' },
-    //     { _id: 2, name: 'Rx Punho' },
-    //   ],
-    // },
-    // { _id: 2, name: 'UNIMED-rio', exames: [] },
+    {
+      _id: 1,
+      name: 'UNIMED',
+      exames: [],
+    },
+    { _id: 2, name: 'UNIMED-rio', exames: [] },
   ]);
   const handleCriarNovaTabela = (e) => {
     setTabelas([...tabelas, e]);
@@ -33,26 +31,46 @@ function Tabelas() {
     setTabelaSelect(null);
     setNovaTabela(false);
   };
+  const propsForm = {
+    cancel: () => handlelCancel(),
+    create: (...p) => handleCriarNovaTabela(...p),
+    edit: tabelaSelect,
+    tabelas: tabelas,
+  };
+  const propsList = {
+    Tabelas: tabelas,
+    tabelaSelecionada: (...p) => tabelaSelecionada(...p),
+  };
   return (
     <div className="mainPage">
       {!novaTabela && (
-        <ListTabelas tabelas={tabelas} tabelaSelect={tabelaSelecionada}>
+        <ListTabelas
+          // tabelas={tabelas}
+          // tabelaSelect={tabelaSelecionada}
+          configList={propsList}
+        >
           <button
-            className={tabelaSelect ? "button edit" : "button"}
+            className={tabelaSelect ? 'button edit' : 'button'}
             onClick={() => setNovaTabela(true)}
           >
-            {tabelaSelect ? "Editar tabela" : "Nova tabela"}
+            {tabelaSelect ? 'Editar tabela' : 'Nova tabela'}
           </button>
         </ListTabelas>
       )}
       {novaTabela && (
-        <FormTabela cancel={handlelCancel} create={handleCriarNovaTabela} />
+        <FormTabela
+          configProp={propsForm}
+          // cancel={handlelCancel}
+          // create={handleCriarNovaTabela}
+          // edit={tabelaSelect}
+        />
       )}
     </div>
   );
 }
 
-const ListTabelas = ({ children, tabelas, tabelaSelect }) => {
+const ListTabelas = ({ children, configList }) => {
+  const { Tabelas: tabelas, tabelaSelecionada: tabelaSelect } = configList;
   const [tabelaExames, setTabelaExames] = useState([]);
   const [cadastrar, setCadastrar] = useState(false);
   const handlOnSelect = (e) => {
@@ -61,7 +79,7 @@ const ListTabelas = ({ children, tabelas, tabelaSelect }) => {
       setTabelaExames(tabela);
       tabelaSelect(tabela);
     }
-    if (e.target.value === "#") {
+    if (e.target.value === '#') {
       tabelaSelect(null);
     }
   };
@@ -112,8 +130,8 @@ const ListTabelas = ({ children, tabelas, tabelaSelect }) => {
 
 const InserirExame = ({ tabela, close }) => {
   const [exames, setExames] = useState([
-    { _id: 1, name: "Rx Torax" },
-    { _id: 2, name: "Rx Torax pa" },
+    { _id: 1, name: 'Rx Torax' },
+    { _id: 2, name: 'Rx Torax pa' },
   ]);
   const [examesSelecionados, setExamesSelecionados] = useState([]);
   const [filterSearch, setFilterSearch] = useState(null);
@@ -186,7 +204,7 @@ const InserirExame = ({ tabela, close }) => {
       <ul>
         {result.map((exame) => (
           <li key={exame._id}>
-            <label htmlFor={exame._id}>
+            <label htmlFor={exame._id} style={{ cursor: 'pointer' }}>
               <input
                 type="checkbox"
                 id={exame._id}
@@ -209,17 +227,19 @@ const InserirExame = ({ tabela, close }) => {
                 <button>
                   <FiTrash2
                     size={15}
-                    color={"red"}
+                    color={'red'}
                     onClick={() => deleteExame(exame)}
                   />
                 </button>
               </div>
               <div className="contentExamInTable">
                 <span> {exame.exame.name}</span>
+
                 <InputMask
                   type="text"
                   id="valor"
                   inputMode="decimal"
+                  required
                   defaultValue={examesSelecionados[index].valor}
                   placeholder="Valor"
                   onChange={(e) => handleChangeInput(e, index)}
@@ -241,8 +261,8 @@ const InserirExame = ({ tabela, close }) => {
     </div>
   );
 };
-const FormTabela = ({ cancel, create }) => {
-  const [name, setName] = useState("");
+const FormTabela = ({ configProp }) => {
+  const [name, setName] = useState('');
   const handleSetName = (e) => {
     setName(e.target.value);
   };
@@ -253,9 +273,23 @@ const FormTabela = ({ cancel, create }) => {
       name,
       exames: [],
     };
-    create(data);
+    if (configProp.edit) {
+      configProp.edit[0].name = name;
+      configProp.cancel();
+    } else {
+      configProp.create(data);
+    }
   };
-
+  const apagarTabela = () => {
+    const a = configProp.tabelas.findIndex(
+      (element) => element._id === configProp.edit[0]._id
+    );
+    configProp.tabelas.splice(a, 1);
+    configProp.cancel();
+  };
+  useEffect(() => {
+    if (configProp.edit) setName(configProp.edit[0].name);
+  }, []);
   return (
     <div className="forms">
       <h2>Cadastro nova tabela</h2>
@@ -274,12 +308,27 @@ const FormTabela = ({ cancel, create }) => {
           <button
             type="submit"
             className="button button-danger"
-            onClick={cancel}
+            onClick={configProp.cancel}
           >
             Cancelar
           </button>
         </div>
       </form>
+      {configProp.edit && (
+        <ModalConfirm
+          title="Confirma"
+          description="Confirma a exclusão da tabela"
+        >
+          {(confirm) => (
+            <button
+              className="button button-danger"
+              onClick={confirm(apagarTabela)}
+            >
+              Apagar tabela
+            </button>
+          )}
+        </ModalConfirm>
+      )}
     </div>
   );
 };

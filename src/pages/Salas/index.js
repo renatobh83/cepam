@@ -144,7 +144,12 @@ const FormSalas = ({ cancel, newSala, editSala }) => {
     const data = {
       name,
     };
-    newSala(data);
+    if (editSala) {
+      editSala.name = name;
+      cancel();
+    } else {
+      newSala(data);
+    }
   };
   const dateSalaEdit = useCallback(() => {
     if (editSala) {

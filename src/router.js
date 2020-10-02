@@ -15,6 +15,10 @@ import Setores from './pages/Setores/index';
 import Salas from './pages/Salas/index';
 import Procedimentos from './pages/Procedimentos/index';
 import Tabelas from './pages/Tabelas/index';
+import Planos from './pages/Planos/index';
+import GerarHorarios from './pages/GerarHorarios/index';
+import Horarios from './pages/Horarios/index';
+import Profile from './pages/Profile/index';
 
 function Router() {
   const { isLoading, isAuthenticated } = useAppContext();
@@ -43,6 +47,10 @@ function Router() {
         <Route path="/salas" exact component={Salas} />
         <Route path="/procedimentos" exact component={Procedimentos} />
         <Route path="/tabelas" exact component={Tabelas} />
+        <Route path="/planos" exact component={Planos} />
+        <Route path="/gerarHorarios" exact component={GerarHorarios} />
+        <Route path="/horarios" exact component={Horarios} />
+        <Route path="/profile" exact component={Profile} />
       </>
     );
   };

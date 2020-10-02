@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import './styles.css';
-import InputLabel from '../../components/InputLabel';
+
 import InputForm from '../../components/InputForm';
 import ModalConfirm from '../../components/ModalConfirm';
 
@@ -101,7 +101,12 @@ const FormGrupos = ({ cancel, newGroup, editGroup }) => {
     const data = {
       name,
     };
-    newGroup(data);
+    if (editGroup) {
+      editGroup.name = name;
+      cancel();
+    } else {
+      newGroup(data);
+    }
   };
   const dateGroupEdit = useCallback(() => {
     if (editGroup) {

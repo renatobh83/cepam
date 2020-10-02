@@ -85,6 +85,37 @@ function Header() {
                   Procedimentos
                 </NavLink>
               </DropdownItem>
+              <DropdownItem>
+                <NavLink className="link" tag={RouterNavLink} to="/tabelas">
+                  Tabelas
+                </NavLink>
+              </DropdownItem>
+              <DropdownItem>
+                <NavLink className="link" tag={RouterNavLink} to="/planos">
+                  Planos
+                </NavLink>
+              </DropdownItem>
+            </DropdownMenu>
+          </UncontrolledDropdown>
+          <UncontrolledDropdown>
+            <DropdownToggle nav caret>
+              Agenda
+            </DropdownToggle>
+            <DropdownMenu right style={{ font: '600 1.3rem Archivo' }}>
+              <DropdownItem>
+                <NavLink
+                  className="link"
+                  tag={RouterNavLink}
+                  to="/gerarHorarios"
+                >
+                  Gerar horarios
+                </NavLink>
+              </DropdownItem>
+              <DropdownItem>
+                <NavLink className="link" tag={RouterNavLink} to="/horarios">
+                  Horarios
+                </NavLink>
+              </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
         </Nav>
@@ -95,8 +126,10 @@ function Header() {
             </DropdownToggle>
             <DropdownMenu right style={{ font: '600 1.2rem Archivo' }}>
               <DropdownItem>
-                <FiUser size={30} className="mr-2" />
-                Profile
+                <NavLink className="link" tag={RouterNavLink} to="/profile">
+                  <FiUser size={30} className="mr-2" />
+                  Profile
+                </NavLink>
               </DropdownItem>
               <DropdownItem divider />
               <DropdownItem fontSize={32} onClick={() => logout()}>

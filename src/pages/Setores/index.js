@@ -110,7 +110,12 @@ const FormSetor = ({ cancel, newSetor, editSetor }) => {
       name,
       time,
     };
-    newSetor(data);
+    if (editSetor) {
+      editSetor.name = name;
+      cancel();
+    } else {
+      newSetor(data);
+    }
   };
   const dateSetorEdit = useCallback(() => {
     if (editSetor) {

@@ -1,0 +1,101 @@
+.gerarHorariosContainer .selectForm {
+  margin-top: 3rem;
+  width: 100%;
+}
+
+.gerarHorariosContainer .selectForm select {
+  font: 400 2rem Archivo;
+  border: 0;
+  appearance: none;
+  width: 45%;
+  padding: 1.4rem;
+  border-radius: 0.9rem;
+}
+.gerarHorariosContainer .selectForm .diasForm {
+  margin: 3rem 0;
+}
+
+.gerarHorariosContainer .selectForm .diasForm ul {
+  width: 100%;
+  list-style: none;
+  justify-content: center;
+  display: flex;
+  font: 500 1.2rem Archivo;
+}
+.gerarHorariosContainer .selectForm .diasForm ul li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.gerarHorariosContainer .selectForm .diasForm ul li label {
+  margin: 0 2rem;
+  width: 100%;
+}
+
+.gerarHorariosContainer .selectForm .intervalo {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  font: 600 2.3rem Archivo;
+}
+
+.gerarHorariosContainer .selectForm .intervalo input {
+  width: 15%;
+  margin: auto 10px;
+  padding: 0.9rem;
+  border: 0;
+  border-radius: 0.9rem;
+  font: 400 1.9rem Poppins;
+}
+
+.gerarHorariosContainer .selectForm .intervalo.data input {
+  width: 100%;
+  margin: 2rem;
+}
+.gerarHorariosContainer .selectForm .grupoButtons {
+  margin-top: 3rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.gerarHorariosContainer .selectForm .grupoButtons button {
+  width: 100%;
+  border: 0;
+  border-radius: 0.8rem;
+  font: 500 3rem Archivo;
+  padding: 2rem;
+  cursor: pointer;
+  font: 700 2.4rem Archivo;
+  color: var(--color-button-text);
+  background: var(--color-primary-darker);
+  transition: all 0.3s;
+}
+.gerarHorariosContainer .selectForm .grupoButtons button:hover {
+  filter: brightness(90%);
+}
+.gerarHorariosContainer .selectForm .grupoButtons button + button {
+  margin-top: 3rem;
+  background: var(--rich-red);
+}
+.loading {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+@media (min-width: 700px) {
+  .gerarHorariosContainer .selectForm select {
+    font-size: 20px;
+  }
+  .gerarHorariosContainer .selectForm .diasForm ul {
+    font-size: 20px;
+  }
+}
