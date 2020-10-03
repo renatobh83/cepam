@@ -6,6 +6,8 @@ import React, {
   useCallback,
   useEffect,
 } from 'react';
+import { setToken } from '../utils/LoginToken';
+import { loginGetUserDate } from '../services/API';
 
 const DEFAULT_REDIRECT_CALLBACK = () =>
   window.history.replaceState({}, document.title, window.location.pathname);
@@ -35,15 +37,17 @@ export default function Provider({
     }
     const isAuthenticated = await auth0FromHook.isAuthenticated();
     if (isAuthenticated) {
-      const user = await auth0FromHook.getUser();
-      setUser(user);
-      //   const { __raw: token } = await auth0FromHook.getIdTokenClaims();
-      //   setToken(token);
-      //   await getUserInMongo();
+      const { __raw: token } = await auth0FromHook.getIdTokenClaims();
+
+      setToken(token);
+      const user = await loginGetUserDate();
+      setUser(user.data.message);
+      setIsAuthenticated(isAuthenticated);
     }
     setIsAuthenticated(isAuthenticated);
 
     setLoading(false);
+    console.log('End init context');
   }, []);
 
   useEffect(() => {
@@ -53,7 +57,6 @@ export default function Provider({
     isLoading,
     isAuthenticated,
     user,
-    token: (...p) => auth0Client.getIdTokenClaims(...p),
     loginWithRedirect: (...p) => auth0Client.loginWithRedirect(...p),
     logout: (...p) => auth0Client.logout(...p),
   };

@@ -4,14 +4,20 @@ import './styles.css';
 
 import InputForm from '../../components/InputForm';
 import ModalConfirm from '../../components/ModalConfirm';
+import { postGrupo, getGrupos } from '../../services/API';
 
 function Grupos() {
   const [newGroup, setNewGroup] = useState(false);
   const [groupEdit, setGroupEdit] = useState(null);
-  const [grupos, setGrupos] = useState([
-    { _id: 1, name: 'Admin' },
-    { _id: 2, name: 'User' },
-  ]);
+  const [grupos, setGrupos] = useState([]);
+
+  const fethcGrupos = useCallback(async () => {
+    const { data: grupos } = await getGrupos();
+    setGrupos(grupos.message);
+  }, []);
+  useEffect(() => {
+    fethcGrupos();
+  }, []);
   const groupToEdit = (e) => {
     setGroupEdit(e);
     setNewGroup(true);
@@ -96,7 +102,7 @@ const FormGrupos = ({ cancel, newGroup, editGroup }) => {
   const handleSetName = (e) => {
     setName(e.target.value);
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
       name,
@@ -105,7 +111,8 @@ const FormGrupos = ({ cancel, newGroup, editGroup }) => {
       editGroup.name = name;
       cancel();
     } else {
-      newGroup(data);
+      const { data: grupo } = await postGrupo(data);
+      newGroup(grupo.message);
     }
   };
   const dateGroupEdit = useCallback(() => {

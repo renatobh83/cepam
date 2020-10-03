@@ -1,18 +1,27 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import InputForm from '../../components/InputForm';
+import { getGrupos, getUsers, postUser, putUser } from '../../services/API';
 
 import './styles.css';
+import Loading from '../../components/Loading';
 
 function Usuarios() {
-  const [users, setUsers] = useState([
-    { name: 'Renato', ativo: true },
-    { name: 'user', ativo: true },
-    { name: 'gabriel', ativo: true },
-    { name: 'veronica', ativo: false },
-  ]);
+  const [users, setUsers] = useState([]);
   const [newUser, setNewUser] = useState(false);
   const [userEdit, setUserEdit] = useState(null);
   const [filter, setFilter] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const fetchUsers = useCallback(async () => {
+    try {
+      const { data: usersBD } = await getUsers();
+      setUsers(usersBD.message);
+      setIsLoading(false);
+    } catch (error) {}
+  }, []);
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   const userToEdit = (e) => {
     setUserEdit(e);
     setNewUser(true);
@@ -20,6 +29,13 @@ function Usuarios() {
   const handleNewUser = (e) => {
     setUsers([...users, e]);
     setNewUser(false);
+    setUserEdit(null);
+  };
+  const userUpdate = (e) => {
+    const filterUsers = users.filter((u) => u._id !== e._id);
+    setUsers([...filterUsers, e]);
+    setNewUser(false);
+    setUserEdit(null);
   };
   const closeForm = () => {
     setUserEdit(null);
@@ -31,6 +47,11 @@ function Usuarios() {
   useEffect(() => {
     setFilter(true);
   }, [userEdit]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <div className="mainUsuarios">
       {!newUser && (
@@ -58,6 +79,7 @@ function Usuarios() {
           close={closeForm}
           newUser={handleNewUser}
           editUser={userEdit}
+          updateDate={userUpdate}
         />
       )}
     </div>
@@ -75,8 +97,13 @@ const ListUsers = ({ users, children, editUser, filter }) => {
       {children}
       <div className="cardUsers">
         {showUsers.map((user) => (
-          <div className="userContent">
-            {user.name}
+          <div className="userContent" key={user._id}>
+            <header className="dados">
+              <h2>{user.name}</h2>
+              <h6>Usuario - {user.nickname}</h6>
+              <p>{user.email}</p>
+              <strong>{user.grupo}</strong>
+            </header>
             <button
               type="submit"
               className="button"
@@ -91,7 +118,7 @@ const ListUsers = ({ users, children, editUser, filter }) => {
   );
 };
 
-const FormUser = ({ close, newUser, editUser }) => {
+const FormUser = ({ close, newUser, editUser, updateDate }) => {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [senha, setSenha] = useState('');
@@ -99,7 +126,16 @@ const FormUser = ({ close, newUser, editUser }) => {
   const [username, setUsername] = useState('');
   const [userAtivo, setAtivo] = useState(true);
   const [grupos, setGrupos] = useState([]);
-  const handleSubmit = (e) => {
+  const fetchGrupos = useCallback(async () => {
+    try {
+      const { data: grupos } = await getGrupos();
+      setGrupos(grupos.message);
+    } catch (error) {}
+  }, []);
+  useEffect(() => {
+    fetchGrupos();
+  }, []);
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let data;
     if (senha) {
@@ -121,7 +157,16 @@ const FormUser = ({ close, newUser, editUser }) => {
       };
     }
 
-    newUser(data);
+    if (editUser) {
+      const { data: user } = await putUser(editUser.email, data);
+
+      updateDate(user.message);
+    } else {
+      try {
+        const { data: user } = await postUser(data);
+        newUser(user.message);
+      } catch (error) {}
+    }
   };
   const closeForm = () => close();
   const dateUserEdit = useCallback(() => {
@@ -176,28 +221,28 @@ const FormUser = ({ close, newUser, editUser }) => {
       </div>
 
       <div className="inputGroup">
-        {/* <select */}
-        {/* // name="grupo" */}
-        {/* // id="grupo" */}
-        {/* // onChange={(e) => setGrupo(e.target.value)} */}
-        {/* // > */}
-        {/* <option value="000"> Selecione um grupo</option>
-            {grupos.map((g) => (
-              <option value={g._id} key={g._id} selected={g._id === grupo}>
-                {g.nome}
-              </option>
-            ))} */}
-        {/* </select> */}
-        {/* {!u && ( */}
-        <div className="floating-label-input">
-          <InputForm
-            id="senha"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            label="senha"
-          />
-        </div>
-        {/* )} */}
+        <select
+          name="grupo"
+          id="grupo"
+          onChange={(e) => setGrupo(e.target.value)}
+        >
+          <option value="000"> Selecione um grupo</option>
+          {grupos.map((g) => (
+            <option value={g._id} key={g._id} selected={g._id === grupo}>
+              {g.name}
+            </option>
+          ))}
+        </select>
+        {!editUser && (
+          <div className="floating-label-input">
+            <InputForm
+              id="senha"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              label="senha"
+            />
+          </div>
+        )}
       </div>
       <div className="inputGroup">
         <button type="submit" className="button">

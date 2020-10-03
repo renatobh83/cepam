@@ -1,20 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppContext } from '../../store/context';
 import Loading from '../../components/Loading';
 import './styles.css';
 import { useHistory } from 'react-router-dom';
 
-function Main() {
-  const { isLoading } = useAppContext;
-  const [paciente] = useState(false);
+function Main(props) {
+  const { isLoading, user, isAuthenticated } = useAppContext();
 
-  if (isLoading) {
-    return <Loading />;
-  }
-  if (paciente) {
-    return <Pacientes />;
-  } else {
-    return <Empresa />;
+  if (isAuthenticated) {
+    if (user.paciente) {
+      return <Pacientes />;
+    } else {
+      return <Empresa />;
+    }
   }
 }
 

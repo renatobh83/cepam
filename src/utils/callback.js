@@ -1,16 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAppContext } from '../store/context';
 import { useHistory } from 'react-router-dom';
 
-export default function Callback() {
-  const { isLoading, user, token } = useAppContext();
-  const history = useHistory();
-  if (isLoading) {
-    return <div> Loading</div>;
-  } else {
-    token().then((res) => console.log(res));
+import Loading from '../components/Loading';
+import { useCallback } from 'react';
 
+export default function Callback() {
+  const { isLoading, user, token, logout } = useAppContext();
+  const history = useHistory();
+
+  const mongo = useCallback(() => {
+    if (!user.data.message.ativo) {
+      alert('Voce esta inativo');
+      logout();
+    }
     history.push('/');
-  }
-  return <div></div>;
+  }, []);
+
+  useEffect(() => {
+    mongo();
+  }, []);
+  return (
+    <div>
+      <Loading />
+    </div>
+  );
 }

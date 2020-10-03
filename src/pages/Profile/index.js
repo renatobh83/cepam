@@ -1,18 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import InputMask from 'react-input-mask';
-
+import { useAppContext } from '../../store/context';
 import './styles.css';
 
 export default function Profile() {
-  if (false) {
-    return <Paciente />;
+  const { user } = useAppContext();
+  if (user.paciente) {
+    return <Paciente user={user} />;
   } else {
     return <Empresa />;
   }
 }
 
-const Paciente = () => {
+const Paciente = ({ user }) => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
@@ -28,10 +29,10 @@ const Paciente = () => {
     // await updateEmail(email, data).then((res) => window.location.reload());
   };
   const handleProfile = useCallback(() => {
-    // setNome(state.responseAPI.message.name);
-    // setEmail(state.responseAPI.message.email);
-    // setDtNascimento(state.responseAPI.message.dtNascimento);
-    // setTelefone(state.responseAPI.message.telefone);
+    setNome(user.name);
+    setEmail(user.email);
+    setDtNascimento(user.dtNascimento);
+    setTelefone(user.telefone);
   }, []); // eslint-disable-line
   useEffect(() => {
     handleProfile();
