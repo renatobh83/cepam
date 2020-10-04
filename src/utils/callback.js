@@ -6,16 +6,17 @@ import Loading from '../components/Loading';
 import { useCallback } from 'react';
 
 export default function Callback() {
-  const { isLoading, user, token, logout } = useAppContext();
+  const { user, logout, setIsAuthenticated } = useAppContext();
   const history = useHistory();
 
   const mongo = useCallback(() => {
-    console.log(user);
-    // if (!user.data.message.ativo) {
-    //   alert('Voce esta inativo');
-    //   logout();
-    // }
-    history.push('/');
+    if (!user.ativo) {
+      alert('Usuário não esta ativo');
+      setIsAuthenticated(false);
+      logout();
+    } else {
+      history.push('/');
+    }
   }, []);
 
   useEffect(() => {

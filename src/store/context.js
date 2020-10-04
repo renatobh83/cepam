@@ -57,6 +57,7 @@ export default function Provider({
   const configObject = {
     isLoading,
     isAuthenticated,
+    setIsAuthenticated,
     user,
     loginWithRedirect: (...p) => auth0Client.loginWithRedirect(...p),
     logout: (...p) => auth0Client.logout(...p),

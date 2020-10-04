@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import InputMask from 'react-input-mask';
 import { useAppContext } from '../../store/context';
 import './styles.css';
+import { putUser } from '../../services/API';
 
 export default function Profile() {
   const { user } = useAppContext();
@@ -17,16 +18,18 @@ const Paciente = ({ user }) => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
+  const history = useHistory();
   const [dtNascimento, setDtNascimento] = useState('');
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
       name: nome,
-      email,
       telefone,
       dtNascimento,
+      nickname: nome,
+      email: email,
     };
-    // await updateEmail(email, data).then((res) => window.location.reload());
+    await putUser(email, data).then(() => window.location.reload());
   };
   const handleProfile = useCallback(() => {
     setNome(user.name);
@@ -53,15 +56,7 @@ const Paciente = ({ user }) => {
         </div>
 
         <div className="floating-label-input">
-          <input
-            type="text"
-            id="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <label htmlFor="email">E-mail </label>
-          <span className="line"></span>
+          <input type="text" id="email" required value={email} disabled />
         </div>
         <div className="groupFlex">
           <div className="floating-label-input">
@@ -101,11 +96,12 @@ const Paciente = ({ user }) => {
   );
 };
 const Empresa = () => {
+  const { user } = useAppContext();
   const [nome, setNome] = useState('');
   const [password, setSenha] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
-  const history = useHistory();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
@@ -113,18 +109,18 @@ const Empresa = () => {
       password,
       telefone,
       email,
+      nickname: user.nickname,
     };
 
-    // await updateEmail(email, data).then(() => {
-    //   alert('Proximo login dados serão atualizados');
-    //   history.push('/');
-    // });
+    await putUser(email, data).then(() => {
+      window.location.reload();
+    });
   };
 
   const handleProfile = useCallback(() => {
-    // setNome(state.responseAPI.message.name);
-    // setEmail(state.responseAPI.message.email);
-    // setTelefone(state.responseAPI.message.telefone);
+    setNome(user.name);
+    setEmail(user.email);
+    setTelefone(user.telefone);
   }, []); // eslint-disable-line
   useEffect(() => {
     handleProfile();

@@ -3,31 +3,46 @@ import React, { useCallback, useEffect, useState } from 'react';
 import './styles.css';
 import ModalConfirm from '../../components/ModalConfirm';
 import InputForm from '../../components/InputForm';
+import {
+  getProcedimentos,
+  getSetores,
+  postProcedimento,
+  procedimentoApagar,
+  putProcedimento,
+} from '../../services/API';
 
 function Procedimentos() {
   const [newProcedimento, setNewProcedimento] = useState(false);
   const [procedimetnoEdit, setProcedimentoEdit] = useState(null);
-  const [procedimentoSelected, setProcedimentoSelected] = useState(null);
-  const [procedimentos, setProcedimentos] = useState([
-    { _id: 1, name: 'Rx torax', setor: 1, ativo: true },
-    { _id: 2, name: 'Rx Punho', setor: 2, ativo: true },
-  ]);
-  const [setores, setSetores] = useState([
-    { _id: 1, name: 'rx' },
-    { _id: 2, name: 'us' },
-  ]);
+  const [setorSelect, setSetorSelect] = useState(null);
+  const [procedimentos, setProcedimentos] = useState([]);
+  const [setores, setSetores] = useState([]);
+
+  const fetchSetores = useCallback(async () => {
+    const { data: setores } = await getSetores();
+    setSetores(setores.message);
+  }, []);
+
+  const fetchProcedimentos = useCallback(async () => {
+    const { data: procedimentos } = await getProcedimentos();
+    setProcedimentos(procedimentos.message);
+  }, []);
+  useEffect(() => {
+    fetchSetores();
+    fetchProcedimentos();
+  }, []);
   const handleNewProcedimento = () =>
-    procedimentoSelected
+    setorSelect
       ? setNewProcedimento(!newProcedimento)
       : alert('Selecione um setor');
   const createProcedimento = (e) => {
     setProcedimentos([...procedimentos, e]);
-    setProcedimentoSelected(null);
+    setSetorSelect(null);
     handleNewProcedimento();
   };
   const handleCancel = () => {
     setProcedimentoEdit(null);
-    setProcedimentoSelected(null);
+    setSetorSelect(null);
     setNewProcedimento(false);
   };
   const handleDeleteProcedimento = (e) => {
@@ -35,13 +50,15 @@ function Procedimentos() {
     setProcedimentos(filterProcedimento);
   };
   const selectedSetor = (e) => {
-    if (e) setProcedimentoSelected(e);
+    if (e) setSetorSelect(e);
   };
-  const procedimentoToEdit = (e) => {
-    console.log(e.target);
-    // setProcedimentoSelected(e);
-    // setProcedimentoEdit(e);
-    // setNewProcedimento(true);
+  const procedimentoToEdit = async (value, e) => {
+    const data = {
+      ativo: value,
+    };
+    try {
+      await putProcedimento(e, data);
+    } catch (error) {}
   };
   return (
     <div className="mainPage">
@@ -67,6 +84,7 @@ function Procedimentos() {
           cancel={handleCancel}
           createProcedimento={createProcedimento}
           editProcedimento={procedimetnoEdit}
+          setor={setorSelect}
         />
       )}
     </div>
@@ -81,11 +99,19 @@ const ListProcedimentos = ({
   selectSetor,
 }) => {
   const [procedimentoFilter, setProcedimentofilter] = useState(null);
+
   const desativarProcedimento = (e) => {
-    procedimetnoEdit(e);
+    if (e.target.checked) {
+      procedimetnoEdit(true, e.target.value);
+    } else {
+      procedimetnoEdit(false, e.target.value);
+    }
   };
-  const apagarProcedimento = (e) => {
-    deleteProcedimento(e);
+  const apagarProcedimento = async (e) => {
+    try {
+      await procedimentoApagar(e);
+      deleteProcedimento(e);
+    } catch (error) {}
   };
   const filterChange = (e) => {
     selectSetor(e);
@@ -95,7 +121,7 @@ const ListProcedimentos = ({
   const exibirProcedimentos =
     !procedimentoFilter || procedimentoFilter === '#'
       ? procedimentos
-      : procedimentos.filter((id) => id.setor === parseInt(procedimentoFilter));
+      : procedimentos.filter((id) => id.setor === procedimentoFilter);
   return (
     <div className="listPage">
       <h2>Procedimentos</h2>
@@ -155,18 +181,27 @@ const ListProcedimentos = ({
     </div>
   );
 };
-const FormProcedimento = ({ cancel, createProcedimento, editProcedimento }) => {
+const FormProcedimento = ({
+  cancel,
+  createProcedimento,
+  editProcedimento,
+  setor,
+}) => {
   const [name, setName] = useState('');
   const handleSetName = (e) => {
     setName(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
       name,
+      setor,
     };
-    createProcedimento(data);
+    try {
+      const { data: procedimento } = await postProcedimento(data);
+      createProcedimento(procedimento.message);
+    } catch (error) {}
   };
   const dateprocedimentoEdit = useCallback(() => {
     if (editProcedimento) {

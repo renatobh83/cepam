@@ -3,14 +3,22 @@ import React, { useCallback, useEffect, useState } from 'react';
 import './styles.css';
 import ModalConfirm from '../../components/ModalConfirm';
 import InputForm from '../../components/InputForm';
-import { getSetores, getSalas } from '../../services/API';
+import {
+  getSetores,
+  getSalas,
+  postSala,
+  putSala,
+  salaDelete,
+} from '../../services/API';
+import actions, { setToEdit } from '../../utils/actions.js';
 
 function Salas() {
   const [newSala, setNewSala] = useState(false);
-  const [salaEdit, setSalaEdit] = useState(null);
+
   const [setorSelected, setSetorSeleted] = useState(null);
   const [salas, setSalas] = useState([]);
   const [setores, setSetores] = useState([]);
+
   const fetchSetores = useCallback(async () => {
     const { data: setores } = await getSetores();
     setSetores(setores.message);
@@ -20,18 +28,19 @@ function Salas() {
     const { data: setores } = await getSalas();
     setSalas(setores.message);
   }, []);
+
   useEffect(() => {
     fetchSetores();
     fetchSalas();
   }, []);
+
   const handleNewSala = () =>
     setorSelected ? setNewSala(!newSala) : alert('Selecione um setor');
+
   const createdSala = (e) => {
-    setSalas([...salas, e]);
-    handleNewSala();
+    actions.create(salas, e, setSalas, setNewSala);
   };
   const handleCancel = () => {
-    setSalaEdit(null);
     setSetorSeleted(null);
     setNewSala(false);
   };
@@ -42,16 +51,12 @@ function Salas() {
   const selectedSetor = (e) => {
     if (e) setSetorSeleted(e);
   };
-  const salaToEdit = (e) => {
-    setSalaEdit(e);
-    setNewSala(true);
-  };
+
   return (
     <div className="mainPage">
       {!newSala && (
         <ListSalas
           salas={salas}
-          salaEdit={salaToEdit}
           setores={setores}
           deleteSala={handleDeleteSala}
           selectSetor={selectedSetor}
@@ -65,35 +70,30 @@ function Salas() {
         <FormSalas
           cancel={handleCancel}
           newSala={createdSala}
-          editSala={salaEdit}
+          setor={setorSelected}
         />
       )}
     </div>
   );
 }
-const ListSalas = ({
-  children,
-  salas,
-  salaEdit,
-  deleteSala,
-  setores,
-  selectSetor,
-}) => {
+const ListSalas = ({ children, salas, deleteSala, setores, selectSetor }) => {
   const [salaFilter, setsalaFilter] = useState(null);
-  const salaToEdit = (e) => {
-    salaEdit(e);
-  };
-  const apagarSala = (e) => {
-    deleteSala(e);
+
+  const apagarSala = async (e) => {
+    try {
+      await salaDelete(e);
+      deleteSala(e);
+    } catch (error) {}
   };
   const filterChange = (e) => {
     selectSetor(e);
     setsalaFilter(e);
   };
+
   const exibirSalas =
     !salaFilter || salaFilter === '#'
       ? salas
-      : salas.filter((id) => id.setor === parseInt(salaFilter));
+      : salas.filter((id) => id.setor === salaFilter);
   return (
     <div className="listPage">
       <h2>Salas</h2>
@@ -114,13 +114,7 @@ const ListSalas = ({
         {exibirSalas.map((sala) => (
           <li key={sala._id}>
             <span>{sala.name}</span>
-            <button
-              type="submit"
-              className="button"
-              onClick={() => salaToEdit(sala)}
-            >
-              Editar
-            </button>
+
             <ModalConfirm
               title="Confirma"
               description="Confirma a exclusão da sala"
@@ -141,32 +135,25 @@ const ListSalas = ({
     </div>
   );
 };
-const FormSalas = ({ cancel, newSala, editSala }) => {
+const FormSalas = ({ cancel, newSala, setor }) => {
   const [name, setName] = useState('');
   const handleSetName = (e) => {
     setName(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
       name,
+      setor,
     };
-    if (editSala) {
-      editSala.name = name;
-      cancel();
-    } else {
-      newSala(data);
-    }
+
+    try {
+      const { data: sala } = await postSala(data);
+      newSala(sala.message);
+    } catch (error) {}
   };
-  const dateSalaEdit = useCallback(() => {
-    if (editSala) {
-      setName(editSala.name);
-    }
-  }, []);
-  useEffect(() => {
-    dateSalaEdit();
-  }, []);
+
   return (
     <div className="forms">
       <h2>Cadastro nova sala</h2>

@@ -3,6 +3,7 @@ import { useAppContext } from '../../store/context';
 import Loading from '../../components/Loading';
 import './styles.css';
 import { useHistory } from 'react-router-dom';
+import Profile from '../Profile/index';
 
 function Main(props) {
   const { isLoading, user, isAuthenticated } = useAppContext();
@@ -18,8 +19,12 @@ function Main(props) {
 
 const Pacientes = () => {
   const history = useHistory();
+  const { user } = useAppContext();
 
   const toggleAgendar = () => history.push('/agendar/');
+  if (!user.telefone) {
+    return <Profile />;
+  }
   return (
     <div className="main">
       <button onClick={toggleAgendar} className="button hover">

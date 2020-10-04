@@ -1,16 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import InputForm from '../../components/InputForm';
 
 import './styles.css';
 import ModalConfirm from '../../components/ModalConfirm';
+import {
+  getTabelas,
+  getPlanos,
+  postPlanos,
+  putPlanos,
+  planosApagar,
+} from '../../services/API';
 
 function Planos() {
   const [novoPlano, setNovoPlano] = useState(false);
   const [planoEdit, setPlanoEdit] = useState(null);
-  const [planos, setPlanos] = useState([
-    { _id: 1, name: 'Unimed' },
-    { _id: 3, name: 'Particular' },
-  ]);
+  const [planos, setPlanos] = useState([]);
+
+  const fetchPlanos = useCallback(async () => {
+    const { data: planos } = await getPlanos();
+    if (planos.statusCode === 200) setPlanos(planos.message);
+  }, []);
+  useEffect(() => {
+    fetchPlanos();
+  }, []);
   const cancel = () => {
     setNovoPlano(false);
     setPlanoEdit(null);
@@ -22,10 +34,12 @@ function Planos() {
   const createPlan = (e) => {
     setPlanos([...planos, e]);
     setPlanoEdit(null);
-
     cancel();
   };
-  const handleDelete = (e) => {
+  const handleDelete = async (e) => {
+    try {
+      await planosApagar(e);
+    } catch (error) {}
     const fitlerPlano = planos.filter((g) => g._id !== e);
     setPlanos(fitlerPlano);
   };
@@ -99,24 +113,57 @@ const ListPLanos = ({ children, config }) => {
 
 const FormsPlanos = ({ config }) => {
   const { cancel, novoPlano, planoEdit } = config;
+
   const [name, setName] = useState('');
+  const [tabelas, setTabelas] = useState([]);
+  const [tabela, setTabela] = useState(null);
+  const [particular, setParticular] = useState(false);
+  const [tabelaEdit, setTabelaEdit] = useState(null);
+
+  const fetchTabelas = useCallback(async () => {
+    try {
+      const { data: tabelas } = await getTabelas();
+      if (tabelas.statusCode === 200) setTabelas(tabelas.message);
+    } catch (error) {}
+  }, []);
+  useEffect(() => {
+    fetchTabelas();
+  }, []);
   const handleSetName = (e) => {
     setName(e.target.value);
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
       name,
+      tabela,
+      particular,
     };
+
     if (planoEdit) {
       planoEdit.name = name;
-      cancel();
+      planoEdit.particular = particular;
+      try {
+        await putPlanos(planoEdit._id, data);
+        cancel();
+      } catch (error) {}
     } else {
-      novoPlano(data);
+      try {
+        const { data: plano } = await postPlanos(data);
+        if (plano.statusCode === 200) {
+          novoPlano(plano.message);
+        } else {
+          alert('Plano ja cadastrado');
+        }
+      } catch (error) {}
     }
   };
   useEffect(() => {
-    if (planoEdit) setName(planoEdit.name);
+    if (planoEdit) {
+      setName(planoEdit.name);
+      setParticular(planoEdit.particular);
+      setTabelaEdit(planoEdit.tabela);
+    }
   }, []);
   return (
     <div className="forms">
@@ -133,18 +180,18 @@ const FormsPlanos = ({ config }) => {
             name="tabela"
             id="tabela"
             required
-            // onChange={(e) => setTabela(e.target.value)}
+            onChange={(e) => setTabela(e.target.value)}
           >
             <option value="">Tabela</option>
-            {/* {tabelas.map((tabela) => (
+            {tabelas.map((tabela) => (
               <option
                 key={tabela._id}
                 value={tabela._id}
-                selected={tabela._id === tableEdit}
+                selected={tabela._id === tabelaEdit}
               >
-                {tabela.nome}
+                {tabela.name}
               </option>
-            ))} */}
+            ))}
           </select>
           <label htmlFor="particular">Particular</label>
           <input
@@ -152,8 +199,8 @@ const FormsPlanos = ({ config }) => {
             style={{ display: 'block' }}
             name="particular"
             id="particular"
-            //   defaultChecked={particular}
-            //   onChange={(e) => setParticular(e.target.checked)}
+            defaultChecked={particular}
+            onChange={(e) => setParticular(e.target.checked)}
           />
         </div>
         <div className="inputGroup">

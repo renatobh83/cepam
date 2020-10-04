@@ -6,23 +6,33 @@ import InputMask from 'react-input-mask';
 import { FiSearch, FiTrash2 } from 'react-icons/fi';
 import { moeda } from '../../utils/formatCurrency';
 import ModalConfirm from '../../components/ModalConfirm';
+import {
+  getTabelas,
+  procedimentoTabela,
+  postTabelas,
+  putNomeTabela,
+  tabelaApagar,
+  putTabelas,
+} from '../../services/API';
 
 function Tabelas() {
   const [novaTabela, setNovaTabela] = useState(false);
   const [tabelaSelect, setTabelaSelect] = useState(null);
-  const [tabelas, setTabelas] = useState([
-    {
-      _id: 1,
-      name: 'UNIMED',
-      exames: [],
-    },
-    { _id: 2, name: 'UNIMED-rio', exames: [] },
-  ]);
+  const [tabelas, setTabelas] = useState([]);
   const handleCriarNovaTabela = (e) => {
     setTabelas([...tabelas, e]);
     handlelCancel();
   };
 
+  const fetchTabelas = useCallback(async () => {
+    try {
+      const { data: tabelas } = await getTabelas();
+      setTabelas(tabelas.message);
+    } catch (error) {}
+  }, []);
+  useEffect(() => {
+    fetchTabelas();
+  }, []);
   const tabelaSelecionada = (e) => {
     setTabelaSelect(e);
   };
@@ -74,7 +84,8 @@ const ListTabelas = ({ children, configList }) => {
   const [tabelaExames, setTabelaExames] = useState([]);
   const [cadastrar, setCadastrar] = useState(false);
   const handlOnSelect = (e) => {
-    const tabela = tabelas.filter((ex) => ex._id === parseInt(e.target.value));
+    const tabela = tabelas.filter((ex) => ex._id === e.target.value);
+
     if (tabela) {
       setTabelaExames(tabela);
       tabelaSelect(tabela);
@@ -97,7 +108,12 @@ const ListTabelas = ({ children, configList }) => {
       {!cadastrar && (
         <div className="forms">
           <div className="inputGroup">
-            <select name="tabela" id="tabela" onChange={handlOnSelect}>
+            <select
+              name="tabela"
+              id="tabela"
+              onChange={handlOnSelect}
+              style={{ margin: 0, padding: 0 }}
+            >
               <option value="#">Selecione uma tabela</option>
               {tabelas.map((tabela) => (
                 <option key={tabela._id} value={tabela._id}>
@@ -129,10 +145,17 @@ const ListTabelas = ({ children, configList }) => {
 };
 
 const InserirExame = ({ tabela, close }) => {
-  const [exames, setExames] = useState([
-    { _id: 1, name: 'Rx Torax' },
-    { _id: 2, name: 'Rx Torax pa' },
-  ]);
+  const [exames, setExames] = useState([]);
+
+  const fetchExames = useCallback(async () => {
+    const { data: proc } = await procedimentoTabela();
+    setExames(proc.message);
+    selectInitialExames(proc.message);
+  }, []);
+  useEffect(() => {
+    fetchExames();
+  }, []);
+
   const [examesSelecionados, setExamesSelecionados] = useState([]);
   const [filterSearch, setFilterSearch] = useState(null);
 
@@ -164,14 +187,18 @@ const InserirExame = ({ tabela, close }) => {
   const handleChangeInput = (e, index) => {
     examesSelecionados[index].valor = e.target.value;
   };
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     tabela[0].exames = examesSelecionados;
-    close();
+    try {
+      await putTabelas(tabela[0]._id, examesSelecionados);
+      close();
+    } catch (error) {}
   };
-  // Carrege exames ja inserido na tabela
+  // Carrega exames ja inserido na tabela
   const selectInitialExames = (e) => {
     setExamesSelecionados(tabela[0].exames);
-    const getExames = tabela[0].exames.map((e) => e.exame);
+    const getExames = tabela[0].exames.map((ex) => ex.exame);
+
     const myArrayFiltered = e.filter((el) => {
       return !getExames.some((f) => {
         return f._id === el._id;
@@ -185,9 +212,7 @@ const InserirExame = ({ tabela, close }) => {
     : exames.filter((exame) =>
         exame.name.toLowerCase().includes(filterSearch.toLocaleLowerCase())
       );
-  useEffect(() => {
-    selectInitialExames(exames);
-  }, []);
+
   return (
     <div className="examesList">
       <div className="buscarExame">
@@ -266,25 +291,39 @@ const FormTabela = ({ configProp }) => {
   const handleSetName = (e) => {
     setName(e.target.value);
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
-      _id: 3,
       name,
       exames: [],
     };
     if (configProp.edit) {
       configProp.edit[0].name = name;
-      configProp.cancel();
+      try {
+        await putNomeTabela(configProp.edit[0]._id, data);
+        configProp.cancel();
+      } catch (error) {
+        console.log(error);
+      }
     } else {
-      configProp.create(data);
+      try {
+        const { data: tabela } = await postTabelas(data);
+        if (tabela.statusCode === 409) {
+          alert('Tabela ja cadastrada');
+        } else {
+          configProp.create(tabela.message);
+        }
+      } catch (error) {}
     }
   };
-  const apagarTabela = () => {
-    const a = configProp.tabelas.findIndex(
+  const apagarTabela = async () => {
+    try {
+      await tabelaApagar(configProp.edit[0]._id);
+    } catch (error) {}
+    const index = configProp.tabelas.findIndex(
       (element) => element._id === configProp.edit[0]._id
     );
-    configProp.tabelas.splice(a, 1);
+    configProp.tabelas.splice(index, 1);
     configProp.cancel();
   };
   useEffect(() => {

@@ -82,11 +82,72 @@ export const postSala = (data) => {
   return instance.post('/salas', data);
 };
 
-export const deleteSala = (id) => {
+export const salaDelete = (id) => {
   headerDefaults();
   return instance.delete(`/salas/${id}`);
 };
-export const putSala = (id, data) => {
+// API procediementos
+export const getProcedimentos = () => {
   headerDefaults();
-  return instance.put(`/salas/${id}`, data);
+  return instance.get('/procedimentos');
+};
+export const postProcedimento = (data) => {
+  headerDefaults();
+  return instance.post('/procedimentos', data);
+};
+export const putProcedimento = (id, data) => {
+  headerDefaults();
+  return instance.put(`/procedimentos/${id}`, data);
+};
+
+export const procedimentoApagar = (id) => {
+  headerDefaults();
+  return instance.delete(`/procedimentos/${id}`);
+};
+// API tabelas
+export const getTabelas = () => {
+  headerDefaults();
+  return instance.get('/tabelas');
+};
+export const postTabelas = (data) => {
+  headerDefaults();
+  return instance.post('/tabelas', data);
+};
+export const putTabelas = (id, data) => {
+  headerDefaults();
+  return instance.put(`/tabelas/${id}`, data);
+};
+export const putNomeTabela = (id, data) => {
+  headerDefaults();
+  return instance.put(`/tabelas/name/${id}`, data);
+};
+export const procedimentoTabela = () => {
+  headerDefaults();
+  return instance.get('/procedimentos/tabela');
+};
+export const tabelaApagar = (id) => {
+  headerDefaults();
+  return instance.delete(`/tabelas/excluir/${id}`);
+};
+export const excluirExame = (id) => {
+  headerDefaults();
+  return instance.delete(`/tabelas/${id}`);
+};
+// API planos
+export const getPlanos = () => {
+  headerDefaults();
+  return instance.get('/planos');
+};
+export const postPlanos = (data) => {
+  headerDefaults();
+  return instance.post('/planos', data);
+};
+export const putPlanos = (id, data) => {
+  headerDefaults();
+  return instance.put(`/planos/${id}`, data);
+};
+
+export const planosApagar = (id) => {
+  headerDefaults();
+  return instance.delete(`/planos/${id}`);
 };
