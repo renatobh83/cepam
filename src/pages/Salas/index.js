@@ -3,19 +3,27 @@ import React, { useCallback, useEffect, useState } from 'react';
 import './styles.css';
 import ModalConfirm from '../../components/ModalConfirm';
 import InputForm from '../../components/InputForm';
+import { getSetores, getSalas } from '../../services/API';
 
 function Salas() {
   const [newSala, setNewSala] = useState(false);
   const [salaEdit, setSalaEdit] = useState(null);
   const [setorSelected, setSetorSeleted] = useState(null);
-  const [salas, setSalas] = useState([
-    { _id: 1, name: 'sala1', setor: 1 },
-    { _id: 2, name: 'sala2', setor: 2 },
-  ]);
-  const [setores, setSetores] = useState([
-    { _id: 1, name: 'rx' },
-    { _id: 2, name: 'us' },
-  ]);
+  const [salas, setSalas] = useState([]);
+  const [setores, setSetores] = useState([]);
+  const fetchSetores = useCallback(async () => {
+    const { data: setores } = await getSetores();
+    setSetores(setores.message);
+  }, []);
+
+  const fetchSalas = useCallback(async () => {
+    const { data: setores } = await getSalas();
+    setSalas(setores.message);
+  }, []);
+  useEffect(() => {
+    fetchSetores();
+    fetchSalas();
+  }, []);
   const handleNewSala = () =>
     setorSelected ? setNewSala(!newSala) : alert('Selecione um setor');
   const createdSala = (e) => {

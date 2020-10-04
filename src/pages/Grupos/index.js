@@ -4,23 +4,30 @@ import './styles.css';
 
 import InputForm from '../../components/InputForm';
 import ModalConfirm from '../../components/ModalConfirm';
-import { postGrupo, getGrupos } from '../../services/API';
+import {
+  postGrupo,
+  getGrupos,
+  apagarGrupo,
+  putGrupo,
+} from '../../services/API';
+import Loading from '../../components/Loading';
+import actions from '../../utils/actions';
 
 function Grupos() {
   const [newGroup, setNewGroup] = useState(false);
   const [groupEdit, setGroupEdit] = useState(null);
   const [grupos, setGrupos] = useState([]);
-
+  const [isLoading, setIsloading] = useState(true);
   const fethcGrupos = useCallback(async () => {
     const { data: grupos } = await getGrupos();
     setGrupos(grupos.message);
+    setIsloading(false);
   }, []);
   useEffect(() => {
     fethcGrupos();
   }, []);
   const groupToEdit = (e) => {
-    setGroupEdit(e);
-    setNewGroup(true);
+    actions.setToEdit(e, setGroupEdit, setNewGroup);
   };
   const handleCancelar = () => {
     setGroupEdit(null);
@@ -28,13 +35,16 @@ function Grupos() {
   };
   const handleNewGroup = () => setNewGroup(!newGroup);
   const createdGroup = (e) => {
-    setGrupos([...grupos, e]);
-    handleNewGroup();
+    actions.create(grupos, e, setGrupos, setNewGroup, setGroupEdit);
   };
+
   const handleDeletGroup = (e) => {
     const filterGroup = grupos.filter((g) => g._id !== e);
     setGrupos(filterGroup);
   };
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div className="mainPage">
       {!newGroup && (
@@ -62,7 +72,10 @@ const ListGroups = ({ grupos, children, editGroup, deleteGrupo }) => {
   const groupForEdit = (e) => {
     editGroup(e);
   };
-  const apagarGrupo = (e) => {
+  const grupoApagar = async (e) => {
+    try {
+      await apagarGrupo(e);
+    } catch (error) {}
     deleteGrupo(e);
   };
   return (
@@ -73,7 +86,9 @@ const ListGroups = ({ grupos, children, editGroup, deleteGrupo }) => {
       <ul>
         {grupos.map((grupo) => (
           <li key={grupo._id}>
-            <span className="descGrupo">{grupo.name}</span>
+            <span className="descGrupo" style={{ textTransform: 'uppercase' }}>
+              {grupo.name}
+            </span>
 
             <button className="button" onClick={() => groupForEdit(grupo)}>
               Editar
@@ -85,7 +100,7 @@ const ListGroups = ({ grupos, children, editGroup, deleteGrupo }) => {
               {(confirm) => (
                 <button
                   className="button button-danger"
-                  onClick={confirm(() => apagarGrupo(grupo._id))}
+                  onClick={confirm(() => grupoApagar(grupo._id))}
                 >
                   Apagar
                 </button>
@@ -109,6 +124,7 @@ const FormGrupos = ({ cancel, newGroup, editGroup }) => {
     };
     if (editGroup) {
       editGroup.name = name;
+      await putGrupo(editGroup._id, data);
       cancel();
     } else {
       const { data: grupo } = await postGrupo(data);

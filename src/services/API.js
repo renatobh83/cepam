@@ -44,3 +44,49 @@ export const postGrupo = (data) => {
   headerDefaults();
   return instance.post('/grupos', data);
 };
+
+export const apagarGrupo = (id) => {
+  headerDefaults();
+  return instance.delete(`/grupos/${id}`);
+};
+export const putGrupo = (id, data) => {
+  headerDefaults();
+  return instance.put(`/grupos/${id}`, data);
+};
+
+// API SETORES
+export const getSetores = () => {
+  headerDefaults();
+  return instance.get('/setores');
+};
+export const postSetores = (data) => {
+  headerDefaults();
+  return instance.post('/setores', data);
+};
+
+export const setorDelete = (id) => {
+  headerDefaults();
+  return instance.delete(`/setores/${id}`);
+};
+export const putSetores = (id, data) => {
+  headerDefaults();
+  return instance.put(`/setores/${id}`, data);
+};
+// API SALAS
+export const getSalas = () => {
+  headerDefaults();
+  return instance.get('/salas');
+};
+export const postSala = (data) => {
+  headerDefaults();
+  return instance.post('/salas', data);
+};
+
+export const deleteSala = (id) => {
+  headerDefaults();
+  return instance.delete(`/salas/${id}`);
+};
+export const putSala = (id, data) => {
+  headerDefaults();
+  return instance.put(`/salas/${id}`, data);
+};

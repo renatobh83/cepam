@@ -10,10 +10,11 @@ export default function Callback() {
   const history = useHistory();
 
   const mongo = useCallback(() => {
-    if (!user.data.message.ativo) {
-      alert('Voce esta inativo');
-      logout();
-    }
+    console.log(user);
+    // if (!user.data.message.ativo) {
+    //   alert('Voce esta inativo');
+    //   logout();
+    // }
     history.push('/');
   }, []);
 

@@ -42,6 +42,7 @@ export default function Provider({
       setToken(token);
       const user = await loginGetUserDate();
       setUser(user.data.message);
+
       setIsAuthenticated(isAuthenticated);
     }
     setIsAuthenticated(isAuthenticated);

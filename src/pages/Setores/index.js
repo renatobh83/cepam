@@ -5,22 +5,36 @@ import './styles.css';
 import ModalConfirm from '../../components/ModalConfirm';
 import InputForm from '../../components/InputForm';
 import InputMask from 'react-input-mask';
+import actions from '../../utils/actions';
+import {
+  getSetores,
+  postSetores,
+  putSetores,
+  setorDelete,
+} from '../../services/API';
+import Loading from '../../components/Loading';
 
 function Setores() {
   const [newSetor, setNewSetor] = useState(false);
   const [setorEdit, setSetorEdit] = useState(null);
-  const [setores, setSetores] = useState([
-    { _id: 1, name: 'Raio-x', time: '00:10' },
-    { _id: 2, name: 'Us', time: '00:20' },
-  ]);
+  const [setores, setSetores] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const setorToEdit = (e) => {
-    setSetorEdit(e);
-    setNewSetor(true);
+    actions.setToEdit(e, setSetorEdit, setNewSetor);
   };
+  const fetchSetores = useCallback(async () => {
+    try {
+      const { data: setor } = await getSetores();
+      setSetores(setor.message);
+      setIsLoading(false);
+    } catch (error) {}
+  }, []);
+  useEffect(() => {
+    fetchSetores();
+  }, []);
   const handleNewSetor = () => setNewSetor(!newSetor);
   const createdSetor = (e) => {
-    setSetores([...setores, e]);
-    handleNewSetor();
+    actions.create(setores, e, setSetores, setNewSetor, setSetorEdit);
   };
   const handleCancel = () => {
     setSetorEdit(null);
@@ -30,6 +44,9 @@ function Setores() {
     const filterSetor = setores.filter((g) => g._id !== e);
     setSetores(filterSetor);
   };
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div className="mainPage">
       {!newSetor && (
@@ -57,8 +74,10 @@ const ListSetor = ({ children, setores, editSetor, deleteSetor }) => {
   const setorForEdit = (e) => {
     editSetor(e);
   };
-  const apagarSetor = (e) => {
-    deleteSetor(e);
+  const apagarSetor = async (e) => {
+    try {
+      await setorDelete(e).then(() => deleteSetor(e));
+    } catch (error) {}
   };
   return (
     <div className="listPage">
@@ -104,7 +123,7 @@ const FormSetor = ({ cancel, newSetor, editSetor }) => {
     setName(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
       name,
@@ -112,9 +131,15 @@ const FormSetor = ({ cancel, newSetor, editSetor }) => {
     };
     if (editSetor) {
       editSetor.name = name;
+      try {
+        await putSetores(editSetor._id, data);
+      } catch (error) {}
       cancel();
     } else {
-      newSetor(data);
+      try {
+        const { data: setor } = await postSetores(data);
+        newSetor(setor.message);
+      } catch (error) {}
     }
   };
   const dateSetorEdit = useCallback(() => {
