@@ -80,27 +80,6 @@
 .forms .inputGroup input,
 .forms .inputGroup select {
   border: 0;
-  /* background: var(--color-background); */
   font: 400 2.8rem Achivo;
   padding: 19px 14px 9px 14px;
-  margin: ;
 }
-/* .mainUsuarios .userForm .userInputGroup {
-  display: flex;
-  justify-content: space-between;
-}
-
-.mainUsuarios .userForm .userInputGroup .button {
-  width: 40%;
-  height: 40px;
-  position: relative;
-} */
-/* 
-.userForm .userInputGroup input,
-.userForm .userInputGroup select {
-  border: 0;
-  background: var(--color-background);
-  font: 400 2.8rem Achivo;
-  padding: 19px 14px 9px 14px;
-  margin: 5px 0;
-} */
