@@ -27,7 +27,7 @@ function Grupos() {
     fethcGrupos();
   }, []);
   const groupToEdit = (e) => {
-    etToEdit(e, setGroupEdit, setNewGroup);
+    setToEdit(e, setGroupEdit, setNewGroup);
   };
   const handleCancelar = () => {
     setGroupEdit(null);
