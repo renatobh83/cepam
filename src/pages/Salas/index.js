@@ -3,14 +3,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import './styles.css';
 import ModalConfirm from '../../components/ModalConfirm';
 import InputForm from '../../components/InputForm';
-import {
-  getSetores,
-  getSalas,
-  postSala,
-  putSala,
-  salaDelete,
-} from '../../services/API';
-import actions, { setToEdit } from '../../utils/actions.js';
+import { getSetores, getSalas, postSala, salaDelete } from '../../services/API';
+import { create } from '../../utils/actions';
 
 function Salas() {
   const [newSala, setNewSala] = useState(false);
@@ -38,7 +32,7 @@ function Salas() {
     setorSelected ? setNewSala(!newSala) : alert('Selecione um setor');
 
   const createdSala = (e) => {
-    actions.create(salas, e, setSalas, setNewSala);
+    create(salas, e, setSalas, setNewSala);
   };
   const handleCancel = () => {
     setSetorSeleted(null);

@@ -4,7 +4,7 @@ import { getGrupos, getUsers, postUser, putUser } from '../../services/API';
 
 import './styles.css';
 import Loading from '../../components/Loading';
-import actions from '../../utils/actions';
+import { setToEdit, create, update } from '../../utils/actions';
 
 function Usuarios() {
   const [users, setUsers] = useState([]);
@@ -24,14 +24,14 @@ function Usuarios() {
   }, []);
 
   const userToEdit = (e) => {
-    actions.setToEdit(e, setUserEdit, setNewUser);
+    setToEdit(e, setUserEdit, setNewUser);
   };
   const handleNewUser = (e) => {
-    actions.create(users, e, setUsers, setNewUser, setUserEdit);
+    create(users, e, setUsers, setNewUser, setUserEdit);
   };
 
   const userUpdate = (e) => {
-    actions.update(users, e, setUsers, setNewUser, setUserEdit);
+    update(users, e, setUsers, setNewUser, setUserEdit);
   };
   const closeForm = () => {
     setUserEdit(null);

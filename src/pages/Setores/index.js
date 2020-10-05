@@ -5,7 +5,7 @@ import './styles.css';
 import ModalConfirm from '../../components/ModalConfirm';
 import InputForm from '../../components/InputForm';
 import InputMask from 'react-input-mask';
-import actions from '../../utils/actions';
+import { setToEdit, create, update } from '../../utils/actions';
 import {
   getSetores,
   postSetores,
@@ -20,7 +20,7 @@ function Setores() {
   const [setores, setSetores] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const setorToEdit = (e) => {
-    actions.setToEdit(e, setSetorEdit, setNewSetor);
+    setToEdit(e, setSetorEdit, setNewSetor);
   };
   const fetchSetores = useCallback(async () => {
     try {
@@ -34,7 +34,7 @@ function Setores() {
   }, []);
   const handleNewSetor = () => setNewSetor(!newSetor);
   const createdSetor = (e) => {
-    actions.create(setores, e, setSetores, setNewSetor, setSetorEdit);
+    create(setores, e, setSetores, setNewSetor, setSetorEdit);
   };
   const handleCancel = () => {
     setSetorEdit(null);
