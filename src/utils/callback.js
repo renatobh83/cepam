@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useAppContext } from '../store/context';
 import { useHistory } from 'react-router-dom';
 
 import Loading from '../components/Loading';
-import { useCallback } from 'react';
 
 export default function Callback() {
   const { user, logout, setIsAuthenticated } = useAppContext();

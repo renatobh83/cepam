@@ -40,8 +40,7 @@ export default function Provider({
       const { __raw: token } = await auth0FromHook.getIdTokenClaims();
 
       setToken(token);
-      const user = await loginGetUserDate();
-      setUser(user.data.message);
+      await loginGetUserDate().then((res) => setUser(res.data.message));
 
       setIsAuthenticated(isAuthenticated);
     }
