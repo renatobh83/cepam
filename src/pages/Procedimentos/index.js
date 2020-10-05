@@ -61,7 +61,7 @@ function Procedimentos() {
     } catch (error) {}
   };
   return (
-    <div className="mainPage">
+    <div className="main">
       {!newProcedimento && (
         <ListProcedimentos
           procedimentos={procedimentos}

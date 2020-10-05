@@ -5,7 +5,7 @@ import ModalConfirm from '../../components/ModalConfirm';
 
 function Horarios() {
   return (
-    <div className="mainPage">
+    <div className="main">
       <h2>Horarios</h2>
       <div className="listPage">
         <div className="horarioGroup">

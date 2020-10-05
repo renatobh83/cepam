@@ -52,7 +52,7 @@ function Tabelas() {
     tabelaSelecionada: (...p) => tabelaSelecionada(...p),
   };
   return (
-    <div className="mainPage">
+    <div className="main">
       {!novaTabela && (
         <ListTabelas
           // tabelas={tabelas}
@@ -229,12 +229,14 @@ const InserirExame = ({ tabela, close }) => {
       <ul>
         {result.map((exame) => (
           <li key={exame._id}>
-            <label htmlFor={exame._id} style={{ cursor: 'pointer' }}>
+            <label
+              htmlFor={exame._id}
+              style={{ cursor: 'pointer', fontSize: '2.3rem' }}
+            >
               <input
                 type="checkbox"
                 id={exame._id}
                 name="exames"
-                className="exames-check"
                 defaultValue={exame._id}
                 onClick={(e) => insertExame(exame, e)}
               />

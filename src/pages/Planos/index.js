@@ -54,7 +54,7 @@ function Planos() {
     planoEdit,
   };
   return (
-    <div className="mainPage">
+    <div className="main">
       {!novoPlano && (
         <ListPLanos config={propsList}>
           <button

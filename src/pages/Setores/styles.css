@@ -8,6 +8,7 @@
 .grpBtn {
   display: flex;
   flex-direction: column;
+  width: 20%;
 }
 .setor ul li .grpBtn button {
   width: 100%;

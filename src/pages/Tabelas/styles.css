@@ -53,7 +53,7 @@
 .tableProcContent {
   margin-top: 4rem;
   width: 100%;
-  font: 600 3rem Archivo;
+  font: 600 2rem Archivo;
   display: flex;
   justify-content: space-between;
 }
@@ -65,7 +65,7 @@
 }
 .examesSelecionados .examesSelect {
   display: flex;
-  font: 500 2.3rem Archivo;
+  font: 500 2rem Archivo;
   align-items: center;
   margin: 0 10px;
 }

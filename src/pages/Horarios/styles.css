@@ -1,5 +1,6 @@
 .header {
   display: grid;
+  font-size: 19px;
   grid-template-columns: 1fr 1fr 1fr 2fr;
 }
 .horarioGroup {
@@ -20,14 +21,6 @@
   width: 55%;
 }
 
-.listPage ul {
-  /* margin-top: 3rem;
-  list-style: none;
-  overflow: hidden;
-  height: 50vh;
-  overflow-y: scroll; */
-}
-
 .listPage .interval {
   width: 100%;
   display: grid;
@@ -37,6 +30,6 @@
   gap: 10px;
 }
 
-.mainPage .listPage .interval .button {
+.main .listPage .interval .button {
   width: 100%;
 }
