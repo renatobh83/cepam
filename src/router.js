@@ -19,7 +19,6 @@ import Planos from './pages/Planos/index';
 import GerarHorarios from './pages/GerarHorarios/index';
 import Horarios from './pages/Horarios/index';
 import Profile from './pages/Profile/index';
-import Router from './router';
 
 function Router() {
   const { isLoading, isAuthenticated } = useAppContext();
