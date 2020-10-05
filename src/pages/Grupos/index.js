@@ -11,7 +11,7 @@ import {
   putGrupo,
 } from '../../services/API';
 import Loading from '../../components/Loading';
-import actions from '../../utils/actions';
+import { setToEdit, create, update } from '../../utils/actions';
 
 function Grupos() {
   const [newGroup, setNewGroup] = useState(false);
@@ -27,7 +27,7 @@ function Grupos() {
     fethcGrupos();
   }, []);
   const groupToEdit = (e) => {
-    actions.setToEdit(e, setGroupEdit, setNewGroup);
+    etToEdit(e, setGroupEdit, setNewGroup);
   };
   const handleCancelar = () => {
     setGroupEdit(null);
@@ -35,7 +35,7 @@ function Grupos() {
   };
   const handleNewGroup = () => setNewGroup(!newGroup);
   const createdGroup = (e) => {
-    actions.create(grupos, e, setGrupos, setNewGroup, setGroupEdit);
+    create(grupos, e, setGrupos, setNewGroup, setGroupEdit);
   };
 
   const handleDeletGroup = (e) => {
