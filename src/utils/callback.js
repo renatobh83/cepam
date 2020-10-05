@@ -14,12 +14,11 @@ export default function Callback() {
       setIsAuthenticated(false);
       logout();
     } else {
-      history.push('/');
     }
   }, []);
 
   useEffect(() => {
-    mongo();
+    history.push('/');
   }, []);
   return (
     <div>
