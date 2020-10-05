@@ -1,17 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from "react";
 
-import './styles.css';
-
-import InputForm from '../../components/InputForm';
-import ModalConfirm from '../../components/ModalConfirm';
+import InputForm from "../../components/InputForm";
+import ModalConfirm from "../../components/ModalConfirm";
 import {
   postGrupo,
   getGrupos,
   apagarGrupo,
   putGrupo,
-} from '../../services/API';
-import Loading from '../../components/Loading';
-import { setToEdit, create, update } from '../../utils/actions';
+} from "../../services/API";
+import Loading from "../../components/Loading";
+import { setToEdit, create, update } from "../../utils/actions";
 
 function Grupos() {
   const [newGroup, setNewGroup] = useState(false);
@@ -46,14 +44,14 @@ function Grupos() {
     return <Loading />;
   }
   return (
-    <div className="mainPage">
+    <div className="main">
       {!newGroup && (
         <ListGroups
           grupos={grupos}
           editGroup={groupToEdit}
           deleteGrupo={handleDeletGroup}
         >
-          <button type="submit" onClick={handleNewGroup} className="button ">
+          <button type="submit" onClick={handleNewGroup} className="button">
             Novo Grupo
           </button>
         </ListGroups>
@@ -86,11 +84,11 @@ const ListGroups = ({ grupos, children, editGroup, deleteGrupo }) => {
       <ul>
         {grupos.map((grupo) => (
           <li key={grupo._id}>
-            <span className="descGrupo" style={{ textTransform: 'uppercase' }}>
+            <span className="descGrupo" style={{ textTransform: "uppercase" }}>
               {grupo.name}
             </span>
 
-            <button className="button" onClick={() => groupForEdit(grupo)}>
+            <button className="button f-1" onClick={() => groupForEdit(grupo)}>
               Editar
             </button>
             <ModalConfirm
@@ -99,7 +97,7 @@ const ListGroups = ({ grupos, children, editGroup, deleteGrupo }) => {
             >
               {(confirm) => (
                 <button
-                  className="button button-danger"
+                  className="button button-danger f-1"
                   onClick={confirm(() => grupoApagar(grupo._id))}
                 >
                   Apagar
@@ -113,7 +111,7 @@ const ListGroups = ({ grupos, children, editGroup, deleteGrupo }) => {
   );
 };
 const FormGrupos = ({ cancel, newGroup, editGroup }) => {
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const handleSetName = (e) => {
     setName(e.target.value);
   };

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { FiTrash2 } from 'react-icons/fi';
-import { useHistory } from 'react-router-dom';
-import ModalConfirm from './ModalConfirm';
-import InputLabel from './InputLabel';
+import React, { useEffect, useState } from "react";
+import { FiTrash2 } from "react-icons/fi";
+import { useHistory } from "react-router-dom";
+import ModalConfirm from "./ModalConfirm";
+import InputLabel from "./InputLabel";
 
 export default function ScreenAgendamento({ isPaciente, pacienteFromForm }) {
   const history = useHistory();
@@ -81,7 +81,7 @@ export default function ScreenAgendamento({ isPaciente, pacienteFromForm }) {
     plano: plano.plano,
   };
   // Cancelar processo de agendamento
-  const handleCancelar = () => history.push('/');
+  const handleCancelar = () => history.push("/");
 
   useEffect(() => {
     if (isPaciente) {
@@ -133,12 +133,12 @@ export default function ScreenAgendamento({ isPaciente, pacienteFromForm }) {
 const ChoosePaciente = ({ setPaciente }) => {
   const history = useHistory();
   const [pacientes, setPacientes] = useState([
-    { _id: 1, name: 'Renato' },
-    { _id: 2, name: 'Gabriel' },
-    { _id: 3, name: 'Veronica' },
-    { _id: 4, name: 'Renato 2' },
-    { _id: 5, name: 'Gabriel 2' },
-    { _id: 6, name: 'Veronica 2' },
+    { _id: 1, name: "Renato" },
+    { _id: 2, name: "Gabriel" },
+    { _id: 3, name: "Veronica" },
+    { _id: 4, name: "Renato 2" },
+    { _id: 5, name: "Gabriel 2" },
+    { _id: 6, name: "Veronica 2" },
   ]);
   const [searchPaciente, setSearchPaciente] = useState(null);
   const [pSelecionado, setPSelecionado] = useState(null);
@@ -160,7 +160,7 @@ const ChoosePaciente = ({ setPaciente }) => {
     if (pSelecionado) {
       pacienteEdit = pacientes.find((i) => i._id === parseInt(pSelecionado));
     }
-    history.push('/pacienteForm', { pacienteEdit });
+    history.push("/pacienteForm", { pacienteEdit });
   };
   const filterSearch = !searchPaciente
     ? pacientes
@@ -184,7 +184,7 @@ const ChoosePaciente = ({ setPaciente }) => {
           className="button"
           onClick={handleEditNewPaciente}
         >
-          {pSelecionado !== null ? 'Editar Cadastro ' : 'Novo cadastro'}
+          {pSelecionado !== null ? "Editar Cadastro " : "Novo cadastro"}
         </button>
       </div>
     </div>
@@ -194,8 +194,8 @@ const ChoosePaciente = ({ setPaciente }) => {
 //Component  pesquisa Plano
 const Plano = ({ setPlano }) => {
   const [planos, setPlanos] = useState([
-    { _id: 1, name: 'Unimed' },
-    { _id: 2, name: 'Bradesco' },
+    { _id: 1, name: "Unimed" },
+    { _id: 2, name: "Bradesco" },
   ]);
   const [searchPlano, setSearchPlano] = useState(null);
   const handleChangePesquisa = (e) => {
@@ -234,9 +234,9 @@ const Plano = ({ setPlano }) => {
 // Component pesquisa exame
 const Exame = ({ setExame }) => {
   const [exames, setExames] = useState([
-    { _id: 1, name: 'Rx Torax PA' },
-    { _id: 2, name: 'Rx Torax Perfil' },
-    { _id: 3, name: 'Rx Torax PA LA' },
+    { _id: 1, name: "Rx Torax PA" },
+    { _id: 2, name: "Rx Torax Perfil" },
+    { _id: 3, name: "Rx Torax PA LA" },
   ]);
   const [examesSelecionados, setExamesSelecionados] = useState([]);
   const [searchExame, setSearchExame] = useState(null);
@@ -297,13 +297,11 @@ const Exame = ({ setExame }) => {
             {examesSelecionados.map((ex) => (
               <div className="examesSelect" key={ex.name}>
                 <div className="delete">
-                  <button>
-                    <FiTrash2
-                      size={15}
-                      color={'red'}
-                      onClick={() => deleteExame(ex)}
-                    />
-                  </button>
+                  <FiTrash2
+                    size={15}
+                    color={"red"}
+                    onClick={() => deleteExame(ex)}
+                  />
                 </div>
                 <div className="content">{ex.name}</div>
               </div>

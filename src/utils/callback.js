@@ -1,8 +1,8 @@
-import React, { useEffect, useCallback } from 'react';
-import { useAppContext } from '../store/context';
-import { useHistory } from 'react-router-dom';
+import React, { useEffect, useCallback } from "react";
+import { useAppContext } from "../store/context";
+import { useHistory } from "react-router-dom";
 
-import Loading from '../components/Loading';
+import Loading from "../components/Loading";
 
 export default function Callback() {
   const { user, logout, setIsAuthenticated } = useAppContext();
@@ -10,11 +10,11 @@ export default function Callback() {
 
   const mongo = useCallback(() => {
     if (!user.ativo) {
-      alert('Usuário não esta ativo');
+      alert("Usuário não esta ativo");
       setIsAuthenticated(false);
       logout();
     } else {
-      history.push('/');
+      history.push("/");
     }
   }, []);
 

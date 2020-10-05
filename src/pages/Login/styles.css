@@ -1,17 +1,12 @@
 .logonContainer {
-  width: 400px;
-  position: absolute;
-  top: 25%;
-  background: #6842c2;
-  align-items: center;
-  justify-content: center;
+  margin: 80px auto 0;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #6842c2;
   flex-direction: column;
   padding: 50px;
   box-shadow: 1px 0 14px rgba(27, 27, 27, 1);
-}
-.logonContainer .logo {
-  padding: 20px;
 }
 
 .logonContainer .login-btn-group {
@@ -19,12 +14,4 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.logonContainer .login-btn-group .button {
-  transition: all 0.2s;
-}
-
-.logonContainer .login-btn-group .button:hover {
-  filter: brightness(90%);
-  color: white;
 }

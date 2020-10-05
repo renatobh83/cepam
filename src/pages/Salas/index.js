@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from "react";
 
-import './styles.css';
-import ModalConfirm from '../../components/ModalConfirm';
-import InputForm from '../../components/InputForm';
-import { getSetores, getSalas, postSala, salaDelete } from '../../services/API';
-import { create } from '../../utils/actions';
+import "./styles.css";
+import ModalConfirm from "../../components/ModalConfirm";
+import InputForm from "../../components/InputForm";
+import { getSetores, getSalas, postSala, salaDelete } from "../../services/API";
+import { create } from "../../utils/actions";
 
 function Salas() {
   const [newSala, setNewSala] = useState(false);
@@ -29,7 +29,7 @@ function Salas() {
   }, []);
 
   const handleNewSala = () =>
-    setorSelected ? setNewSala(!newSala) : alert('Selecione um setor');
+    setorSelected ? setNewSala(!newSala) : alert("Selecione um setor");
 
   const createdSala = (e) => {
     create(salas, e, setSalas, setNewSala);
@@ -47,7 +47,7 @@ function Salas() {
   };
 
   return (
-    <div className="mainPage">
+    <div className="main">
       {!newSala && (
         <ListSalas
           salas={salas}
@@ -85,7 +85,7 @@ const ListSalas = ({ children, salas, deleteSala, setores, selectSetor }) => {
   };
 
   const exibirSalas =
-    !salaFilter || salaFilter === '#'
+    !salaFilter || salaFilter === "#"
       ? salas
       : salas.filter((id) => id.setor === salaFilter);
   return (
@@ -130,7 +130,7 @@ const ListSalas = ({ children, salas, deleteSala, setores, selectSetor }) => {
   );
 };
 const FormSalas = ({ cancel, newSala, setor }) => {
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const handleSetName = (e) => {
     setName(e.target.value);
   };

@@ -1,18 +1,18 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from "react";
 
-import './styles.css';
+import "./styles.css";
 
-import ModalConfirm from '../../components/ModalConfirm';
-import InputForm from '../../components/InputForm';
-import InputMask from 'react-input-mask';
-import { setToEdit, create, update } from '../../utils/actions';
+import ModalConfirm from "../../components/ModalConfirm";
+import InputForm from "../../components/InputForm";
+import InputMask from "react-input-mask";
+import { setToEdit, create, update } from "../../utils/actions";
 import {
   getSetores,
   postSetores,
   putSetores,
   setorDelete,
-} from '../../services/API';
-import Loading from '../../components/Loading';
+} from "../../services/API";
+import Loading from "../../components/Loading";
 
 function Setores() {
   const [newSetor, setNewSetor] = useState(false);
@@ -48,7 +48,7 @@ function Setores() {
     return <Loading />;
   }
   return (
-    <div className="mainPage">
+    <div className="main">
       {!newSetor && (
         <ListSetor
           setores={setores}
@@ -80,7 +80,7 @@ const ListSetor = ({ children, setores, editSetor, deleteSetor }) => {
     } catch (error) {}
   };
   return (
-    <div className="listPage">
+    <div className="listPage setor">
       <h2>Setores</h2>
       {children}
       <ul>
@@ -88,27 +88,29 @@ const ListSetor = ({ children, setores, editSetor, deleteSetor }) => {
           <li key={setor._id}>
             <span>{setor.name}</span>
             <h5>Tempo {setor.time}</h5>
-            <button
-              type="submit"
-              className="button"
-              onClick={() => setorForEdit(setor)}
-            >
-              Editar
-            </button>
-            <ModalConfirm
-              title="Confirma"
-              description="Confirma a exclusão do setor"
-            >
-              {(confirm) => (
-                <button
-                  type="submit"
-                  className="button button-danger"
-                  onClick={confirm(() => apagarSetor(setor._id))}
-                >
-                  Apagar
-                </button>
-              )}
-            </ModalConfirm>
+            <div className="grpBtn">
+              <button
+                type="submit"
+                className="button"
+                onClick={() => setorForEdit(setor)}
+              >
+                Editar
+              </button>
+              <ModalConfirm
+                title="Confirma"
+                description="Confirma a exclusão do setor"
+              >
+                {(confirm) => (
+                  <button
+                    type="submit"
+                    className="button button-danger"
+                    onClick={confirm(() => apagarSetor(setor._id))}
+                  >
+                    Apagar
+                  </button>
+                )}
+              </ModalConfirm>
+            </div>
           </li>
         ))}
       </ul>
@@ -116,8 +118,8 @@ const ListSetor = ({ children, setores, editSetor, deleteSetor }) => {
   );
 };
 const FormSetor = ({ cancel, newSetor, editSetor }) => {
-  const [name, setName] = useState('');
-  const [time, setTime] = useState('');
+  const [name, setName] = useState("");
+  const [time, setTime] = useState("");
 
   const handleSetName = (e) => {
     setName(e.target.value);

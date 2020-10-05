@@ -4,5 +4,24 @@
 .mainPage .listPage ul li h5 {
   margin: 0;
   font: 500 2rem Archivo;
-  margin-right: auto;
+}
+.grpBtn {
+  display: flex;
+  flex-direction: column;
+}
+.setor ul li .grpBtn button {
+  width: 100%;
+}
+.setor ul li span {
+  font-size: 15px;
+}
+@media (min-width: 810px) {
+  .grpBtn {
+    width: 40%;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .setor ul li .grpBtn button {
+    width: 30%;
+  }
 }

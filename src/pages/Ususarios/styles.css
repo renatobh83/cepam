@@ -1,72 +1,48 @@
-.mainUsuarios {
-  width: 100%;
+.main .children button {
+  margin-bottom: 20px;
 }
-.mainUsuarios .listOfPatients {
-  font: 500 2rem Archivo;
+.main label {
+  font-size: 1.3rem;
+  margin-right: 3px;
+}
+.main .listOfPatients .cardUsers {
   display: flex;
+  width: 100%;
   flex-direction: column;
-  padding: 4px 0;
   justify-content: center;
   align-items: center;
 }
-.mainUsuarios .listOfPatients .children {
+.main .listOfPatients .cardUsers .userContent {
+  box-shadow: 0px -2px 7px 0px rgba(0, 0, 0, 0.78);
+  margin-bottom: 3rem;
+  width: 100%;
   display: flex;
+  justify-content: center;
   align-items: center;
-  width: 100%;
-}
-.mainUsuarios .listOfPatients .children label {
-  margin-right: 5px;
-}
-.mainUsuarios .listOfPatients button {
-  margin: 2rem 0;
-  height: 30px;
-  margin-right: auto;
-  width: 70%;
-}
-
-.mainUsuarios .listOfPatients .cardUsers {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(3, 3fr);
-  height: 300px;
-  gap: 10px;
-}
-.mainUsuarios .listOfPatients .cardUsers .userContent {
-  position: relative;
-  width: 100%;
-  height: 20rem;
-  box-shadow: 1px 7px 8px 0 rgba(0, 0, 0, 0.75);
-}
-.cardUsers .userContent .dados {
-  padding: 4px 10px;
-  font: 400 2rem Poppins;
-  display: flex;
   flex-direction: column;
-  width: 100%;
+  padding: 10px;
 }
-.cardUsers .userContent .dados h2 {
-  font-size: 2.2rem;
-}
-.mainUsuarios .listOfPatients .cardUsers .userContent button {
-  position: absolute;
-  bottom: 10%;
-  left: 15%;
-  margin: 0;
-  letter-spacing: 0;
-  font: 500 2rem Archivo;
-  text-transform: none;
+.main .listOfPatients .cardUsers .userContent button {
+  width: 50%;
 }
 
+@media (min-width: 810px) {
+  .main .listOfPatients .cardUsers {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(3, 2fr);
+  }
+}
 /* Css form */
 
-.mainUsuarios .forms .flagAtivo {
+.main .forms .flagAtivo {
   font: 500 1rem Archivo;
   display: flex;
   width: 100%;
 
   justify-content: flex-end;
 }
-.mainUsuarios .forms .flagAtivo input {
+.main .forms .flagAtivo input {
   margin-right: 1rem;
   display: block;
   font: 700 1rem Archivo;
@@ -74,12 +50,11 @@
 
 .forms .inputGroup select {
   margin-top: 3rem;
-  font: 500 2rem Archivo;
+  font: 500 1.4rem Archivo;
   margin-right: 1.2rem;
+  background: #fff;
 }
 .forms .inputGroup input,
 .forms .inputGroup select {
   border: 0;
-  font: 400 2.8rem Achivo;
-  padding: 19px 14px 9px 14px;
 }

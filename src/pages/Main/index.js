@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useAppContext } from '../../store/context';
-import Loading from '../../components/Loading';
-import './styles.css';
-import { useHistory } from 'react-router-dom';
-import Profile from '../Profile/index';
+import React, { useEffect, useState } from "react";
+import { useAppContext } from "../../store/context";
+import Loading from "../../components/Loading";
+import "./styles.css";
+import { useHistory } from "react-router-dom";
+import Profile from "../Profile/index";
 
 function Main(props) {
   const { isLoading, user, isAuthenticated } = useAppContext();
 
   if (isAuthenticated) {
-    if (user.paciente) {
+    if (!user.paciente) {
       return <Pacientes />;
     } else {
       return <Empresa />;
@@ -21,7 +21,7 @@ const Pacientes = () => {
   const history = useHistory();
   const { user } = useAppContext();
 
-  const toggleAgendar = () => history.push('/agendar/');
+  const toggleAgendar = () => history.push("/agendar/");
   if (!user.telefone) {
     return <Profile />;
   }
@@ -39,7 +39,7 @@ const Pacientes = () => {
 
 const Empresa = () => {
   const history = useHistory();
-  const toggleAgendar = () => history.push('/agendar/');
+  const toggleAgendar = () => history.push("/agendar/");
   return (
     <div className="main">
       <button onClick={toggleAgendar} className="button hover">

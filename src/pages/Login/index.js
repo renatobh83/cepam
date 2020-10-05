@@ -1,20 +1,20 @@
-import React from 'react';
-import { FiHeart } from 'react-icons/fi';
-import { useAppContext } from '../../store/context';
+import React from "react";
+import { FiHeart } from "react-icons/fi";
+import { useAppContext } from "../../store/context";
 
-import './styles.css';
+import "./styles.css";
 
 export default function Login() {
   const { loginWithRedirect } = useAppContext();
   return (
-    <div className="logonContainer">
-      <div className="logo">
-        <FiHeart size={100} color={'white'} />
-      </div>
-      <div className="login-btn-group">
-        <button onClick={() => loginWithRedirect()} className="button">
-          Login
-        </button>
+    <div className="main">
+      <div className="logonContainer">
+        <FiHeart size={100} color={"white"} />
+        <div className="login-btn-group">
+          <button onClick={() => loginWithRedirect()} className="button">
+            Login
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -1,13 +1,13 @@
-import createAuth0Client from '@auth0/auth0-spa-js';
+import createAuth0Client from "@auth0/auth0-spa-js";
 import React, {
   createContext,
   useContext,
   useState,
   useCallback,
   useEffect,
-} from 'react';
-import { setToken } from '../utils/LoginToken';
-import { loginGetUserDate } from '../services/API';
+} from "react";
+import { setToken } from "../utils/LoginToken";
+import { loginGetUserDate } from "../services/API";
 
 const DEFAULT_REDIRECT_CALLBACK = () =>
   window.history.replaceState({}, document.title, window.location.pathname);
@@ -23,15 +23,15 @@ export default function Provider({
   const [auth0Client, setAuth0] = useState();
   const [isLoading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState("");
 
   const init = useCallback(async () => {
-    console.log('init');
+    console.log("init");
     const auth0FromHook = await createAuth0Client(initOption);
 
     setAuth0(auth0FromHook);
 
-    if (window.location.search.includes('code=')) {
+    if (window.location.search.includes("code=")) {
       const { appState } = await auth0FromHook.handleRedirectCallback();
       onRedirectCAllback(appState);
     }
@@ -47,7 +47,7 @@ export default function Provider({
     setIsAuthenticated(isAuthenticated);
 
     setLoading(false);
-    console.log('End init context');
+    console.log("End init context");
   }, []);
 
   useEffect(() => {
