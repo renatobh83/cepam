@@ -104,7 +104,7 @@ const ListSalas = ({ children, salas, deleteSala, setores, selectSetor }) => {
           </option>
         ))}
       </select>
-      <ul>
+      <ul className="list">
         {exibirSalas.map((sala) => (
           <li key={sala._id}>
             <span>{sala.name}</span>

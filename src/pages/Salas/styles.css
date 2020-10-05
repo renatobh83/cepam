@@ -1,8 +1,11 @@
 .listPage select {
   font: 400 1.9rem Archivo;
+  background: #fff;
   border: 0;
   appearance: none;
-  width: 45%;
   padding: 1.4rem;
   border-radius: 0.9rem;
+}
+.listPage .list li .button {
+  width: 50%;
 }
