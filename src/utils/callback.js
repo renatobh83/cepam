@@ -3,6 +3,7 @@ import { useAppContext } from '../store/context';
 import { useHistory } from 'react-router-dom';
 
 import Loading from '../components/Loading';
+import Main from '../pages/Main/index';
 
 export default function Callback() {
   const { user, logout, setIsAuthenticated } = useAppContext();
@@ -18,11 +19,11 @@ export default function Callback() {
   }, []);
 
   useEffect(() => {
-    history.push('/');
+    // history.push('/');
   }, []);
   return (
     <div>
-      <Loading />
+      <Main />
     </div>
   );
 }
