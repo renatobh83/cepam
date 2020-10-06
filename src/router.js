@@ -19,6 +19,7 @@ import Planos from './pages/Planos/index';
 import GerarHorarios from './pages/GerarHorarios/index';
 import Horarios from './pages/Horarios/index';
 import Profile from './pages/Profile/index';
+import Report from './pages/Report/index';
 
 function Router() {
   const { isLoading, isAuthenticated } = useAppContext();
@@ -51,6 +52,7 @@ function Router() {
         <Route path="/gerarHorarios" exact component={GerarHorarios} />
         <Route path="/horarios" exact component={Horarios} />
         <Route path="/profile" exact component={Profile} />
+        <Route path="/relatorios" exact component={Report} />
       </>
     );
   };

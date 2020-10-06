@@ -118,6 +118,11 @@ function Header() {
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
+          <NavItem>
+            <NavLink className="link" tag={RouterNavLink} to="/relatorios">
+              Relatorios
+            </NavLink>
+          </NavItem>
         </Nav>
         <Nav navbar>
           <UncontrolledDropdown nav inNavbar>

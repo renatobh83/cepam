@@ -1,15 +1,15 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from 'react';
 
-import InputForm from "../../components/InputForm";
-import ModalConfirm from "../../components/ModalConfirm";
+import InputForm from '../../components/InputForm';
+import ModalConfirm from '../../components/ModalConfirm';
 import {
   postGrupo,
   getGrupos,
   apagarGrupo,
   putGrupo,
-} from "../../services/API";
-import Loading from "../../components/Loading";
-import { setToEdit, create, update } from "../../utils/actions";
+} from '../../services/API';
+import Loading from '../../components/Loading';
+import { setToEdit, create, update } from '../../utils/actions';
 
 function Grupos() {
   const [newGroup, setNewGroup] = useState(false);
@@ -84,12 +84,12 @@ const ListGroups = ({ grupos, children, editGroup, deleteGrupo }) => {
       <ul>
         {grupos.map((grupo) => (
           <li key={grupo._id}>
-            <span className="descGrupo" style={{ textTransform: "uppercase" }}>
+            <span className="descGrupo" style={{ textTransform: 'uppercase' }}>
               {grupo.name}
             </span>
 
             <button className="button f-1" onClick={() => groupForEdit(grupo)}>
-              Editar
+              Permissoes
             </button>
             <ModalConfirm
               title="Confirma"
@@ -111,7 +111,7 @@ const ListGroups = ({ grupos, children, editGroup, deleteGrupo }) => {
   );
 };
 const FormGrupos = ({ cancel, newGroup, editGroup }) => {
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const handleSetName = (e) => {
     setName(e.target.value);
   };
