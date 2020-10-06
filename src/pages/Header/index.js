@@ -18,12 +18,91 @@ import {
 } from 'reactstrap';
 import { useAppContext } from '../../store/context';
 import { FiHeart, FiLogOut, FiUser } from 'react-icons/fi';
+import { getPermissoes, getGrupoPermissoes } from '../../services/API';
+import { useEffect } from 'react';
 
 function Header() {
-  const { logout, isAuthenticated } = useAppContext();
+  const { logout, isAuthenticated, user } = useAppContext();
   const [isOpen, setIsOpen] = useState(false);
-
+  const [stateMenuOpt, setSate] = useState({
+    USUARIOS: false,
+    GRUPOS: false,
+    SETOR: false,
+    SALAS: false,
+    PROCEDIMENTOS: false,
+    TABELAS: false,
+    PLANOS: false,
+    HORARIOS: false,
+    RELATORIOS: false,
+    mFAturamento: false,
+    mCadastro: false,
+  });
   const toggle = () => setIsOpen(!isOpen);
+  const userPermissoes = async () => {
+    if (!user.paciente) {
+      const idPermissao = await getPermissoes();
+      const grupo = await getGrupoPermissoes(user.grupoId);
+      if (grupo && idPermissao) {
+        const permissaoFiltered = idPermissao.data.message.filter((el) => {
+          return grupo.data.message.permissaoId.some((f) => {
+            return f === el._id;
+          });
+        });
+        let newState = Object.assign({}, stateMenuOpt);
+
+        permissaoFiltered.map((p) => {
+          switch (p.name) {
+            case 'GRUPOS':
+              newState.GRUPOS = true;
+              newState.mCadastro = true;
+              break;
+            case 'USUARIOS':
+              newState.USUARIOS = true;
+              newState.mCadastro = true;
+              break;
+            case 'SETOR':
+              newState.SETOR = true;
+              newState.mCadastro = true;
+              break;
+            case 'SALAS':
+              newState.SALAS = true;
+              newState.mCadastro = true;
+              break;
+            case 'PROCEDIMENTOS':
+              newState.mFAturamento = true;
+              newState.PROCEDIMENTOS = true;
+              break;
+
+            case 'TABELAS':
+              newState.mFAturamento = true;
+              newState.TABELAS = true;
+              break;
+
+            case 'PLANOS':
+              newState.mFAturamento = true;
+              newState.PLANOS = true;
+              break;
+
+            case 'HORARIOS':
+              newState.HORARIOS = true;
+              break;
+            case 'RELATÓRIOS':
+              newState.RELATORIOS = true;
+              break;
+
+            default:
+              break;
+          }
+        });
+
+        setSate(newState);
+      }
+    }
+  };
+
+  useEffect(() => {
+    userPermissoes();
+  }, []);
   return (
     <Navbar
       color="#f5f5f5"
@@ -43,91 +122,148 @@ function Header() {
               Home
             </NavLink>
           </NavItem>
-
-          <UncontrolledDropdown nav inNavbar>
-            <DropdownToggle nav caret>
-              Cadastros
-            </DropdownToggle>
-            <DropdownMenu right style={{ font: '600 1.3rem Archivo' }}>
-              <DropdownItem>
-                <NavLink className="link" tag={RouterNavLink} to="/usuarios">
-                  Usuarios
+          {!user.paciente && (
+            <>
+              {stateMenuOpt.mCadastro && (
+                <UncontrolledDropdown nav inNavbar>
+                  <DropdownToggle nav caret>
+                    Cadastros
+                  </DropdownToggle>
+                  <DropdownMenu right style={{ font: '600 1.3rem Archivo' }}>
+                    {stateMenuOpt.USUARIOS && (
+                      <DropdownItem>
+                        <NavLink
+                          className="link"
+                          tag={RouterNavLink}
+                          to="/usuarios"
+                        >
+                          Usuarios
+                        </NavLink>
+                      </DropdownItem>
+                    )}
+                    {stateMenuOpt.GRUPOS && (
+                      <DropdownItem>
+                        <NavLink
+                          className="link"
+                          tag={RouterNavLink}
+                          to="/grupos"
+                        >
+                          Grupos
+                        </NavLink>
+                      </DropdownItem>
+                    )}
+                    {stateMenuOpt.SETOR && (
+                      <DropdownItem>
+                        <NavLink
+                          className="link"
+                          tag={RouterNavLink}
+                          to="/setor"
+                        >
+                          Setores
+                        </NavLink>
+                      </DropdownItem>
+                    )}
+                    {stateMenuOpt.SALAS && (
+                      <DropdownItem>
+                        <NavLink
+                          className="link"
+                          tag={RouterNavLink}
+                          to="/salas"
+                        >
+                          Salas
+                        </NavLink>
+                      </DropdownItem>
+                    )}
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              )}
+              {stateMenuOpt.mFAturamento && (
+                <UncontrolledDropdown>
+                  <DropdownToggle nav caret>
+                    Faturamento
+                  </DropdownToggle>
+                  <DropdownMenu right style={{ font: '600 1.3rem Archivo' }}>
+                    {stateMenuOpt.PROCEDIMENTOS && (
+                      <DropdownItem>
+                        <NavLink
+                          className="link"
+                          tag={RouterNavLink}
+                          to="/procedimentos"
+                        >
+                          Procedimentos
+                        </NavLink>
+                      </DropdownItem>
+                    )}
+                    {stateMenuOpt.TABELAS && (
+                      <DropdownItem>
+                        <NavLink
+                          className="link"
+                          tag={RouterNavLink}
+                          to="/tabelas"
+                        >
+                          Tabelas
+                        </NavLink>
+                      </DropdownItem>
+                    )}
+                    {stateMenuOpt.PLANOS && (
+                      <DropdownItem>
+                        <NavLink
+                          className="link"
+                          tag={RouterNavLink}
+                          to="/planos"
+                        >
+                          Planos
+                        </NavLink>
+                      </DropdownItem>
+                    )}
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              )}
+              <UncontrolledDropdown>
+                <DropdownToggle nav caret>
+                  Agenda
+                </DropdownToggle>
+                <DropdownMenu right style={{ font: '600 1.3rem Archivo' }}>
+                  {stateMenuOpt.HORARIOS && (
+                    <DropdownItem>
+                      <NavLink
+                        className="link"
+                        tag={RouterNavLink}
+                        to="/gerarHorarios"
+                      >
+                        Gerar horarios
+                      </NavLink>
+                    </DropdownItem>
+                  )}
+                  <DropdownItem>
+                    <NavLink
+                      className="link"
+                      tag={RouterNavLink}
+                      to="/horarios"
+                    >
+                      Horarios
+                    </NavLink>
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
+              {stateMenuOpt.RELATORIOS && (
+                <NavItem>
+                  <NavLink
+                    className="link"
+                    tag={RouterNavLink}
+                    to="/relatorios"
+                  >
+                    Relatorios
+                  </NavLink>
+                </NavItem>
+              )}
+              <NavItem>
+                <NavLink className="link" tag={RouterNavLink} to="/permissoes">
+                  Permissoes
                 </NavLink>
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink className="link" tag={RouterNavLink} to="/grupos">
-                  Grupos
-                </NavLink>
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink className="link" tag={RouterNavLink} to="/setor">
-                  Setores
-                </NavLink>
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink className="link" tag={RouterNavLink} to="/salas">
-                  Salas
-                </NavLink>
-              </DropdownItem>
-            </DropdownMenu>
-          </UncontrolledDropdown>
-          <UncontrolledDropdown>
-            <DropdownToggle nav caret>
-              Faturamento
-            </DropdownToggle>
-            <DropdownMenu right style={{ font: '600 1.3rem Archivo' }}>
-              <DropdownItem>
-                <NavLink
-                  className="link"
-                  tag={RouterNavLink}
-                  to="/procedimentos"
-                >
-                  Procedimentos
-                </NavLink>
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink className="link" tag={RouterNavLink} to="/tabelas">
-                  Tabelas
-                </NavLink>
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink className="link" tag={RouterNavLink} to="/planos">
-                  Planos
-                </NavLink>
-              </DropdownItem>
-            </DropdownMenu>
-          </UncontrolledDropdown>
-          <UncontrolledDropdown>
-            <DropdownToggle nav caret>
-              Agenda
-            </DropdownToggle>
-            <DropdownMenu right style={{ font: '600 1.3rem Archivo' }}>
-              <DropdownItem>
-                <NavLink
-                  className="link"
-                  tag={RouterNavLink}
-                  to="/gerarHorarios"
-                >
-                  Gerar horarios
-                </NavLink>
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink className="link" tag={RouterNavLink} to="/horarios">
-                  Horarios
-                </NavLink>
-              </DropdownItem>
-            </DropdownMenu>
-          </UncontrolledDropdown>
-          <NavItem>
-            <NavLink className="link" tag={RouterNavLink} to="/relatorios">
-              Relatorios
-            </NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink className="link" tag={RouterNavLink} to="/permissoes">
-              Permissoes
-            </NavLink>
-          </NavItem>
+              </NavItem>
+            </>
+          )}
         </Nav>
         <Nav navbar>
           <UncontrolledDropdown nav inNavbar>

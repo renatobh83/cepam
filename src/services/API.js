@@ -45,6 +45,10 @@ export const postGrupo = (data) => {
   return instance.post('/grupos', data);
 };
 
+export const getGrupoPermissoes = (id) => {
+  headerDefaults();
+  return instance.get(`/grupos/${id}`);
+};
 export const apagarGrupo = (id) => {
   headerDefaults();
   return instance.delete(`/grupos/${id}`);
