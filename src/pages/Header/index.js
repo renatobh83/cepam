@@ -123,6 +123,11 @@ function Header() {
               Relatorios
             </NavLink>
           </NavItem>
+          <NavItem>
+            <NavLink className="link" tag={RouterNavLink} to="/permissoes">
+              Permissoes
+            </NavLink>
+          </NavItem>
         </Nav>
         <Nav navbar>
           <UncontrolledDropdown nav inNavbar>

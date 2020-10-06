@@ -151,3 +151,21 @@ export const planosApagar = (id) => {
   headerDefaults();
   return instance.delete(`/planos/${id}`);
 };
+// API permissoes
+export const getPermissoes = () => {
+  headerDefaults();
+  return instance.get('/permissoes');
+};
+export const postPermissao = (data) => {
+  headerDefaults();
+  return instance.post('/permissoes', data);
+};
+export const permissaoApagar = (id) => {
+  headerDefaults();
+  return instance.delete(`/permissoes/${id}`);
+};
+
+export const includePermissao = (data) => {
+  headerDefaults();
+  return instance.post('/permissao/grupo', data);
+};

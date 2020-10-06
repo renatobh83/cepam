@@ -10,10 +10,13 @@ import {
 } from '../../services/API';
 import Loading from '../../components/Loading';
 import { setToEdit, create, update } from '../../utils/actions';
+import PermissoesGrupo from '../PermissaoGrupo/';
 
 function Grupos() {
   const [newGroup, setNewGroup] = useState(false);
   const [groupEdit, setGroupEdit] = useState(null);
+  const [grupoSelect, setGrupoSelect] = useState(null);
+  const [permissao, setPermissao] = useState(false);
   const [grupos, setGrupos] = useState([]);
   const [isLoading, setIsloading] = useState(true);
   const fethcGrupos = useCallback(async () => {
@@ -24,14 +27,20 @@ function Grupos() {
   useEffect(() => {
     fethcGrupos();
   }, []);
-  const groupToEdit = (e) => {
-    setToEdit(e, setGroupEdit, setNewGroup);
+  const permissaoGrupo = (e) => {
+    setPermissao(true);
+    setGrupoSelect(e);
+  };
+  const closeSetPermissao = () => {
+    setPermissao(false);
+    fethcGrupos();
   };
   const handleCancelar = () => {
     setGroupEdit(null);
     setNewGroup(false);
   };
   const handleNewGroup = () => setNewGroup(!newGroup);
+
   const createdGroup = (e) => {
     create(grupos, e, setGrupos, setNewGroup, setGroupEdit);
   };
@@ -45,10 +54,10 @@ function Grupos() {
   }
   return (
     <div className="main">
-      {!newGroup && (
+      {!newGroup && !permissao && (
         <ListGroups
           grupos={grupos}
-          editGroup={groupToEdit}
+          editGroup={permissaoGrupo}
           deleteGrupo={handleDeletGroup}
         >
           <button type="submit" onClick={handleNewGroup} className="button">
@@ -56,12 +65,15 @@ function Grupos() {
           </button>
         </ListGroups>
       )}
-      {newGroup && (
+      {newGroup && !permissao && (
         <FormGrupos
           cancel={handleCancelar}
           newGroup={createdGroup}
           editGroup={groupEdit}
         />
+      )}
+      {permissao && (
+        <PermissoesGrupo grupo={grupoSelect} close={closeSetPermissao} />
       )}
     </div>
   );
