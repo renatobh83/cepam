@@ -3,9 +3,10 @@ import React, { useCallback, useEffect, useState } from 'react';
 import './styles.css';
 import ModalConfirm from '../../components/ModalConfirm';
 import InputForm from '../../components/InputForm';
+import Loading from '../../components/Loading';
 import {
   getProcedimentos,
-  getSetores,
+  getSetoresCadastro,
   postProcedimento,
   procedimentoApagar,
   putProcedimento,
@@ -17,10 +18,11 @@ function Procedimentos() {
   const [setorSelect, setSetorSelect] = useState(null);
   const [procedimentos, setProcedimentos] = useState([]);
   const [setores, setSetores] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(true);
   const fetchSetores = useCallback(async () => {
-    const { data: setores } = await getSetores();
+    const { data: setores } = await getSetoresCadastro();
     setSetores(setores.message);
+    setIsLoading(false);
   }, []);
 
   const fetchProcedimentos = useCallback(async () => {
@@ -60,6 +62,9 @@ function Procedimentos() {
       await putProcedimento(e, data);
     } catch (error) {}
   };
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div className="main">
       {!newProcedimento && (

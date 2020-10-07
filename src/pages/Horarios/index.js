@@ -2,8 +2,13 @@ import React from 'react';
 
 import './styles.css';
 import ModalConfirm from '../../components/ModalConfirm';
-
+import Loading from '../../components/Loading';
+import { useState } from 'react';
 function Horarios() {
+  const [isLoading, setIsLoading] = useState(true);
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div className="main">
       <h2>Horarios</h2>

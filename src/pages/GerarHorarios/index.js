@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 import InputMask from 'react-input-mask';
 
 import './styles.css';
+import { useCallback } from 'react';
+import { getInterval, getSalasCadastro } from '../../services/API';
+import { useEffect } from 'react';
 
 export default function GerarHorarios() {
   const [horaInicio, setHoraInicio] = useState('');
@@ -10,16 +13,27 @@ export default function GerarHorarios() {
   const [dataFim, setDataFim] = useState('');
   const [sala, setSala] = useState('');
   const [setor, setSetor] = useState('');
+  const [salas, setSalas] = useState([]);
   const [horaFim, setHoraFim] = useState('');
   const [dia, setDia] = useState([]);
   const [intervalo, setIntervalo] = useState('');
   const [dias] = useState(['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']);
-  const selectSalaAndSetor = (obj) => {
-    // const { setor } = salas.find((sala) => sala._id === obj);
-    // setSala(obj);
-    // setSetor(setor);
+  const selectSalaAndSetor = async (obj) => {
+    const { setor } = salas.find((sala) => sala._id === obj);
+    const { data: time } = await getInterval(obj);
+    if (time) {
+      setIntervalo(time.message.IntervaloSala[0].setor.time.split(':')[1]);
+    }
+    setSala(obj);
+    setSetor(setor);
   };
-  const [salas] = useState([{ _id: 1, nome: 'Sala01' }]);
+  const fetchSalas = useCallback(async () => {
+    const { data: salas } = await getSalasCadastro();
+    setSalas(salas.message);
+  }, []);
+  useEffect(() => {
+    fetchSalas();
+  }, []);
   const pushDays = (day, e) => {
     if (e.target.checked) {
       setDia([...dia, day]);
@@ -45,6 +59,7 @@ export default function GerarHorarios() {
       intervalo: intervaloNumber,
       daysWeek: dia,
     };
+    console.log(data);
     // await storeHorarios(data).then((res) => {
     //   if (res.data.statusCode === 400) alert(res.data.message);
     //   exitCreatedHours();
@@ -62,7 +77,7 @@ export default function GerarHorarios() {
           <option value="">Selecionar sala</option>
           {salas.map((sala) => (
             <option value={sala._id} key={sala._id}>
-              {sala.nome}
+              {sala.name}
             </option>
           ))}
         </select>
@@ -125,16 +140,7 @@ export default function GerarHorarios() {
             value={horaFim}
             onChange={(e) => setHoraFim(e.target.value)}
           />
-          <span>Intervalo</span>
-          <input
-            type="number"
-            max="60"
-            min="00"
-            required
-            inputMode="numeric"
-            value={intervalo}
-            onChange={(e) => setIntervalo(e.target.value)}
-          />
+          <span>Intervalo {intervalo}</span>
         </div>
         <div className="inputGroup">
           <button type="submit" className="button">

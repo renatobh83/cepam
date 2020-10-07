@@ -6,8 +6,9 @@ import InputMask from 'react-input-mask';
 import { FiSearch, FiTrash2 } from 'react-icons/fi';
 import { moeda } from '../../utils/formatCurrency';
 import ModalConfirm from '../../components/ModalConfirm';
+import Loading from '../../components/Loading';
 import {
-  getTabelas,
+  getTabelasCadastro,
   procedimentoTabela,
   postTabelas,
   putNomeTabela,
@@ -19,6 +20,7 @@ function Tabelas() {
   const [novaTabela, setNovaTabela] = useState(false);
   const [tabelaSelect, setTabelaSelect] = useState(null);
   const [tabelas, setTabelas] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const handleCriarNovaTabela = (e) => {
     setTabelas([...tabelas, e]);
     handlelCancel();
@@ -26,8 +28,9 @@ function Tabelas() {
 
   const fetchTabelas = useCallback(async () => {
     try {
-      const { data: tabelas } = await getTabelas();
+      const { data: tabelas } = await getTabelasCadastro();
       setTabelas(tabelas.message);
+      setIsLoading(false);
     } catch (error) {}
   }, []);
   useEffect(() => {
@@ -51,6 +54,9 @@ function Tabelas() {
     Tabelas: tabelas,
     tabelaSelecionada: (...p) => tabelaSelecionada(...p),
   };
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div className="main">
       {!novaTabela && (

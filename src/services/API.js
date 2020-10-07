@@ -40,6 +40,11 @@ export const getGrupos = () => {
   headerDefaults();
   return instance.get('/grupos');
 };
+export const getGruposUsuario = () => {
+  headerDefaults();
+  return instance.get('/grupos/cadastro');
+};
+
 export const postGrupo = (data) => {
   headerDefaults();
   return instance.post('/grupos', data);
@@ -63,6 +68,10 @@ export const getSetores = () => {
   headerDefaults();
   return instance.get('/setores');
 };
+export const getSetoresCadastro = () => {
+  headerDefaults();
+  return instance.get('/setores/cadastro');
+};
 export const postSetores = (data) => {
   headerDefaults();
   return instance.post('/setores', data);
@@ -80,6 +89,14 @@ export const putSetores = (id, data) => {
 export const getSalas = () => {
   headerDefaults();
   return instance.get('/salas');
+};
+export const getSalasCadastro = () => {
+  headerDefaults();
+  return instance.get('/salas/cadastro');
+};
+export const getInterval = (id) => {
+  headerDefaults();
+  return instance.get(`/salas/intervalo/${id}`);
 };
 export const postSala = (data) => {
   headerDefaults();
@@ -112,6 +129,10 @@ export const procedimentoApagar = (id) => {
 export const getTabelas = () => {
   headerDefaults();
   return instance.get('/tabelas');
+};
+export const getTabelasCadastro = () => {
+  headerDefaults();
+  return instance.get('/tabelas/cadastro');
 };
 export const postTabelas = (data) => {
   headerDefaults();

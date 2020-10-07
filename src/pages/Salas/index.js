@@ -1,21 +1,28 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from 'react';
 
-import "./styles.css";
-import ModalConfirm from "../../components/ModalConfirm";
-import InputForm from "../../components/InputForm";
-import { getSetores, getSalas, postSala, salaDelete } from "../../services/API";
-import { create } from "../../utils/actions";
+import './styles.css';
+import ModalConfirm from '../../components/ModalConfirm';
+import InputForm from '../../components/InputForm';
+import {
+  getSalas,
+  postSala,
+  salaDelete,
+  getSetoresCadastro,
+} from '../../services/API';
+import { create } from '../../utils/actions';
+import Loading from '../../components/Loading';
 
 function Salas() {
   const [newSala, setNewSala] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(true);
   const [setorSelected, setSetorSeleted] = useState(null);
   const [salas, setSalas] = useState([]);
   const [setores, setSetores] = useState([]);
 
   const fetchSetores = useCallback(async () => {
-    const { data: setores } = await getSetores();
+    const { data: setores } = await getSetoresCadastro();
     setSetores(setores.message);
+    setIsLoading(false);
   }, []);
 
   const fetchSalas = useCallback(async () => {
@@ -29,7 +36,7 @@ function Salas() {
   }, []);
 
   const handleNewSala = () =>
-    setorSelected ? setNewSala(!newSala) : alert("Selecione um setor");
+    setorSelected ? setNewSala(!newSala) : alert('Selecione um setor');
 
   const createdSala = (e) => {
     create(salas, e, setSalas, setNewSala);
@@ -45,7 +52,9 @@ function Salas() {
   const selectedSetor = (e) => {
     if (e) setSetorSeleted(e);
   };
-
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div className="main">
       {!newSala && (
@@ -85,7 +94,7 @@ const ListSalas = ({ children, salas, deleteSala, setores, selectSetor }) => {
   };
 
   const exibirSalas =
-    !salaFilter || salaFilter === "#"
+    !salaFilter || salaFilter === '#'
       ? salas
       : salas.filter((id) => id.setor === salaFilter);
   return (
@@ -130,7 +139,7 @@ const ListSalas = ({ children, salas, deleteSala, setores, selectSetor }) => {
   );
 };
 const FormSalas = ({ cancel, newSala, setor }) => {
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const handleSetName = (e) => {
     setName(e.target.value);
   };

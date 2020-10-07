@@ -3,6 +3,8 @@ import InputForm from '../../components/InputForm';
 
 import './styles.css';
 import ModalConfirm from '../../components/ModalConfirm';
+import Loading from '../../components/Loading';
+
 import {
   getTabelas,
   getPlanos,
@@ -15,10 +17,12 @@ function Planos() {
   const [novoPlano, setNovoPlano] = useState(false);
   const [planoEdit, setPlanoEdit] = useState(null);
   const [planos, setPlanos] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchPlanos = useCallback(async () => {
     const { data: planos } = await getPlanos();
     if (planos.statusCode === 200) setPlanos(planos.message);
+    setIsLoading(false);
   }, []);
   useEffect(() => {
     fetchPlanos();
@@ -53,6 +57,9 @@ function Planos() {
     novoPlano: (...p) => createPlan(...p),
     planoEdit,
   };
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div className="main">
       {!novoPlano && (
