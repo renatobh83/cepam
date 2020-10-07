@@ -5,7 +5,9 @@
   margin-top: 3rem;
   width: 100%;
 }
-
+.gerarHorariosContainer .selectForm span {
+  font-size: 1.7rem;
+}
 .gerarHorariosContainer .selectForm select {
   font: 400 2rem Archivo;
   border: 0;
@@ -41,10 +43,12 @@
   align-items: center;
   width: 100%;
   font: 600 1.6rem Archivo;
+  justify-content: space-between;
+  margin: 2rem 0;
 }
 
 .gerarHorariosContainer .selectForm .intervalo input {
-  width: 15%;
+  width: 50%;
   margin: auto 10px;
   padding: 0.9rem;
   border: 0.9px solid;
@@ -53,7 +57,6 @@
 
 .gerarHorariosContainer .selectForm .intervalo.data input {
   width: 100%;
-  margin: 2rem;
 }
 .gerarHorariosContainer .selectForm .grupoButtons {
   margin-top: 3rem;

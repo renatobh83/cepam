@@ -1,31 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import InputMask from 'react-input-mask';
+import InputMask from "react-input-mask";
 
-import './styles.css';
-import { useCallback } from 'react';
-import { getInterval, getSalasCadastro } from '../../services/API';
-import { useEffect } from 'react';
+import "./styles.css";
+import { useCallback } from "react";
+import { getInterval, getSalasCadastro } from "../../services/API";
+import { useEffect } from "react";
 
 export default function GerarHorarios() {
-  const [horaInicio, setHoraInicio] = useState('');
-  const [dataInicio, setdataInicio] = useState('');
-  const [dataFim, setDataFim] = useState('');
-  const [sala, setSala] = useState('');
-  const [setor, setSetor] = useState('');
+  const [horaInicio, setHoraInicio] = useState("");
+  const [dataInicio, setdataInicio] = useState("");
+  const [dataFim, setDataFim] = useState("");
+  const [sala, setSala] = useState("");
+  const [setor, setSetor] = useState("");
   const [salas, setSalas] = useState([]);
-  const [horaFim, setHoraFim] = useState('');
+  const [horaFim, setHoraFim] = useState("");
   const [dia, setDia] = useState([]);
-  const [intervalo, setIntervalo] = useState('');
-  const [dias] = useState(['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']);
+  const [intervalo, setIntervalo] = useState("");
+  const [dias] = useState(["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"]);
+
   const selectSalaAndSetor = async (obj) => {
-    const { setor } = salas.find((sala) => sala._id === obj);
-    const { data: time } = await getInterval(obj);
-    if (time) {
-      setIntervalo(time.message.IntervaloSala[0].setor.time.split(':')[1]);
+    if (obj) {
+      const { setor } = salas.find((sala) => sala._id === obj);
+      const { data: time } = await getInterval(obj);
+      if (time) {
+        setIntervalo(time.message.IntervaloSala[0].setor.time.split(":")[1]);
+      }
+      setSala(obj);
+      setSetor(setor);
+    } else {
+      setIntervalo("");
     }
-    setSala(obj);
-    setSetor(setor);
   };
   const fetchSalas = useCallback(async () => {
     const { data: salas } = await getSalasCadastro();
@@ -47,7 +52,7 @@ export default function GerarHorarios() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const intervaloNumber = parseInt(intervalo);
-    if (dia.length === 0) alert('Selecionar um dia da semana');
+    if (dia.length === 0) alert("Selecionar um dia da semana");
 
     const data = {
       idSala: sala,
@@ -81,6 +86,7 @@ export default function GerarHorarios() {
             </option>
           ))}
         </select>
+        <span>Intervalo {intervalo}</span>
         <div className="diasForm">
           <ul>
             {dias.map((day, key) => (
@@ -88,7 +94,7 @@ export default function GerarHorarios() {
                 <label htmlFor={key}>{day}</label>
                 <input
                   type="checkbox"
-                  style={{ display: 'block' }}
+                  style={{ display: "block" }}
                   name={day}
                   id={key}
                   value={key}
@@ -120,7 +126,7 @@ export default function GerarHorarios() {
           />
         </div>
         <div className="intervalo">
-          <span>Inicio</span>
+          <span>Hora Inicio</span>
 
           <InputMask
             mask="99:99"
@@ -131,7 +137,7 @@ export default function GerarHorarios() {
             onChange={(e) => setHoraInicio(e.target.value)}
           />
 
-          <span>Fim</span>
+          <span>Hora Fim</span>
           <InputMask
             mask="99:99"
             required
@@ -140,7 +146,6 @@ export default function GerarHorarios() {
             value={horaFim}
             onChange={(e) => setHoraFim(e.target.value)}
           />
-          <span>Intervalo {intervalo}</span>
         </div>
         <div className="inputGroup">
           <button type="submit" className="button">
