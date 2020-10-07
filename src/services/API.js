@@ -194,3 +194,7 @@ export const includePermissao = (data) => {
   headerDefaults();
   return instance.post('/permissao/grupo', data);
 };
+
+// API horarios
+
+export const getAllHorarios = () => {};
