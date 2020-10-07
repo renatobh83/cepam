@@ -1,15 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import InputForm from '../../components/InputForm';
+import React, { useCallback, useEffect, useState } from "react";
+import InputForm from "../../components/InputForm";
 import {
   getGruposUsuario,
   getUsers,
   postUser,
   putUser,
-} from '../../services/API';
+} from "../../services/API";
 
-import './styles.css';
-import Loading from '../../components/Loading';
-import { setToEdit, create, update } from '../../utils/actions';
+import "./styles.css";
+import Loading from "../../components/Loading";
+import { setToEdit, create, update } from "../../utils/actions";
 
 function Usuarios() {
   const [users, setUsers] = useState([]);
@@ -22,7 +22,14 @@ function Usuarios() {
       const { data: usersBD } = await getUsers();
       setUsers(usersBD.message);
       setIsLoading(false);
-    } catch (error) {}
+    } catch (error) {
+      const findStr = error.message.search("401");
+      if (findStr !== -1) {
+        alert("Você não tem permissão para acessar essa área");
+        // setLoading(false);
+        // history.push("/");
+      }
+    }
   }, []);
   useEffect(() => {
     fetchUsers();
@@ -120,11 +127,11 @@ const ListUsers = ({ users, children, editUser, filter }) => {
 };
 
 const FormUser = ({ close, newUser, editUser, updateDate }) => {
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [senha, setSenha] = useState('');
-  const [grupo, setGrupo] = useState('');
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [senha, setSenha] = useState("");
+  const [grupo, setGrupo] = useState("");
+  const [username, setUsername] = useState("");
   const [userAtivo, setAtivo] = useState(true);
   const [grupos, setGrupos] = useState([]);
   const fetchGrupos = useCallback(async () => {
