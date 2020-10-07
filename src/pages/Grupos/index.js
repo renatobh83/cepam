@@ -1,28 +1,35 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from "react";
 
-import InputForm from '../../components/InputForm';
-import ModalConfirm from '../../components/ModalConfirm';
+import InputForm from "../../components/InputForm";
+import ModalConfirm from "../../components/ModalConfirm";
 import {
   postGrupo,
   getGrupos,
   apagarGrupo,
   putGrupo,
-} from '../../services/API';
-import Loading from '../../components/Loading';
-import { setToEdit, create, update } from '../../utils/actions';
-import PermissoesGrupo from '../PermissaoGrupo/';
+} from "../../services/API";
+import Loading from "../../components/Loading";
+import { setToEdit, create, update } from "../../utils/actions";
+import PermissoesGrupo from "../PermissaoGrupo/";
+import { useHistory } from "react-router-dom";
+import ErroPermission from "../../utils/chekPermission";
 
 function Grupos() {
+  const history = useHistory();
   const [newGroup, setNewGroup] = useState(false);
   const [groupEdit, setGroupEdit] = useState(null);
   const [grupoSelect, setGrupoSelect] = useState(null);
   const [permissao, setPermissao] = useState(false);
   const [grupos, setGrupos] = useState([]);
-  const [isLoading, setIsloading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const fethcGrupos = useCallback(async () => {
-    const { data: grupos } = await getGrupos();
-    setGrupos(grupos.message);
-    setIsloading(false);
+    try {
+      const { data: grupos } = await getGrupos();
+      setGrupos(grupos.message);
+      setIsLoading(false);
+    } catch (error) {
+      ErroPermission(error, setIsLoading, history);
+    }
   }, []);
   useEffect(() => {
     fethcGrupos();
@@ -58,6 +65,7 @@ function Grupos() {
         <ListGroups
           grupos={grupos}
           editGroup={permissaoGrupo}
+          history
           deleteGrupo={handleDeletGroup}
         >
           <button type="submit" onClick={handleNewGroup} className="button">
@@ -78,14 +86,16 @@ function Grupos() {
     </div>
   );
 }
-const ListGroups = ({ grupos, children, editGroup, deleteGrupo }) => {
+const ListGroups = ({ grupos, children, editGroup, deleteGrupo, history }) => {
   const groupForEdit = (e) => {
     editGroup(e);
   };
   const grupoApagar = async (e) => {
     try {
       await apagarGrupo(e);
-    } catch (error) {}
+    } catch (error) {
+      ErroPermission(error, history);
+    }
     deleteGrupo(e);
   };
   return (
@@ -96,7 +106,7 @@ const ListGroups = ({ grupos, children, editGroup, deleteGrupo }) => {
       <ul>
         {grupos.map((grupo) => (
           <li key={grupo._id}>
-            <span className="descGrupo" style={{ textTransform: 'uppercase' }}>
+            <span className="descGrupo" style={{ textTransform: "uppercase" }}>
               {grupo.name}
             </span>
 
@@ -123,7 +133,8 @@ const ListGroups = ({ grupos, children, editGroup, deleteGrupo }) => {
   );
 };
 const FormGrupos = ({ cancel, newGroup, editGroup }) => {
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
+  const history = useHistory();
   const handleSetName = (e) => {
     setName(e.target.value);
   };
@@ -133,12 +144,21 @@ const FormGrupos = ({ cancel, newGroup, editGroup }) => {
       name,
     };
     if (editGroup) {
-      editGroup.name = name;
-      await putGrupo(editGroup._id, data);
-      cancel();
+      try {
+        editGroup.name = name;
+
+        await putGrupo(editGroup._id, data);
+        cancel();
+      } catch (error) {
+        ErroPermission(error, history);
+      }
     } else {
-      const { data: grupo } = await postGrupo(data);
-      newGroup(grupo.message);
+      try {
+        const { data: grupo } = await postGrupo(data);
+        newGroup(grupo.message);
+      } catch (error) {
+        ErroPermission(error, history);
+      }
     }
   };
   const dateGroupEdit = useCallback(() => {

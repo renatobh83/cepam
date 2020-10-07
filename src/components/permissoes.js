@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { getPermissoes, postPermissao, permissaoApagar } from '../services/API';
+import React, { useState, useEffect, useCallback } from "react";
+import { getPermissoes, postPermissao, permissaoApagar } from "../services/API";
 
 // import "./styles.css";
 
 export default function Permissoes() {
   const [permissoes, setPermissoes] = useState([]);
-  const [permissao, setPermissao] = useState('');
+  const [permissao, setPermissao] = useState("");
 
   const handleNewPermission = async (e) => {
     e.preventDefault();
@@ -14,7 +14,7 @@ export default function Permissoes() {
     };
     await postPermissao(data).then((res) => {
       if (res.data.statusCode === 400) alert(res.data.message);
-      setPermissao('');
+      setPermissao("");
     });
   };
   const handleApagar = async (e) => {
@@ -33,7 +33,7 @@ export default function Permissoes() {
   }, []);
   useEffect(() => {
     fetchPermissions();
-  }, [handleNewPermission]); // eslint-disable-line
+  }, []); // eslint-disable-line
   return (
     <div className="main">
       <form className="forms" onSubmit={handleNewPermission}>
@@ -51,7 +51,7 @@ export default function Permissoes() {
         <button
           type="submit"
           className="button"
-          style={{ marginBottom: '3rem' }}
+          style={{ marginBottom: "3rem" }}
         >
           Gravar
         </button>

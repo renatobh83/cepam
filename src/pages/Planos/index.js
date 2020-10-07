@@ -1,28 +1,36 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import InputForm from '../../components/InputForm';
+import React, { useCallback, useEffect, useState } from "react";
+import InputForm from "../../components/InputForm";
 
-import './styles.css';
-import ModalConfirm from '../../components/ModalConfirm';
-import Loading from '../../components/Loading';
+import "./styles.css";
+import ModalConfirm from "../../components/ModalConfirm";
+import Loading from "../../components/Loading";
 
 import {
-  getTabelas,
+  getTabelasCadastro,
   getPlanos,
   postPlanos,
   putPlanos,
   planosApagar,
-} from '../../services/API';
+} from "../../services/API";
+import ErroPermission from "../../utils/chekPermission";
+import { useHistory } from "react-router-dom";
 
 function Planos() {
+  const history = useHistory();
   const [novoPlano, setNovoPlano] = useState(false);
   const [planoEdit, setPlanoEdit] = useState(null);
   const [planos, setPlanos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchPlanos = useCallback(async () => {
-    const { data: planos } = await getPlanos();
-    if (planos.statusCode === 200) setPlanos(planos.message);
-    setIsLoading(false);
+    try {
+      const { data: planos } = await getPlanos();
+      console.log(planos.message);
+      if (planos.statusCode === 200) setPlanos(planos.message);
+      setIsLoading(false);
+    } catch (error) {
+      ErroPermission(error, setIsLoading, history);
+    }
   }, []);
   useEffect(() => {
     fetchPlanos();
@@ -43,7 +51,9 @@ function Planos() {
   const handleDelete = async (e) => {
     try {
       await planosApagar(e);
-    } catch (error) {}
+    } catch (error) {
+      ErroPermission(error, setIsLoading, history);
+    }
     const fitlerPlano = planos.filter((g) => g._id !== e);
     setPlanos(fitlerPlano);
   };
@@ -56,6 +66,7 @@ function Planos() {
     cancel: () => cancel(),
     novoPlano: (...p) => createPlan(...p),
     planoEdit,
+    history,
   };
   if (isLoading) {
     return <Loading />;
@@ -119,9 +130,9 @@ const ListPLanos = ({ children, config }) => {
 };
 
 const FormsPlanos = ({ config }) => {
-  const { cancel, novoPlano, planoEdit } = config;
+  const { cancel, novoPlano, planoEdit, history } = config;
 
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [tabelas, setTabelas] = useState([]);
   const [tabela, setTabela] = useState(null);
   const [particular, setParticular] = useState(false);
@@ -129,13 +140,11 @@ const FormsPlanos = ({ config }) => {
 
   const fetchTabelas = useCallback(async () => {
     try {
-      const { data: tabelas } = await getTabelas();
+      const { data: tabelas } = await getTabelasCadastro();
       if (tabelas.statusCode === 200) setTabelas(tabelas.message);
     } catch (error) {}
   }, []);
-  useEffect(() => {
-    fetchTabelas();
-  }, []);
+
   const handleSetName = (e) => {
     setName(e.target.value);
   };
@@ -150,27 +159,37 @@ const FormsPlanos = ({ config }) => {
     if (planoEdit) {
       planoEdit.name = name;
       planoEdit.particular = particular;
+      planoEdit.tabela = tabela;
       try {
+        console.log(planoEdit);
         await putPlanos(planoEdit._id, data);
         cancel();
-      } catch (error) {}
+      } catch (error) {
+        ErroPermission(error, history);
+      }
     } else {
       try {
         const { data: plano } = await postPlanos(data);
         if (plano.statusCode === 200) {
           novoPlano(plano.message);
         } else {
-          alert('Plano ja cadastrado');
+          alert("Plano ja cadastrado");
         }
-      } catch (error) {}
+      } catch (error) {
+        ErroPermission(error, history);
+      }
+    }
+  };
+  const handleEditPlano = (e) => {
+    if (e !== null) {
+      setName(e.name);
+      setParticular(e.particular);
+      setTabelaEdit(e.tabela);
     }
   };
   useEffect(() => {
-    if (planoEdit) {
-      setName(planoEdit.name);
-      setParticular(planoEdit.particular);
-      setTabelaEdit(planoEdit.tabela);
-    }
+    fetchTabelas();
+    handleEditPlano(planoEdit);
   }, []);
   return (
     <div className="forms">
@@ -183,6 +202,7 @@ const FormsPlanos = ({ config }) => {
           onChange={handleSetName}
         />
         <div className="divGroup">
+          <label>Tabela</label>
           <select
             name="tabela"
             id="tabela"
@@ -203,7 +223,7 @@ const FormsPlanos = ({ config }) => {
           <label htmlFor="particular">Particular</label>
           <input
             type="checkbox"
-            style={{ display: 'block' }}
+            style={{ display: "block" }}
             name="particular"
             id="particular"
             defaultChecked={particular}

@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import InputForm from "../../components/InputForm";
 import {
   getGruposUsuario,
@@ -12,6 +13,7 @@ import Loading from "../../components/Loading";
 import { setToEdit, create, update } from "../../utils/actions";
 
 function Usuarios() {
+  const history = useHistory();
   const [users, setUsers] = useState([]);
   const [newUser, setNewUser] = useState(false);
   const [userEdit, setUserEdit] = useState(null);
@@ -26,8 +28,8 @@ function Usuarios() {
       const findStr = error.message.search("401");
       if (findStr !== -1) {
         alert("Você não tem permissão para acessar essa área");
-        // setLoading(false);
-        // history.push("/");
+        setIsLoading(false);
+        history.push("/");
       }
     }
   }, []);
