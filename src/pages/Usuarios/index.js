@@ -1,16 +1,16 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import InputForm from "../../components/InputForm";
+import React, { useCallback, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import InputForm from '../../components/InputForm';
 import {
   getGruposUsuario,
   getUsers,
   postUser,
   putUser,
-} from "../../services/API";
+} from '../../services/API';
 
-import "./styles.css";
-import Loading from "../../components/Loading";
-import { setToEdit, create, update } from "../../utils/actions";
+import './styles.css';
+import Loading from '../../components/Loading';
+import { setToEdit, create, update } from '../../utils/actions';
 
 function Usuarios() {
   const history = useHistory();
@@ -25,11 +25,11 @@ function Usuarios() {
       setUsers(usersBD.message);
       setIsLoading(false);
     } catch (error) {
-      const findStr = error.message.search("401");
+      const findStr = error.message.search('401');
       if (findStr !== -1) {
-        alert("Você não tem permissão para acessar essa área");
+        alert('Você não tem permissão para acessar essa área');
         setIsLoading(false);
-        history.push("/");
+        history.push('/');
       }
     }
   }, []);
@@ -45,6 +45,7 @@ function Usuarios() {
   };
 
   const userUpdate = (e) => {
+    console.log(e);
     update(users, e, setUsers, setNewUser, setUserEdit);
   };
   const closeForm = () => {
@@ -129,11 +130,11 @@ const ListUsers = ({ users, children, editUser, filter }) => {
 };
 
 const FormUser = ({ close, newUser, editUser, updateDate }) => {
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [senha, setSenha] = useState("");
-  const [grupo, setGrupo] = useState("");
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [senha, setSenha] = useState('');
+  const [grupo, setGrupo] = useState('');
+  const [username, setUsername] = useState('');
   const [userAtivo, setAtivo] = useState(true);
   const [grupos, setGrupos] = useState([]);
   const fetchGrupos = useCallback(async () => {
@@ -168,9 +169,14 @@ const FormUser = ({ close, newUser, editUser, updateDate }) => {
     }
 
     if (editUser) {
-      const { data: user } = await putUser(editUser.email, data);
-
-      updateDate(user.message);
+      editUser.name = name;
+      editUser.grupoId = grupo;
+      editUser.nickname = username;
+      editUser.email = email;
+      try {
+        const { data: user } = await putUser(editUser.email, data);
+        updateDate(user.message);
+      } catch (error) {}
     } else {
       try {
         const { data: user } = await postUser(data);
@@ -192,7 +198,7 @@ const FormUser = ({ close, newUser, editUser, updateDate }) => {
   }, []);
   return (
     <form className="forms" onSubmit={handleSubmit}>
-      <h2>Cadastro novo usuario</h2>
+      <h2>{editUser ? 'Editar usuario' : 'Cadastro novo usuario'}</h2>
       {editUser && (
         <div className="flagAtivo">
           <input
@@ -213,14 +219,18 @@ const FormUser = ({ close, newUser, editUser, updateDate }) => {
           label="Nome completo"
         />
       </div>
-      <div className="inputGroup">
-        <InputForm
-          id="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          label="Ususario"
-        />
-      </div>
+      {!editUser ? (
+        <div className="inputGroup">
+          <InputForm
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            label="Ususario"
+          />
+        </div>
+      ) : (
+        <h1 style={{ margin: '15px 0' }}>Usuario: {username}</h1>
+      )}
       <div className="inputGroup">
         <InputForm
           id="email"
