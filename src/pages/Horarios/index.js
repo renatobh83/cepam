@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useEffect } from "react";
 
-import './styles.css';
-import ModalConfirm from '../../components/ModalConfirm';
-import Loading from '../../components/Loading';
-import { useState } from 'react';
-import { useCallback } from 'react';
-import { getSalasCadastro } from '../../services/API';
+import "./styles.css";
+import ModalConfirm from "../../components/ModalConfirm";
+import Loading from "../../components/Loading";
+import { useState } from "react";
+import { useCallback } from "react";
+import {
+  getHorarioBySala,
+  getSalasCadastro,
+  deleteHorario,
+} from "../../services/API";
+import { getHours } from "../../utils/getHours";
 
 function Horarios() {
   const [isLoading, setIsLoading] = useState(true);
@@ -21,13 +26,61 @@ function Horarios() {
       }
     });
   }, []);
-  const handleHorarios = useCallback(async () => {
-    if (sala !== null && sala !== '#') {
-      console.log(sala);
+  const setDiaSemana = (dia) => {
+    switch (dia) {
+      case 0:
+        return "Domingo";
+      case 1:
+        return "Segunda";
+      case 2:
+        return "Terça";
+      case 3:
+        return "Quarta";
+      case 4:
+        return "Quinta";
+      case 5:
+        return "Sexta";
+      case 6:
+        return "Sábado";
+      default:
+        break;
     }
-  }, [sala]);
+  };
+  const handleHorarios = useCallback(
+    async (sala) => {
+      await getHorarioBySala(sala).then((res) => {
+        getHours(res.data.message, (value) => {
+          setHorarios((oldValues) => [...oldValues, value]);
+          setIsLoading(false);
+        });
+        setIsLoading(false);
+      });
+    },
+    [] // eslint-disable-line
+  );
 
-  handleHorarios();
+  const apagarHorario = (date) => {
+    const data = {
+      deleteHorary: [date],
+      sala: sala,
+    };
+
+    deleteHorario(data).then(() => {
+      const fitler = horarios.filter((h) => h.id !== date);
+      setHorarios(fitler);
+    });
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    if (sala !== null && sala !== "#") {
+      setHorarios([]);
+      handleHorarios(sala);
+    } else {
+      setIsLoading(false);
+      setHorarios([]);
+    }
+  }, [sala]); // eslint-disable-line
   useState(() => {
     fetchSalas();
   }, []);
@@ -59,27 +112,30 @@ function Horarios() {
           <span>Intervalo</span>
         </div>
         <ul>
-          <li>
-            <div className="interval">
-              <span>horario</span>
-              <span>setDiaS</span>
-              <span>horario</span>
-              <ModalConfirm
-                title="Confirma"
-                description="Desaja apagar o intervalo"
-              >
-                {(confirm) => (
-                  <button
-                    className="button button-danger"
-                    type="submit"
-                    // onClick={confirm(apagarHorario(horario.id))}
-                  >
-                    Apagar
-                  </button>
-                )}
-              </ModalConfirm>
-            </div>
-          </li>
+          {horarios.map((horario) => (
+            <li key={horario.id}>
+              <div className="interval">
+                <span>{horario.data}</span>
+                <span>{setDiaSemana(horario.diaSemana)}</span>
+                <span>{horario.horaInicio}</span>
+
+                <ModalConfirm
+                  title="Confirma"
+                  description="Desaja apagar o intervalo"
+                >
+                  {(confirm) => (
+                    <button
+                      className="button button-danger"
+                      type="submit"
+                      onClick={confirm(() => apagarHorario(horario.id))}
+                    >
+                      Apagar
+                    </button>
+                  )}
+                </ModalConfirm>
+              </div>
+            </li>
+          ))}
         </ul>
       </div>
     </div>
