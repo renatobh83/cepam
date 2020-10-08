@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { useAppContext } from '../../store/context';
 import Loading from '../../components/Loading';
 import InputMask from 'react-input-mask';
+import { postPaciente, putUser } from '../../services/API';
 
 function Pacientes(props) {
   const { isLoading } = useAppContext();
@@ -16,27 +17,57 @@ function Pacientes(props) {
   const [dtNascimento, setDtNascimento] = useState('');
   const [prosseguir, setProsseguir] = useState(false);
   const [paciente, setPaciente] = useState({});
-
+  const [userAuth, setUserAuth] = useState(true);
   const loadDate = useCallback(() => {
     if (props.location.state.pacienteEdit) {
-      setName(props.location.state.pacienteEdit.name);
+      const {
+        name,
+        email,
+        dtNascimento,
+        telefone,
+      } = props.location.state.pacienteEdit;
+
+      if (props.location.state.pacienteEdit.sub) {
+        const auth = props.location.state.pacienteEdit.sub.split('|')[0];
+        if (auth !== 'auth0') setUserAuth(false);
+      } else {
+      }
+
+      setName(name);
+      setEmail(email);
+      setDtNascimento(dtNascimento);
+      setTelefone(telefone);
     }
   }, []);
   const handleCancel = () => {
     history.push('/agendar');
   };
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const data = {
       name,
-      username: name,
+      nickname: name,
       email,
       telefone,
       dtNascimento,
       paciente: true,
     };
 
-    setPaciente(data);
-    setProsseguir(true);
+    if (props.location.state.pacienteEdit) {
+      const data = { name, email, telefone, dtNascimento };
+      const paciente = await putUser(
+        props.location.state.pacienteEdit.email,
+        data
+      );
+
+      setPaciente(paciente);
+      setProsseguir(true);
+    } else {
+      try {
+        const paciente = await postPaciente(data);
+        setPaciente(paciente);
+        setProsseguir(true);
+      } catch (error) {}
+    }
   };
   useEffect(() => {
     loadDate();
@@ -60,21 +91,27 @@ function Pacientes(props) {
             <label htmlFor="nome">Nome </label>
             <span className="line"></span>
           </div>
-          <div className="floating-label-input">
-            <input
-              type="text"
-              id="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <label htmlFor="email">E-mail</label>
-            <span className="line"></span>
-          </div>
+          {userAuth ? (
+            <div className="floating-label-input">
+              <input
+                type="text"
+                id="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <label htmlFor="email">E-mail</label>
+              <span className="line"></span>
+            </div>
+          ) : (
+            <div className="floating-label-input">
+              <input type="text" id="email" required value={email} disabled />
+            </div>
+          )}
           <div className="groupInputs">
             <div className="floating-label-input">
               <InputMask
-                mask="(99)99999-9999"
+                mask="99/99/9999"
                 type="text"
                 id="dtNascimento"
                 inputMode="numeric"

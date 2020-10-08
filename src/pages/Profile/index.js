@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useHistory } from "react-router-dom";
-import InputMask from "react-input-mask";
-import { useAppContext } from "../../store/context";
-import "./styles.css";
-import { putUser } from "../../services/API";
+import React, { useState, useEffect, useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
+import InputMask from 'react-input-mask';
+import { useAppContext } from '../../store/context';
+import './styles.css';
+import { putUser } from '../../services/API';
 
 export default function Profile() {
   const { user } = useAppContext();
@@ -15,11 +15,11 @@ export default function Profile() {
 }
 
 const Paciente = ({ user }) => {
-  const [nome, setNome] = useState("");
-  const [email, setEmail] = useState("");
-  const [telefone, setTelefone] = useState("");
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
+  const [telefone, setTelefone] = useState('');
   const history = useHistory();
-  const [dtNascimento, setDtNascimento] = useState("");
+  const [dtNascimento, setDtNascimento] = useState('');
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
@@ -95,10 +95,10 @@ const Paciente = ({ user }) => {
 };
 const Empresa = () => {
   const { user } = useAppContext();
-  const [nome, setNome] = useState("");
-  const [password, setSenha] = useState("");
-  const [email, setEmail] = useState("");
-  const [telefone, setTelefone] = useState("");
+  const [nome, setNome] = useState('');
+  const [password, setSenha] = useState('');
+  const [email, setEmail] = useState('');
+  const [telefone, setTelefone] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();

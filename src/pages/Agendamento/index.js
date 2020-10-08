@@ -8,14 +8,13 @@ import './styles.css';
 import ScreenAgendamento from '../../components/ScreenAgendamento';
 
 function Agendamento() {
-  const { isLoading } = useAppContext();
-  const [paciente] = useState(false);
+  const { isLoading, user } = useAppContext();
 
   if (isLoading) {
     return <Loading />;
   }
-  if (paciente) {
-    return <ScreenAgendamento isPaciente={paciente} />;
+  if (user.paciente) {
+    return <ScreenAgendamento isPaciente={user.paciente} />;
   } else {
     return <ScreenAgendamento />;
   }

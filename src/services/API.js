@@ -1,22 +1,22 @@
-import axios from "axios";
+import axios from 'axios';
 
-import { getToken } from "../utils/LoginToken";
+import { getToken } from '../utils/LoginToken';
 const instance = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
 });
 
 const headerDefaults = () => {
-  instance.defaults.headers.post["Content-Type"] =
-    "application/x-www-form-urlencoded";
-  instance.defaults.headers.common["withCredentials"] = true;
-  instance.defaults.headers.common["Authorization"] = `Bearer ${getToken()}`;
+  instance.defaults.headers.post['Content-Type'] =
+    'application/x-www-form-urlencoded';
+  instance.defaults.headers.common['withCredentials'] = true;
+  instance.defaults.headers.common['Authorization'] = `Bearer ${getToken()}`;
 };
 
 // Api login
 
 export const loginGetUserDate = () => {
   headerDefaults();
-  const response = instance.get("/usuarios/login");
+  const response = instance.get('/usuarios/login');
   return response;
 };
 
@@ -24,30 +24,38 @@ export const loginGetUserDate = () => {
 
 export const getUsers = () => {
   headerDefaults();
-  return instance.get("/usuarios");
+  return instance.get('/usuarios');
 };
 export const postUser = (data) => {
   headerDefaults();
-  return instance.post("/usuarios/", data);
+  return instance.post('/usuarios/', data);
+};
+export const postPaciente = (data) => {
+  headerDefaults();
+  return instance.post('/paciente/', data);
 };
 
 export const putUser = (email, data) => {
   headerDefaults();
   return instance.put(`/usuarios/${email}`, data);
 };
+export const getPacientes = () => {
+  headerDefaults();
+  return instance.get('/pacientes/');
+};
 // API grupos
 export const getGrupos = () => {
   headerDefaults();
-  return instance.get("/grupos");
+  return instance.get('/grupos');
 };
 export const getGruposUsuario = () => {
   headerDefaults();
-  return instance.get("/grupos/cadastro");
+  return instance.get('/grupos/cadastro');
 };
 
 export const postGrupo = (data) => {
   headerDefaults();
-  return instance.post("/grupos", data);
+  return instance.post('/grupos', data);
 };
 
 export const getGrupoPermissoes = (id) => {
@@ -66,15 +74,15 @@ export const putGrupo = (id, data) => {
 // API SETORES
 export const getSetores = () => {
   headerDefaults();
-  return instance.get("/setores");
+  return instance.get('/setores');
 };
 export const getSetoresCadastro = () => {
   headerDefaults();
-  return instance.get("/setores/cadastro");
+  return instance.get('/setores/cadastro');
 };
 export const postSetores = (data) => {
   headerDefaults();
-  return instance.post("/setores", data);
+  return instance.post('/setores', data);
 };
 
 export const setorDelete = (id) => {
@@ -88,11 +96,11 @@ export const putSetores = (id, data) => {
 // API SALAS
 export const getSalas = () => {
   headerDefaults();
-  return instance.get("/salas");
+  return instance.get('/salas');
 };
 export const getSalasCadastro = () => {
   headerDefaults();
-  return instance.get("/salas/cadastro");
+  return instance.get('/salas/cadastro');
 };
 export const getInterval = (id) => {
   headerDefaults();
@@ -100,7 +108,7 @@ export const getInterval = (id) => {
 };
 export const postSala = (data) => {
   headerDefaults();
-  return instance.post("/salas", data);
+  return instance.post('/salas', data);
 };
 
 export const salaDelete = (id) => {
@@ -110,11 +118,11 @@ export const salaDelete = (id) => {
 // API procediementos
 export const getProcedimentos = () => {
   headerDefaults();
-  return instance.get("/procedimentos");
+  return instance.get('/procedimentos');
 };
 export const postProcedimento = (data) => {
   headerDefaults();
-  return instance.post("/procedimentos", data);
+  return instance.post('/procedimentos', data);
 };
 export const putProcedimento = (id, data) => {
   headerDefaults();
@@ -128,15 +136,15 @@ export const procedimentoApagar = (id) => {
 // API tabelas
 export const getTabelas = () => {
   headerDefaults();
-  return instance.get("/tabelas");
+  return instance.get('/tabelas');
 };
 export const getTabelasCadastro = () => {
   headerDefaults();
-  return instance.get("/tabelas/cadastro");
+  return instance.get('/tabelas/cadastro');
 };
 export const postTabelas = (data) => {
   headerDefaults();
-  return instance.post("/tabelas", data);
+  return instance.post('/tabelas', data);
 };
 export const putTabelas = (id, data) => {
   headerDefaults();
@@ -148,7 +156,7 @@ export const putNomeTabela = (id, data) => {
 };
 export const procedimentoTabela = () => {
   headerDefaults();
-  return instance.get("/procedimentos/tabela");
+  return instance.get('/procedimentos/tabela');
 };
 export const tabelaApagar = (id) => {
   headerDefaults();
@@ -161,11 +169,11 @@ export const excluirExame = (id) => {
 // API planos
 export const getPlanos = () => {
   headerDefaults();
-  return instance.get("/planos");
+  return instance.get('/planos');
 };
 export const postPlanos = (data) => {
   headerDefaults();
-  return instance.post("/planos", data);
+  return instance.post('/planos', data);
 };
 export const putPlanos = (id, data) => {
   headerDefaults();
@@ -179,11 +187,11 @@ export const planosApagar = (id) => {
 // API permissoes
 export const getPermissoes = () => {
   headerDefaults();
-  return instance.get("/permissoes");
+  return instance.get('/permissoes');
 };
 export const postPermissao = (data) => {
   headerDefaults();
-  return instance.post("/permissoes", data);
+  return instance.post('/permissoes', data);
 };
 export const permissaoApagar = (id) => {
   headerDefaults();
@@ -192,7 +200,7 @@ export const permissaoApagar = (id) => {
 
 export const includePermissao = (data) => {
   headerDefaults();
-  return instance.post("/permissao/grupo", data);
+  return instance.post('/permissao/grupo', data);
 };
 
 // API horarios
@@ -205,11 +213,11 @@ export const getHorarioBySala = (id) => {
 };
 export const postHorarios = (data) => {
   headerDefaults();
-  return instance.post("/horarios/", data);
+  return instance.post('/horarios/', data);
 };
 
 export const deleteHorario = (data) => {
   headerDefaults();
 
-  return instance.post("/horarios/delete", data);
+  return instance.post('/horarios/delete', data);
 };
