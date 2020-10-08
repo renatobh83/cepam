@@ -1,10 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { FiTrash2 } from 'react-icons/fi';
-import { useHistory } from 'react-router-dom';
-import ModalConfirm from './ModalConfirm';
-import InputLabel from './InputLabel';
-import { useCallback } from 'react';
-import { getPacientes } from '../services/API';
+import React, { useEffect, useState } from "react";
+import { FiTrash2 } from "react-icons/fi";
+import { useHistory } from "react-router-dom";
+import ModalConfirm from "./ModalConfirm";
+import InputLabel from "./InputLabel";
+import { useCallback } from "react";
+import {
+  getPacientes,
+  getPlanoExames,
+  getPlanos,
+  getPlanosAgenda,
+} from "../services/API";
 
 export default function ScreenAgendamento({ isPaciente, pacienteFromForm }) {
   const history = useHistory();
@@ -83,7 +88,7 @@ export default function ScreenAgendamento({ isPaciente, pacienteFromForm }) {
     plano: plano.plano,
   };
   // Cancelar processo de agendamento
-  const handleCancelar = () => history.push('/');
+  const handleCancelar = () => history.push("/");
 
   useEffect(() => {
     if (isPaciente) {
@@ -102,7 +107,7 @@ export default function ScreenAgendamento({ isPaciente, pacienteFromForm }) {
         <Plano setPlano={planoSelecionado} />
       )}
       {!exame.selected && plano.selected && (
-        <Exame setExame={ExamesSelecionado} />
+        <Exame setExame={ExamesSelecionado} plano={plano} />
       )}
       {plano.selected && exame.selected && (
         <SelecetHorario setHorario={HorarioSelecionado} />
@@ -166,7 +171,7 @@ const ChoosePaciente = ({ setPaciente }) => {
       pacienteEdit = pacientes.find((i) => i._id === pSelecionado);
     }
 
-    history.push('/pacienteForm', { pacienteEdit });
+    history.push("/pacienteForm", { pacienteEdit });
   };
   const filterSearch = !searchPaciente
     ? pacientes
@@ -190,7 +195,7 @@ const ChoosePaciente = ({ setPaciente }) => {
           className="button"
           onClick={handleEditNewPaciente}
         >
-          {pSelecionado !== null ? 'Editar Cadastro ' : 'Novo cadastro'}
+          {pSelecionado !== null ? "Editar Cadastro " : "Novo cadastro"}
         </button>
       </div>
     </div>
@@ -199,11 +204,19 @@ const ChoosePaciente = ({ setPaciente }) => {
 
 //Component  pesquisa Plano
 const Plano = ({ setPlano }) => {
-  const [planos, setPlanos] = useState([
-    { _id: 1, name: 'Unimed' },
-    { _id: 2, name: 'Bradesco' },
-  ]);
+  const [planos, setPlanos] = useState([]);
   const [searchPlano, setSearchPlano] = useState(null);
+
+  const fetchPlanos = useCallback(async () => {
+    try {
+      const { data: planos } = await getPlanosAgenda();
+      setPlanos(planos.message);
+    } catch (error) {}
+  }, []);
+
+  useEffect(() => {
+    fetchPlanos();
+  }, []);
   const handleChangePesquisa = (e) => {
     setSearchPlano(e.target.value);
   };
@@ -238,15 +251,21 @@ const Plano = ({ setPlano }) => {
 };
 
 // Component pesquisa exame
-const Exame = ({ setExame }) => {
-  const [exames, setExames] = useState([
-    { _id: 1, name: 'Rx Torax PA' },
-    { _id: 2, name: 'Rx Torax Perfil' },
-    { _id: 3, name: 'Rx Torax PA LA' },
-  ]);
+const Exame = ({ setExame, plano }) => {
+  const [exames, setExames] = useState([]);
   const [examesSelecionados, setExamesSelecionados] = useState([]);
   const [searchExame, setSearchExame] = useState(null);
 
+  const fetchExames = useCallback(async () => {
+    const { data: exames } = await getPlanoExames(plano.plano);
+    if (exames.message.length > 0) {
+      // setExames(exames.message[0].ex);
+      console.log(exames.message[0].ex.exames);
+    }
+  });
+  useEffect(() => {
+    fetchExames();
+  }, []);
   let newState = Object.assign([], examesSelecionados);
   const onchangeExame = (e) => {
     if (e.target.checked) {
@@ -305,7 +324,7 @@ const Exame = ({ setExame }) => {
                 <div className="delete">
                   <FiTrash2
                     size={15}
-                    color={'red'}
+                    color={"red"}
                     onClick={() => deleteExame(ex)}
                   />
                 </div>
