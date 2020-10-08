@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
-import InputForm from "../../components/InputForm";
+import React, { useCallback, useEffect, useState } from 'react';
+import InputForm from '../../components/InputForm';
 
-import "./styles.css";
-import ModalConfirm from "../../components/ModalConfirm";
-import Loading from "../../components/Loading";
+import './styles.css';
+import ModalConfirm from '../../components/ModalConfirm';
+import Loading from '../../components/Loading';
 
 import {
   getTabelasCadastro,
@@ -11,9 +11,9 @@ import {
   postPlanos,
   putPlanos,
   planosApagar,
-} from "../../services/API";
-import ErroPermission from "../../utils/chekPermission";
-import { useHistory } from "react-router-dom";
+} from '../../services/API';
+import ErroPermission from '../../utils/chekPermission';
+import { useHistory } from 'react-router-dom';
 
 function Planos() {
   const history = useHistory();
@@ -25,7 +25,7 @@ function Planos() {
   const fetchPlanos = useCallback(async () => {
     try {
       const { data: planos } = await getPlanos();
-      console.log(planos.message);
+
       if (planos.statusCode === 200) setPlanos(planos.message);
       setIsLoading(false);
     } catch (error) {
@@ -132,22 +132,28 @@ const ListPLanos = ({ children, config }) => {
 const FormsPlanos = ({ config }) => {
   const { cancel, novoPlano, planoEdit, history } = config;
 
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [tabelas, setTabelas] = useState([]);
   const [tabela, setTabela] = useState(null);
   const [particular, setParticular] = useState(false);
-  const [tabelaEdit, setTabelaEdit] = useState(null);
 
   const fetchTabelas = useCallback(async () => {
     try {
       const { data: tabelas } = await getTabelasCadastro();
-      if (tabelas.statusCode === 200) setTabelas(tabelas.message);
+      if (tabelas.statusCode === 200) {
+        setTabelas(tabelas.message);
+      }
     } catch (error) {}
   }, []);
 
   const handleSetName = (e) => {
     setName(e.target.value);
   };
+  const inputCheck = (e) => {
+    console.log(e.target);
+    setParticular(e.target.checked);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
@@ -157,11 +163,11 @@ const FormsPlanos = ({ config }) => {
     };
 
     if (planoEdit) {
+      planoEdit.tabela = tabela;
       planoEdit.name = name;
       planoEdit.particular = particular;
-      planoEdit.tabela = tabela;
+
       try {
-        console.log(planoEdit);
         await putPlanos(planoEdit._id, data);
         cancel();
       } catch (error) {
@@ -173,7 +179,7 @@ const FormsPlanos = ({ config }) => {
         if (plano.statusCode === 200) {
           novoPlano(plano.message);
         } else {
-          alert("Plano ja cadastrado");
+          alert('Plano ja cadastrado');
         }
       } catch (error) {
         ErroPermission(error, history);
@@ -184,7 +190,7 @@ const FormsPlanos = ({ config }) => {
     if (e !== null) {
       setName(e.name);
       setParticular(e.particular);
-      setTabelaEdit(e.tabela);
+      setTabela(e.tabela);
     }
   };
   useEffect(() => {
@@ -214,7 +220,7 @@ const FormsPlanos = ({ config }) => {
               <option
                 key={tabela._id}
                 value={tabela._id}
-                selected={tabela._id === tabelaEdit}
+                selected={tabela._id === planoEdit.tabela}
               >
                 {tabela.name}
               </option>
@@ -223,10 +229,9 @@ const FormsPlanos = ({ config }) => {
           <label htmlFor="particular">Particular</label>
           <input
             type="checkbox"
-            style={{ display: "block" }}
-            name="particular"
+            style={{ display: 'block' }}
             id="particular"
-            defaultChecked={particular}
+            defaultChecked={planoEdit.particular}
             onChange={(e) => setParticular(e.target.checked)}
           />
         </div>

@@ -4,8 +4,33 @@ import './styles.css';
 import ModalConfirm from '../../components/ModalConfirm';
 import Loading from '../../components/Loading';
 import { useState } from 'react';
+import { useCallback } from 'react';
+import { getSalasCadastro } from '../../services/API';
+
 function Horarios() {
   const [isLoading, setIsLoading] = useState(true);
+  const [salas, setSalas] = useState([]);
+  const [sala, setSala] = useState(null);
+  const [horarios, setHorarios] = useState([]);
+
+  const fetchSalas = useCallback(async () => {
+    await getSalasCadastro().then((res) => {
+      if (res.data.statusCode === 200) {
+        setSalas(res.data.message);
+        setIsLoading(false);
+      }
+    });
+  }, []);
+  const handleHorarios = useCallback(async () => {
+    if (sala !== null && sala !== '#') {
+      console.log(sala);
+    }
+  }, [sala]);
+
+  handleHorarios();
+  useState(() => {
+    fetchSalas();
+  }, []);
   if (isLoading) {
     return <Loading />;
   }
@@ -15,18 +40,18 @@ function Horarios() {
       <div className="listPage">
         <div className="horarioGroup">
           <label htmlFor="sala">Sala</label>
-          {/* <select
-                name="sala"
-                id="sala"
-                onChange={(e) => setSala(e.target.value)}
-              >
-                <option value="null">Selecione uma sala</option>
-                {salas.map((sala) => (
-                  <option key={sala._id} value={sala._id}>
-                    {sala.nome}
-                  </option>
-                ))}
-              </select> */}
+          <select
+            name="sala"
+            id="sala"
+            onChange={(e) => setSala(e.target.value)}
+          >
+            <option value="#">Selecione uma sala</option>
+            {salas.map((sala) => (
+              <option key={sala._id} value={sala._id}>
+                {sala.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="header">
           <span>Data</span>

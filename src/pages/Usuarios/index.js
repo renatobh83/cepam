@@ -173,6 +173,7 @@ const FormUser = ({ close, newUser, editUser, updateDate }) => {
       editUser.grupoId = grupo;
       editUser.nickname = username;
       editUser.email = email;
+      editUser.ativo = userAtivo;
       try {
         const { data: user } = await putUser(editUser.email, data);
         updateDate(user.message);

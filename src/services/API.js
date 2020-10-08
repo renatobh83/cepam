@@ -198,3 +198,9 @@ export const includePermissao = (data) => {
 // API horarios
 
 export const getAllHorarios = () => {};
+
+export const getHorarioBySala = () => {};
+export const postHorarios = (data) => {
+  headerDefaults();
+  return instance.post('/horarios/', data);
+};
