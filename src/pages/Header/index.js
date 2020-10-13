@@ -27,7 +27,7 @@ function Header() {
   const [stateMenuOpt, setSate] = useState({
     USUARIOS: false,
     GRUPOS: false,
-    SETOR: false,
+    SETORES: false,
     SALAS: false,
     PROCEDIMENTOS: false,
     TABELAS: false,
@@ -60,8 +60,8 @@ function Header() {
               newState.USUARIOS = true;
               newState.mCadastro = true;
               break;
-            case 'SETOR':
-              newState.SETOR = true;
+            case 'SETORES':
+              newState.SETORES = true;
               newState.mCadastro = true;
               break;
             case 'SALAS':
@@ -152,7 +152,7 @@ function Header() {
                         </NavLink>
                       </DropdownItem>
                     )}
-                    {stateMenuOpt.SETOR && (
+                    {stateMenuOpt.SETORES && (
                       <DropdownItem>
                         <NavLink
                           className="link"

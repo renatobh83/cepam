@@ -115,6 +115,7 @@ input[type='checkbox'] {
 input:checked ~ .dados {
   filter: brightness(75%);
   color: var(--black);
+  transform: scale(1.05);
   box-shadow: 0px 35px 77px -17px rgba(0, 0, 0, 0.64);
   background: rgb(0, 255, 203);
 }
