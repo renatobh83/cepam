@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useAppContext } from '../../store/context';
 import Loading from '../../components/Loading';
 import './styles.css';
 import { useHistory } from 'react-router-dom';
 import Profile from '../Profile/index';
+import Agendamentos from '../Agendamentos';
+import { getPacientes } from '../../services/API';
+import InputLabel from '../../components/InputLabel';
 
 function Main() {
   const { isLoading, user, isAuthenticated } = useAppContext();
@@ -20,8 +23,11 @@ function Main() {
 const Pacientes = () => {
   const history = useHistory();
   const { user } = useAppContext();
-
   const toggleAgendar = () => history.push('/agendar/');
+  const toggleGetAgendamentos = () =>
+    history.push({ pathname: '/agendamentos', state: user });
+
+  // completar dados cadastrais apos first login
   if (!user.telefone) {
     return <Profile />;
   }
@@ -30,7 +36,11 @@ const Pacientes = () => {
       <button onClick={toggleAgendar} className="button hover">
         Agendar
       </button>
-      <button className="button" className="button hover">
+      <button
+        className="button"
+        className="button hover"
+        onClick={toggleGetAgendamentos}
+      >
         Agendamentos
       </button>
     </div>
@@ -40,11 +50,13 @@ const Pacientes = () => {
 const Empresa = () => {
   const history = useHistory();
   const toggleAgendar = () => history.push('/agendar/');
+
   return (
     <div className="main">
       <button onClick={toggleAgendar} className="button hover">
-        Agendar
+        Agendar/Consulta
       </button>
+
       <div className="cardUser">
         <h1>Nome User</h1>
         <p>Dados Agendamento Dia</p>

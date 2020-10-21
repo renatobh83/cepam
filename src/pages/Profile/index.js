@@ -20,6 +20,7 @@ const Paciente = ({ user }) => {
   const [telefone, setTelefone] = useState('');
   const history = useHistory();
   const [dtNascimento, setDtNascimento] = useState('');
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {

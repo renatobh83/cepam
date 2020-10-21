@@ -1,9 +1,9 @@
 import React from 'react';
 
-function InputForm({ id, value, onChange, label }) {
+function InputForm({ id, value, onChange, label, type = 'text' }) {
   return (
     <div className="floating-label-input">
-      <input type="text" id={id} required value={value} onChange={onChange} />
+      <input type={type} id={id} required value={value} onChange={onChange} />
       <label htmlFor={id}>{label}</label>
       <span className="line"></span>
     </div>

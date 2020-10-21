@@ -1,0 +1,29 @@
+.agendamentos {
+  width: 100%;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.agendamentos li {
+  padding: 18px;
+}
+
+ul li .cardAgendamentos {
+  width: 150px;
+  box-shadow: 5px -2px 7px rgba(0, 0, 0, 0.77);
+  margin-top: 10px;
+  border-radius: 0.9rem;
+  display: flex;
+  font: 500 1.5rem Archivo;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px;
+  background: var(--color-primary-dark);
+}
+
+ul li .cardAgendamentos button {
+  margin: 10px;
+  padding: 4px;
+  height: 40px;
+}

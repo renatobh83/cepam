@@ -7,6 +7,7 @@ export default function InputLabel({
   onchangeInFilter,
   typeInput,
   name,
+  otp = null,
 }) {
   return (
     <>
@@ -29,7 +30,9 @@ export default function InputLabel({
               value={f._id}
               onChange={onchangeInFilter}
             />
-            <label htmlFor={f._id}>{f.name}</label>
+            <label htmlFor={f._id}>
+              {f.name} {otp === 'dtNascimento' ? ` - ${f.dtNascimento}` : null}
+            </label>
           </li>
         ))}
       </ul>

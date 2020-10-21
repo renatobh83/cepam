@@ -10,16 +10,18 @@ import { postPaciente, putUser } from '../../services/API';
 
 function Pacientes(props) {
   const { isLoading } = useAppContext();
+  const [isPaciente, setIspaciente] = useState(null);
   const history = useHistory();
   const [name, setName] = useState('');
   const [telefone, setTelefone] = useState('');
   const [email, setEmail] = useState('');
   const [dtNascimento, setDtNascimento] = useState('');
   const [prosseguir, setProsseguir] = useState(false);
-  const [paciente, setPaciente] = useState({});
+
   const [userAuth, setUserAuth] = useState(true);
   const loadDate = useCallback(() => {
     if (props.location.state.pacienteEdit) {
+      setIspaciente(props.location.state.pacienteEdit);
       const {
         name,
         email,
@@ -59,12 +61,11 @@ function Pacientes(props) {
         data
       );
 
-      setPaciente(paciente);
       setProsseguir(true);
     } else {
       try {
         const paciente = await postPaciente(data);
-        setPaciente(paciente);
+        setIspaciente(paciente.data.message);
         setProsseguir(true);
       } catch (error) {}
     }
@@ -146,9 +147,7 @@ function Pacientes(props) {
           </div>
         </>
       )}
-      {prosseguir && (
-        <ScreenAgendamento isPaciente={'pasda'} pacienteFromForm={paciente} />
-      )}
+      {prosseguir && <ScreenAgendamento isPaciente={isPaciente} />}
     </div>
   );
 }

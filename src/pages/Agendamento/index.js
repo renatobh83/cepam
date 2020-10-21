@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Loading from '../../components/Loading';
 import { useAppContext } from '../../store/context';
@@ -13,8 +13,9 @@ function Agendamento() {
   if (isLoading) {
     return <Loading />;
   }
+
   if (user.paciente) {
-    return <ScreenAgendamento isPaciente={user.paciente} />;
+    return <ScreenAgendamento isPaciente={user} />;
   } else {
     return <ScreenAgendamento />;
   }

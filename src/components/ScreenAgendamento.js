@@ -7,34 +7,53 @@ import { useCallback } from 'react';
 import {
   getPacientes,
   getPlanoExames,
-  getPlanos,
   rotaTeste,
   getPlanosAgenda,
+  postAgendamento,
+  updateHorario,
+  getAgendamento,
 } from '../services/API';
 import { moeda } from '../utils/formatCurrency';
 import Loading from '../components/Loading';
 import { useAppContext } from '../store/context';
+import {
+  compare,
+  filterHorariosMesmoSetor,
+  proximoIntervalo,
+} from '../utils/filterHorariosAgendamento';
+import Pagination from './Pagination';
+import Agendamento from '../pages/Agendamento';
 
-export default function ScreenAgendamento({ isPaciente, pacienteFromForm }) {
+export default function ScreenAgendamento({ isPaciente, close }) {
   const history = useHistory();
   const [proximo, setProximo] = useState(false);
   const [horarios, setHorarios] = useState([]);
   const [horarioEscolhido, setHorarioEscolhido] = useState([]);
+  const [horarioUpdate, setHorarioUpdate] = useState([]);
 
+  const [dadosParticular, setDadosPaticular] = useState({
+    isParticular: false,
+    total: 0,
+  });
+
+  // pega o paciente selecionado
   const [paciente, setPaciente] = useState({
     paciente: null,
     selected: false,
   });
+  //pega plano do paciente
   const [plano, setPlano] = useState({
     plano: null,
     selected: false,
   });
 
+  //pega os exames para agendamento
   const [exame, setExame] = useState({
     exames: [],
     selected: false,
   });
 
+  //pega os horarios escolhido
   const [horarioSelecionado, setHorarioSelecionado] = useState({
     horario: [],
     selected: false,
@@ -71,7 +90,7 @@ export default function ScreenAgendamento({ isPaciente, pacienteFromForm }) {
       setProximo(false);
     }
   };
-
+  // Fun selecionar horarios
   const horariosExames = (e) => {
     if (typeof e === 'number') {
       var array = [...horarios];
@@ -84,11 +103,16 @@ export default function ScreenAgendamento({ isPaciente, pacienteFromForm }) {
       setHorarios([...horarios, e]);
     }
   };
+
   const HorarioSelecionado = (e) => {
     if (e) {
       setHorarioEscolhido(e);
       setProximo(true);
     }
+  };
+
+  const horarioForUpdate = (e) => {
+    setHorarioUpdate([...horarioUpdate, e]);
   };
 
   // Ativa butao avancar
@@ -102,25 +126,30 @@ export default function ScreenAgendamento({ isPaciente, pacienteFromForm }) {
     } else if (!HorarioSelecionado.selected) {
       setHorarioSelecionado({ ...HorarioSelecionado, selected: true });
     }
-
     setProximo(false);
   };
 
+  // dados para conclusao do agendamento
   const dadosAgendamento = {
     dados: horarioEscolhido,
     paciente: paciente.paciente,
     plano: plano.plano,
+    dadosParticular,
   };
 
   // Cancelar processo de agendamento
-  const handleCancelar = () => history.push('/');
+  const handleCancelar = () => {
+    history.push('/');
+    if (close) {
+      close();
+    }
+  };
 
   useEffect(() => {
     if (isPaciente) {
-      if (pacienteFromForm !== undefined) {
-        // console.log(pacienteFromForm);
+      if (isPaciente.paciente) {
+        setPaciente({ paciente: isPaciente._id, selected: true });
       }
-      setPaciente({ ...paciente, selected: true });
     }
   }, []);
   return (
@@ -128,21 +157,31 @@ export default function ScreenAgendamento({ isPaciente, pacienteFromForm }) {
       {!isPaciente && !paciente.selected && (
         <ChoosePaciente setPaciente={pacienteSelecionado} />
       )}
+
       {!plano.selected && paciente.selected && (
         <Plano setPlano={planoSelecionado} />
       )}
+
       {!exame.selected && plano.selected && (
         <Exame
           setExame={ExamesSelecionado}
           plano={plano}
           horariosAgendamento={horariosExames}
+          particularSet={setDadosPaticular}
         />
       )}
       {plano.selected && exame.selected && !horarioSelecionado.selected && (
-        <SelectHorario setHorario={HorarioSelecionado} horarios={horarios} />
+        <SelectHorario
+          setHorario={HorarioSelecionado}
+          horarios={horarios}
+          update={horarioForUpdate}
+        />
       )}
       {horarioSelecionado.selected && (
-        <ConcluirAgendamento dados={dadosAgendamento} />
+        <ConcluirAgendamento
+          agendamento={dadosAgendamento}
+          update={horarioUpdate}
+        />
       )}
 
       <div className="grupo-btn">
@@ -172,23 +211,41 @@ export default function ScreenAgendamento({ isPaciente, pacienteFromForm }) {
 const ChoosePaciente = ({ setPaciente }) => {
   const history = useHistory();
   const [pacientes, setPacientes] = useState([]);
-  const [searchPaciente, setSearchPaciente] = useState(null);
+  const [searchPaciente, setSearchPaciente] = useState('');
   const [pSelecionado, setPSelecionado] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAgendamentos, setIsAgendamentos] = useState(false);
 
   const fetchPacientes = useCallback(async () => {
     await getPacientes().then((res) => {
+      setIsLoading(false);
       if (res.data.statusCode === 200) setPacientes(res.data.message);
     });
   }, []);
 
+  const consultaAgendamento = useCallback(async (paciente) => {
+    await getAgendamento(paciente).then((res) => {
+      if (res.data.message.length) {
+        setIsAgendamentos(true);
+      } else {
+        setIsAgendamentos(false);
+      }
+    });
+  }, []);
+  const handleConsultaAgandamento = () =>
+    history.push({ pathname: '/agendamentos', state: { user: pSelecionado } });
   useEffect(() => {
     fetchPacientes();
   }, []);
+
   const onChangePaciente = (e) => {
     if (e.target.checked) {
+      consultaAgendamento(e.target.value);
       setPaciente(e.target.value);
       setPSelecionado(e.target.value);
     } else {
+      console.log('remove');
+      e.target.removeAttr('checked');
       setPaciente(null);
       setPSelecionado(null);
     }
@@ -209,6 +266,11 @@ const ChoosePaciente = ({ setPaciente }) => {
     : pacientes.filter((paciente) =>
         paciente.name.toLowerCase().includes(searchPaciente.toLocaleLowerCase())
       );
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <div className="screenContainer">
       <h1>Pesquisa de paciente</h1>
@@ -220,14 +282,32 @@ const ChoosePaciente = ({ setPaciente }) => {
           onchangeInFilter={onChangePaciente}
           typeInput="radio"
           name="paciente"
+          otp={'dtNascimento'}
         />
-        <button
-          type="submit"
-          className="button"
-          onClick={handleEditNewPaciente}
-        >
-          {pSelecionado !== null ? 'Editar Cadastro ' : 'Novo cadastro'}
-        </button>
+        {!isAgendamentos && (
+          <button
+            type="submit"
+            className="button"
+            onClick={handleEditNewPaciente}
+          >
+            {pSelecionado !== null ? 'Editar Cadastro ' : 'Novo cadastro'}
+          </button>
+        )}
+        {isAgendamentos && (
+          <div className="grupo-btn">
+            <button
+              type="submit"
+              className="button"
+              onClick={handleEditNewPaciente}
+            >
+              {pSelecionado !== null ? 'Editar Cadastro ' : 'Novo cadastro'}
+            </button>
+
+            <button className="button" onClick={handleConsultaAgandamento}>
+              Consulta Agendamentos
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -236,12 +316,13 @@ const ChoosePaciente = ({ setPaciente }) => {
 //Component  pesquisa Plano
 const Plano = ({ setPlano }) => {
   const [planos, setPlanos] = useState([]);
-  const [searchPlano, setSearchPlano] = useState(null);
-
+  const [searchPlano, setSearchPlano] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const fetchPlanos = useCallback(async () => {
     try {
       const { data: planos } = await getPlanosAgenda();
       setPlanos(planos.message);
+      setIsLoading(false);
     } catch (error) {}
   }, []);
 
@@ -264,6 +345,10 @@ const Plano = ({ setPlano }) => {
     : planos.filter((plano) =>
         plano.name.toLowerCase().includes(searchPlano.toLocaleLowerCase())
       );
+
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div className="screenContainer">
       <h1>Planos</h1>
@@ -282,14 +367,15 @@ const Plano = ({ setPlano }) => {
 };
 
 // Component pesquisa exame
-const Exame = ({ setExame, plano, horariosAgendamento }) => {
+const Exame = ({ setExame, plano, horariosAgendamento, particularSet }) => {
   const [exames, setExames] = useState([]);
   const [examesSelecionados, setExamesSelecionados] = useState([]);
-  const [searchExame, setSearchExame] = useState(null);
+  const [searchExame, setSearchExame] = useState('');
   const [total, setTotal] = useState(0);
   const [particular, setParticular] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
+
   const fetchExames = useCallback(async () => {
     const { data: exames } = await getPlanoExames(plano.plano);
     if (exames.message.length > 0) {
@@ -304,6 +390,7 @@ const Exame = ({ setExame, plano, horariosAgendamento }) => {
 
   let newState = Object.assign([], examesSelecionados);
 
+  // selecao de exames
   const onchangeExame = (e) => {
     if (e.target.checked) {
       for (const ex of exames) {
@@ -312,11 +399,17 @@ const Exame = ({ setExame, plano, horariosAgendamento }) => {
           setIsLoading(true);
           rotaTeste(ex.exame.setor).then((res) => {
             setIsLoading(false);
+
             if (!res.data.message.setorHorario.length) {
               alert('Sem horarios para esse exame');
             } else {
               setTotal(total + parseFloat(ex.valor));
-              // console.log(res.data.message);
+              if (particular) {
+                particularSet({
+                  isParticular: particular,
+                  total: total + parseFloat(ex.valor),
+                });
+              }
               const dados = {
                 ex: ex.exame,
                 horario: res.data.message.setorHorario,
@@ -341,12 +434,20 @@ const Exame = ({ setExame, plano, horariosAgendamento }) => {
       setExame(filterExames);
     }
   };
+
+  // apagar exame selecionado
   const deleteExame = (e) => {
     const newArray = examesSelecionados.filter(
       (ex) => ex.exame._id !== e.exame._id
     );
     horariosAgendamento(examesSelecionados.indexOf(e));
     setTotal(total - parseFloat(e.valor));
+    if (particular) {
+      particularSet({
+        isParticular: particular,
+        total: total - parseFloat(e.valor),
+      });
+    }
     setExames([...exames, e]);
     setExamesSelecionados(newArray);
     setExame(newArray);
@@ -412,8 +513,8 @@ const Exame = ({ setExame, plano, horariosAgendamento }) => {
     </div>
   );
 };
-const SelectHorario = ({ setHorario, horarios }) => {
-  const [limitHorario] = useState(10);
+const SelectHorario = ({ setHorario, horarios, update }) => {
+  const [limitHorario] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
 
   const [horariosExame, setHorariosExame] = useState([]);
@@ -422,62 +523,56 @@ const SelectHorario = ({ setHorario, horarios }) => {
   const [horarioSelect, setHorarioSelect] = useState([]);
   const [isCloncluir, setIsConcluir] = useState(false);
   const [horario, setHorarioChoose] = useState('');
+  const [horarioForUpdate, setHorarioForUpdate] = useState([]);
 
   const setHorarioSelecionado = (e) => {
     setHorarioChoose(e);
   };
+  // ordernar data de horario
   horarios.sort((a, b) => {
     return new Date(a.horario[0].data) - new Date(b.horario[0].data);
   });
   const getHorarios = () => {
     if (stop < horarios.length) {
       setExameAtual(horarios[stop].ex.name);
-      setHorariosExame(
-        horarios[stop].horarios.sort((a, b) => {
-          return a.periodo.horaInicio - b.periodo.horaInicio;
-        })
-      );
+      setHorariosExame(horarios[stop].horarios.sort(compare));
     }
     if (horarios.length > 1 && horario) {
       let newHorary = [];
-      horarios[stop].horarios.forEach((a) => {
-        a.periodo.filter((i) => {
-          if (i.horaInicio > horario.horaInicio) {
-            newHorary.push(i);
-          }
+
+      if (horarios[stop - 1].ex.setor === horarios[stop].ex.setor) {
+        horarios[stop].horarios.forEach((a) => {
+          const diff = filterHorariosMesmoSetor(a, horario);
+          newHorary.push(diff);
         });
-        const periodo = [
-          {
-            periodo: newHorary,
-          },
-        ];
-        setHorariosExame(periodo);
-      });
+        const removeUndefined = newHorary.filter((a) => a !== undefined);
+        setHorariosExame(removeUndefined);
+      } else {
+        const horarioLivre = proximoIntervalo(horario, horarios[stop].horarios);
+        setHorariosExame(horarioLivre);
+      }
     }
   };
 
+  //Paginacao
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   const handleConcluir = () => {
-    const data = [
-      {
-        exame: horarios[stop].ex,
-        horario: horario,
-      },
-    ];
-    if (horarios.length === 1) {
-      setHorario(data);
-    } else {
-      setHorario([...horarioSelect, data]);
-    }
+    const data = {
+      exame: horarios[stop].ex,
+      horario: horario,
+    };
+
+    setHorario([...horarioSelect, data]);
+    update(horario.id);
     setIsConcluir(true);
   };
   const setProximoExame = () => {
-    const data = [
-      {
-        exame: horarios[stop].ex,
-        horario: horario,
-      },
-    ];
-
+    const data = {
+      exame: horarios[stop].ex,
+      horario: horario,
+    };
+    update(horario.id);
     setHorarioSelect([...horarioSelect, data]);
     setStop(stop + 1);
   };
@@ -489,7 +584,7 @@ const SelectHorario = ({ setHorario, horarios }) => {
   //pagination
   const indexOfLastPage = currentPage * limitHorario;
   const indexOfFirstPage = indexOfLastPage - limitHorario;
-  // const current = horariosDisponivel.slice(indexOfFirstPage, indexOfLastPage);
+  const current = horariosExame.slice(indexOfFirstPage, indexOfLastPage);
 
   return (
     <>
@@ -497,33 +592,38 @@ const SelectHorario = ({ setHorario, horarios }) => {
         <h1>Seleção de horários</h1>
         <h1>{exameAtual}</h1>
         <div className="screenCardContent">
-          {horariosExame.map((a) =>
-            a.periodo.map((h) => (
-              <div className="cardHorarios" key={h.id}>
-                <label htmlFor={h.id}>
-                  <input
-                    name="horario"
-                    type="radio"
-                    id={h.id}
-                    value={h.id}
-                    onChange={() => setHorarioSelecionado(h)}
-                  />
-                  <div className="dados">
-                    <div className="day">{h.data}</div>
-                    <div className="intervalo">Hora: {h.horaInicio} </div>
-                    <div className="intervalo">Duração exame: minutos.</div>
-                  </div>
-                </label>
-              </div>
-            ))
-          )}
+          {current.map((a) => (
+            <div className="cardHorarios" key={a.periodo.id}>
+              <label htmlFor={a.periodo.id}>
+                <input
+                  name="horario"
+                  type="radio"
+                  id={a.periodo.id}
+                  value={a.periodo.id}
+                  onChange={() => setHorarioSelecionado(a.periodo)}
+                />
+                <div className="dados">
+                  <div className="day">{a.periodo.data}</div>
+                  <div className="intervalo">Hora: {a.periodo.horaInicio}</div>
+                  <div className="intervalo">Duração exame: minutos.</div>
+                </div>
+              </label>
+            </div>
+          ))}
         </div>
+        <>
+          <Pagination
+            limitHorario={limitHorario}
+            totalHorarios={horariosExame.length}
+            paginate={paginate}
+          />
+        </>
         {horarios.length > 1 && horarios.length - 1 !== stop && (
           <button onClick={setProximoExame} className="button">
             Proximo exame
           </button>
         )}
-        {horario && !isCloncluir && (
+        {horarios.length - 1 === stop && !isCloncluir && (
           <button onClick={handleConcluir} className="button">
             Concluir
           </button>
@@ -532,8 +632,47 @@ const SelectHorario = ({ setHorario, horarios }) => {
     </>
   );
 };
-const ConcluirAgendamento = (props) => {
+const ConcluirAgendamento = ({ agendamento, update }) => {
   const { user } = useAppContext();
+  const { dadosParticular, paciente, plano, dados } = agendamento;
+  const history = useHistory();
+  const handleConfirma = useCallback(async () => {
+    const dadosForAgandamento = {
+      paciente,
+      agent: user.nickname,
+      plano,
+      dados,
+    };
+    const horarioUpdate = {
+      horarios: update,
+      ocupado: true,
+    };
 
-  return <div>Concluir</div>;
+    try {
+      await updateHorario(horarioUpdate).then(async () => {
+        await postAgendamento(dadosForAgandamento).then(() => {
+          history.push('/');
+        });
+      });
+    } catch (error) {}
+  }, []);
+
+  return (
+    <div className="screenContainer concluiragendamento">
+      <ul>
+        {agendamento.dados.map((dado) => (
+          <li key={agendamento.paciente}>
+            {dado.exame.name} - {dado.horario.data} - {dado.horario.horaInicio}
+          </li>
+        ))}
+        <li>
+          {dadosParticular.isParticular &&
+            `Total a pagar: ${moeda(dadosParticular.total)}`}
+        </li>
+      </ul>
+      <button className="button" onClick={handleConfirma}>
+        Confirma agendamento
+      </button>
+    </div>
+  );
 };

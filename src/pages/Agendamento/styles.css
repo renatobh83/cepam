@@ -122,3 +122,10 @@ input:checked ~ .dados {
 .dados {
   width: 100%;
 }
+.concluiragendamento ul {
+  list-style: none;
+  font: 600 2rem Archivo;
+}
+.concluiragendamento ul li {
+  padding: 10px 0;
+}

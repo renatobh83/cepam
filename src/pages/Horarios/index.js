@@ -1,16 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
-import "./styles.css";
-import ModalConfirm from "../../components/ModalConfirm";
-import Loading from "../../components/Loading";
-import { useState } from "react";
-import { useCallback } from "react";
+import './styles.css';
+import ModalConfirm from '../../components/ModalConfirm';
+import Loading from '../../components/Loading';
+import { useState } from 'react';
+import { useCallback } from 'react';
 import {
   getHorarioBySala,
   getSalasCadastro,
   deleteHorario,
-} from "../../services/API";
-import { getHours } from "../../utils/getHours";
+} from '../../services/API';
+import { getHours } from '../../utils/getHours';
 
 function Horarios() {
   const [isLoading, setIsLoading] = useState(true);
@@ -26,22 +26,23 @@ function Horarios() {
       }
     });
   }, []);
+
   const setDiaSemana = (dia) => {
     switch (dia) {
       case 0:
-        return "Domingo";
+        return 'Domingo';
       case 1:
-        return "Segunda";
+        return 'Segunda';
       case 2:
-        return "Terça";
+        return 'Terça';
       case 3:
-        return "Quarta";
+        return 'Quarta';
       case 4:
-        return "Quinta";
+        return 'Quinta';
       case 5:
-        return "Sexta";
+        return 'Sexta';
       case 6:
-        return "Sábado";
+        return 'Sábado';
       default:
         break;
     }
@@ -50,15 +51,25 @@ function Horarios() {
     async (sala) => {
       await getHorarioBySala(sala).then((res) => {
         getHours(res.data.message, (value) => {
-          setHorarios((oldValues) => [...oldValues, value]);
+          setHorarios((oldValues) => [...oldValues, value].sort(compare));
           setIsLoading(false);
         });
+
         setIsLoading(false);
       });
     },
     [] // eslint-disable-line
   );
-
+  const compare = (a, b) => {
+    return (
+      Date.parse(
+        a.data + a.horaInicio.slice(0, -2) + ' ' + a.horaInicio.slice(-2)
+      ) -
+      Date.parse(
+        b.data + b.horaInicio.slice(0, -2) + ' ' + b.horaInicio.slice(-2)
+      )
+    );
+  };
   const apagarHorario = (date) => {
     const data = {
       deleteHorary: [date],
@@ -73,7 +84,7 @@ function Horarios() {
 
   useEffect(() => {
     setIsLoading(true);
-    if (sala !== null && sala !== "#") {
+    if (sala !== null && sala !== '#') {
       setHorarios([]);
       handleHorarios(sala);
     } else {

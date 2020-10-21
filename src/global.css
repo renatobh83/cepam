@@ -215,3 +215,18 @@ h2 {
 .f-1 {
   font-size: 1.4rem;
 }
+
+/* css pagination */
+.page {
+  display: flex;
+  font: 500 2rem Archivo;
+  list-style: none;
+  margin: 8px 0;
+}
+
+.page a {
+  color: black;
+  cursor: pointer;
+  padding: 8px 16px;
+  text-decoration: none;
+}

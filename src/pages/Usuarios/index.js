@@ -235,6 +235,7 @@ const FormUser = ({ close, newUser, editUser, updateDate }) => {
       <div className="inputGroup">
         <InputForm
           id="email"
+          type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           label="email"

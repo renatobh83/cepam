@@ -228,6 +228,20 @@ export const postHorarios = (data) => {
   headerDefaults();
   return instance.post('/horarios/', data);
 };
+export const updateHorario = (data) => {
+  headerDefaults();
+  return instance.put('/horarios/', data);
+};
+// concluir agendamento
+export const postAgendamento = (data) => {
+  headerDefaults();
+  return instance.post('/agendamento/dados', data);
+};
+export const getAgendamento = (id) => {
+  headerDefaults();
+  return instance.get(`/agendamento/${id}`);
+};
+
 // rota teste
 export const rotaTeste = (id) => {
   headerDefaults();
@@ -239,6 +253,5 @@ export const rotaTeste = (id) => {
 
 export const deleteHorario = (data) => {
   headerDefaults();
-
   return instance.post('/horarios/delete', data);
 };
