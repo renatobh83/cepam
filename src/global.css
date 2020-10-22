@@ -221,6 +221,7 @@ h2 {
   display: flex;
   font: 500 2rem Archivo;
   list-style: none;
+  flex-wrap: wrap;
   margin: 8px 0;
 }
 

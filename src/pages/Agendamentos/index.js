@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import ModalConfirm from '../../components/ModalConfirm';
 
-import { getAgendamento } from '../../services/API';
+import { getAgendamento, updateHorario } from '../../services/API';
 
 import { AgendamentosFuturos } from '../../utils/showAgendamentoFuturos';
 import './styles.css';
@@ -19,18 +19,21 @@ export default function Agendamentos(props) {
     try {
       await getAgendamento(paciente).then((res) => {
         AgendamentosFuturos(res.data.message, (response) => {
-          console.log(response);
+          // console.log(response);
           setAgendamentos((oldValues) => [...oldValues, response]);
         });
       });
     } catch (error) {}
   }, []);
+
   const handleCancelarAgendamento = async (e) => {
     const data = {
       horarios: [e],
       ocupado: false,
     };
-    console.log(data);
+    const filter = agendamentos.filter((h) => h.horario.id !== e);
+    setAgendamentos(filter);
+    await updateHorario(data);
   };
 
   const close = () => history.push('/');
