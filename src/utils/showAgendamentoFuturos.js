@@ -2,6 +2,7 @@ import { addHours, differenceInDays, differenceInHours } from 'date-fns';
 import { differenceInMinutes } from 'date-fns/esm';
 
 const today = new Date();
+
 export const AgendamentosFuturos = (value, callback) => {
   value[0].dados.forEach((a) => {
     const horaAgendamento = addHours(new Date(a.hora.time), 3);

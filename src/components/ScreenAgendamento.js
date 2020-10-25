@@ -7,7 +7,7 @@ import { useCallback } from 'react';
 import {
   getPacientes,
   getPlanoExames,
-  rotaTeste,
+  searchHorario,
   getPlanosAgenda,
   postAgendamento,
   updateHorario,
@@ -213,7 +213,7 @@ const ChoosePaciente = ({ setPaciente }) => {
   const [pacientes, setPacientes] = useState([]);
   const [searchPaciente, setSearchPaciente] = useState('');
   const [pSelecionado, setPSelecionado] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isAgendamentos, setIsAgendamentos] = useState(false);
 
   const fetchPacientes = useCallback(async () => {
@@ -234,6 +234,7 @@ const ChoosePaciente = ({ setPaciente }) => {
   }, []);
   const handleConsultaAgandamento = () =>
     history.push({ pathname: '/agendamentos', state: { user: pSelecionado } });
+
   useEffect(() => {
     fetchPacientes();
   }, []);
@@ -244,7 +245,6 @@ const ChoosePaciente = ({ setPaciente }) => {
       setPaciente(e.target.value);
       setPSelecionado(e.target.value);
     } else {
-      console.log('remove');
       e.target.removeAttr('checked');
       setPaciente(null);
       setPSelecionado(null);
@@ -397,7 +397,7 @@ const Exame = ({ setExame, plano, horariosAgendamento, particularSet }) => {
         if (ex.exame.name === e.target.value) {
           newState.push(ex);
           setIsLoading(true);
-          rotaTeste(ex.exame.setor).then((res) => {
+          searchHorario(ex.exame.setor).then((res) => {
             setIsLoading(false);
 
             if (!res.data.message.setorHorario.length) {
@@ -537,9 +537,9 @@ const SelectHorario = ({ setHorario, horarios, update }) => {
       setExameAtual(horarios[stop].ex.name);
       setHorariosExame(horarios[stop].horarios.sort(compare));
     }
+
     if (horarios.length > 1 && horario) {
       let newHorary = [];
-
       if (horarios[stop - 1].ex.setor === horarios[stop].ex.setor) {
         horarios[stop].horarios.forEach((a) => {
           const diff = filterHorariosMesmoSetor(a, horario);
@@ -547,6 +547,7 @@ const SelectHorario = ({ setHorario, horarios, update }) => {
         });
         const removeUndefined = newHorary.filter((a) => a !== undefined);
         setHorariosExame(removeUndefined);
+        setCurrentPage(1);
       } else {
         const horarioLivre = proximoIntervalo(horario, horarios[stop].horarios);
         setHorariosExame(horarioLivre);

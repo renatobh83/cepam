@@ -241,9 +241,12 @@ export const getAgendamento = (id) => {
   headerDefaults();
   return instance.get(`/agendamento/${id}`);
 };
+export const cancelaAgendamento = (data) => {
+  headerDefaults();
+  return instance.post(`/agendamento/cancela/`, data);
+};
 
-// rota teste
-export const rotaTeste = (id) => {
+export const searchHorario = (id) => {
   headerDefaults();
   const data = {
     id,
