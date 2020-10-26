@@ -1,0 +1,30 @@
+.charts {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.chart {
+  margin: 5px;
+  width: 350px;
+  height: 320px;
+  border: 1px solid black;
+  position: relative;
+}
+.chart h2 {
+  padding: 8px 0;
+}
+.chart .grupExport {
+  width: 100%;
+  font: 400 1.2rem Archivo;
+  position: absolute;
+  bottom: 0;
+  padding: 10px;
+}
+.chart .grupExport button {
+  padding: 2px 10px;
+  margin: 0 auto;
+
+  border: 0;
+  background: transparent;
+}

@@ -23,10 +23,6 @@ export default function Agendamentos(props) {
     try {
       await getAgendamento(paciente).then((res) => {
         setAgendamentos(res.data.message);
-        // AgendamentosFuturos(res.data.message, (response) => {
-        //   // console.log(response);
-        //   setAgendamentos((oldValues) => [...oldValues, response]);
-        // });
       });
     } catch (error) {}
   }, []);

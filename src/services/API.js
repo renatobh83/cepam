@@ -35,6 +35,11 @@ export const postPaciente = (data) => {
   return instance.post('/paciente/', data);
 };
 
+export const userInfoDash = () => {
+  headerDefaults();
+  return instance.get('/user/dash/');
+};
+
 export const putUser = (email, data) => {
   headerDefaults();
   return instance.put(`/usuarios/${email}`, data);
@@ -257,4 +262,10 @@ export const searchHorario = (id) => {
 export const deleteHorario = (data) => {
   headerDefaults();
   return instance.post('/horarios/delete', data);
+};
+
+// report
+export const reportGet = (data) => {
+  headerDefaults();
+  return instance.get('/reports', { params: { data } });
 };
