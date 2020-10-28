@@ -1,17 +1,17 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from "react";
 
-import Loading from '../../components/Loading';
-import { Chart } from 'react-google-charts';
-import { reportGet } from '../../services/API';
-import './styles.css';
-import { addMonths, format, subMonths } from 'date-fns';
-import brasilLocal from 'date-fns/locale/pt-BR';
-import { exporta } from '../../utils/pdfExport';
+import Loading from "../../components/Loading";
+import { Chart } from "react-google-charts";
+import { reportGet } from "../../services/API";
+import "./styles.css";
+import { addMonths, format, subMonths } from "date-fns";
+import brasilLocal from "date-fns/locale/pt-BR";
+import { exporta } from "../../utils/pdfExport";
 
-import { pdf, PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import { pdf, PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 function Report() {
   const [detalhes, setDetalhes] = useState(false);
-  const [valueDetalhes, setValueDetalhes] = useState('');
+  const [valueDetalhes, setValueDetalhes] = useState("");
   const [mesAtual, setMesAtual] = useState(new Date());
   const [isLoading, setIsLoading] = useState(true);
   const [viewPdf, setViewPdf] = useState(false);
@@ -41,25 +41,25 @@ function Report() {
   const processReport = (response, mes) => {
     const totalMes =
       response.mesAgendamentos.length > 0
-        ? [['Mes', 'Total', { role: 'annotation' }]].concat(
+        ? [["Mes", "Total", { role: "annotation" }]].concat(
             response.mesAgendamentos.map((t) => [
-              `${format(mes, 'MMMM', { locale: brasilLocal })}`,
+              `${format(mes, "MMMM", { locale: brasilLocal })}`,
               t.count,
               t.count,
             ])
           )
         : [
-            ['Mes', 'Total'],
+            ["Mes", "Total"],
             [0, 0],
           ];
 
     const detalhesMes =
       response.detalhesAgendadoMes.length > 0
-        ? [['Mes', 'Total']].concat(
+        ? [["Mes", "Total"]].concat(
             response.detalhesAgendadoMes.map((t) => [t._id.name, t.count])
           )
         : [
-            ['Mes', 'Total'],
+            ["Mes", "Total"],
             [0, 0],
           ];
     setState({ ...state, data: [totalMes, detalhesMes] });
@@ -74,13 +74,15 @@ function Report() {
   };
   const fechar = () => setDetalhes(false);
   const closeViewPdf = () => setViewPdf(false);
-  const info = `Relatório periodo ${format(mesAtual, 'MMMM/yyyy', {
+  const info = `Relatório periodo ${format(mesAtual, "MMMM/yyyy", {
     locale: brasilLocal,
   })}
 `;
   const exportaPdf = (e) => {
+    setIsLoading(true);
     exporta(e, info, mesAtual, (res) => {
       setState({ ...state, pdf: res });
+      setIsLoading(false);
       setViewPdf(true);
     });
   };
@@ -100,7 +102,7 @@ function Report() {
       {!detalhes && !viewPdf && (
         <>
           <h2>
-            {`Periodo ${format(mesAtual, 'MMMM/yyyy', {
+            {`Periodo ${format(mesAtual, "MMMM/yyyy", {
               locale: brasilLocal,
             })}`}
           </h2>
@@ -118,66 +120,44 @@ function Report() {
               <div id="agendamento">
                 <h2>Total agendamentos mês</h2>
                 <Chart
-                  width={'100%'}
-                  height={200}
                   chartType="BarChart"
                   loader={<div>Loading Chart</div>}
                   data={state.data[0]}
                   options={{
-                    legend: 'none',
+                    legend: "none",
                     hAxis: {
-                      title: 'Total',
+                      title: "Total",
                       minValue: 0,
                     },
+
                     vAxis: {
-                      title: 'Mes',
+                      title: "Mes",
                     },
                   }}
                 />
               </div>
               <div className="grupExport">
                 <button
+                  className="button"
                   type="submit"
-                  onClick={() => handleDetalhes('agendamento')}
+                  onClick={() => handleDetalhes("agendamento")}
                 >
                   Detalhes
                 </button>
 
-                <button type="submit" onClick={() => exportaPdf('agendamento')}>
+                <button
+                  className="button"
+                  type="submit"
+                  onClick={() => exportaPdf("agendamento")}
+                >
                   Pdf
                 </button>
-                <button type="submit">excel</button>
-              </div>
-            </div>
-            <div className="chart" id="horario">
-              <h2>Horarios</h2>
-              <div className="grupExport">
-                <button
-                  type="submit"
-                  onClick={() => handleDetalhes('horarios')}
-                >
-                  Detalhes
+                <button className="button" type="submit">
+                  excel
                 </button>
-                <button type="submit">Pdf</button>
-                <button type="submit">excel</button>
               </div>
             </div>
-            <div className="chart">
-              <h2>Horarios</h2>
-              <div className="grupExport">
-                <button type="submit">Detalhes</button>
-                <button type="submit">Pdf</button>
-                <button type="submit">excel</button>
-              </div>
-            </div>
-            <div className="chart">
-              <h2>Horarios</h2>
-              <div className="grupExport">
-                <button type="submit">Detalhes</button>
-                <button type="submit">Pdf</button>
-                <button type="submit">excel</button>
-              </div>
-            </div>
+            <div className="chart"> </div>
           </div>
         </>
       )}
@@ -199,36 +179,35 @@ function Report() {
   );
 }
 const Detalhes = ({ value, close, report, exportarPdf }) => {
-  if (value === 'agendamento') {
+  if (value === "agendamento") {
     return (
       <>
         <div id="chart">
           Agendamentos dia
           <Chart
-            width={'100%'}
-            height={200}
-            chartType="BarChart"
+            chartType="ColumnChart"
             loader={<div>Loading Chart</div>}
             data={report.data[1]}
             options={{
-              legend: 'none',
+              legend: "none",
               hAxis: {
-                title: 'Total',
+                title: "Setor",
               },
               vAxis: {
-                title: 'Setor',
+                title: "Total",
+                minValue: 0,
               },
             }}
           />
         </div>
-        <div className="grupExport">
+        <div className="detalhesGrupo">
           <button type="submit" className="button" onClick={close}>
             Voltar
           </button>
           <button
             type="submit"
             className="button"
-            onClick={() => exportarPdf('chart')}
+            onClick={() => exportarPdf("chart")}
           >
             Pdf
           </button>
