@@ -7,8 +7,9 @@ import "./styles.css";
 import { addMonths, format, subMonths } from "date-fns";
 import brasilLocal from "date-fns/locale/pt-BR";
 import { exporta } from "../../utils/pdfExport";
-
+import { ExportCSV } from "../../utils/xlsExport";
 import { pdf, PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
+
 function Report() {
   const [detalhes, setDetalhes] = useState(false);
   const [valueDetalhes, setValueDetalhes] = useState("");
@@ -86,6 +87,7 @@ function Report() {
       setViewPdf(true);
     });
   };
+  const exportaXLSX = () => {};
   if (isLoading) {
     return <Loading />;
   }
@@ -155,6 +157,7 @@ function Report() {
                 <button className="button" type="submit">
                   excel
                 </button>
+                <ExportCSV csvData={state.data[1]} fileName="excel" />
               </div>
             </div>
             <div className="chart"> </div>
