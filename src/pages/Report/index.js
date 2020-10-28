@@ -1,21 +1,22 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect } from 'react';
 
-import Loading from "../../components/Loading";
-import { Chart } from "react-google-charts";
-import { reportGet } from "../../services/API";
-import "./styles.css";
-import { addMonths, format, subMonths } from "date-fns";
-import brasilLocal from "date-fns/locale/pt-BR";
-import { exporta } from "../../utils/pdfExport";
-import { ExportCSV } from "../../utils/xlsExport";
-import { pdf, PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
+import Loading from '../../components/Loading';
+import { Chart } from 'react-google-charts';
+import { reportGet } from '../../services/API';
+import './styles.css';
+import { addMonths, format, subMonths } from 'date-fns';
+import brasilLocal from 'date-fns/locale/pt-BR';
+import { exporta } from '../../utils/pdfExport';
+import { ExportCSV } from '../../utils/xlsExport';
+import { pdf, PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 
 function Report() {
   const [detalhes, setDetalhes] = useState(false);
-  const [valueDetalhes, setValueDetalhes] = useState("");
+  const [valueDetalhes, setValueDetalhes] = useState('');
   const [mesAtual, setMesAtual] = useState(new Date());
   const [isLoading, setIsLoading] = useState(true);
   const [viewPdf, setViewPdf] = useState(false);
+  const [dataToExcel, setDataExcel] = useState([]);
   const [state, setState] = useState({
     data: null,
     pdf: null,
@@ -42,27 +43,35 @@ function Report() {
   const processReport = (response, mes) => {
     const totalMes =
       response.mesAgendamentos.length > 0
-        ? [["Mes", "Total", { role: "annotation" }]].concat(
+        ? [['Mes', 'Total', { role: 'annotation' }]].concat(
             response.mesAgendamentos.map((t) => [
-              `${format(mes, "MMMM", { locale: brasilLocal })}`,
+              `${format(mes, 'MMMM', { locale: brasilLocal })}`,
               t.count,
               t.count,
             ])
           )
         : [
-            ["Mes", "Total"],
+            ['Mes', 'Total'],
             [0, 0],
           ];
 
     const detalhesMes =
       response.detalhesAgendadoMes.length > 0
-        ? [["Mes", "Total"]].concat(
+        ? [['Mes', 'Total']].concat(
             response.detalhesAgendadoMes.map((t) => [t._id.name, t.count])
           )
         : [
-            ["Mes", "Total"],
+            ['Mes', 'Total'],
             [0, 0],
           ];
+    const excel = [['Mes', 'Total']].concat(
+      response.mesAgendamentos.map((t) => [
+        `${format(mes, 'MMMM', { locale: brasilLocal })}`,
+        ,
+        t.count,
+      ])
+    );
+    setDataExcel(excel);
     setState({ ...state, data: [totalMes, detalhesMes] });
     setIsLoading(false);
   };
@@ -75,7 +84,7 @@ function Report() {
   };
   const fechar = () => setDetalhes(false);
   const closeViewPdf = () => setViewPdf(false);
-  const info = `Relatório periodo ${format(mesAtual, "MMMM/yyyy", {
+  const info = `Relatório periodo ${format(mesAtual, 'MMMM/yyyy', {
     locale: brasilLocal,
   })}
 `;
@@ -104,7 +113,7 @@ function Report() {
       {!detalhes && !viewPdf && (
         <>
           <h2>
-            {`Periodo ${format(mesAtual, "MMMM/yyyy", {
+            {`Periodo ${format(mesAtual, 'MMMM/yyyy', {
               locale: brasilLocal,
             })}`}
           </h2>
@@ -126,14 +135,14 @@ function Report() {
                   loader={<div>Loading Chart</div>}
                   data={state.data[0]}
                   options={{
-                    legend: "none",
+                    legend: 'none',
                     hAxis: {
-                      title: "Total",
+                      title: 'Total',
                       minValue: 0,
                     },
 
                     vAxis: {
-                      title: "Mes",
+                      title: 'Mes',
                     },
                   }}
                 />
@@ -142,7 +151,7 @@ function Report() {
                 <button
                   className="button"
                   type="submit"
-                  onClick={() => handleDetalhes("agendamento")}
+                  onClick={() => handleDetalhes('agendamento')}
                 >
                   Detalhes
                 </button>
@@ -150,14 +159,19 @@ function Report() {
                 <button
                   className="button"
                   type="submit"
-                  onClick={() => exportaPdf("agendamento")}
+                  onClick={() => exportaPdf('agendamento')}
                 >
                   Pdf
                 </button>
                 <button className="button" type="submit">
                   excel
                 </button>
-                <ExportCSV csvData={state.data[1]} fileName="excel" />
+                <ExportCSV
+                  csvData={dataToExcel}
+                  fileName={format(mesAtual, 'MMMM/yyyy', {
+                    locale: brasilLocal,
+                  })}
+                />
               </div>
             </div>
             <div className="chart"> </div>
@@ -182,7 +196,7 @@ function Report() {
   );
 }
 const Detalhes = ({ value, close, report, exportarPdf }) => {
-  if (value === "agendamento") {
+  if (value === 'agendamento') {
     return (
       <>
         <div id="chart">
@@ -192,12 +206,12 @@ const Detalhes = ({ value, close, report, exportarPdf }) => {
             loader={<div>Loading Chart</div>}
             data={report.data[1]}
             options={{
-              legend: "none",
+              legend: 'none',
               hAxis: {
-                title: "Setor",
+                title: 'Setor',
               },
               vAxis: {
-                title: "Total",
+                title: 'Total',
                 minValue: 0,
               },
             }}
@@ -210,7 +224,7 @@ const Detalhes = ({ value, close, report, exportarPdf }) => {
           <button
             type="submit"
             className="button"
-            onClick={() => exportarPdf("chart")}
+            onClick={() => exportarPdf('chart')}
           >
             Pdf
           </button>
