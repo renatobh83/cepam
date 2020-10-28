@@ -8,7 +8,7 @@ export const ExportCSV = ({ csvData, fileName }) => {
   const fileExtension = '.xlsx';
 
   const exportToCSV = (csvData, fileName) => {
-    const ws = XLSX.utils.json_to_sheet(csvData);
+    const ws = XLSX.utils.aoa_to_sheet(csvData);
     const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
 
     const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
