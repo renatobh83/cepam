@@ -1,6 +1,6 @@
 import React from 'react';
-import * as XLSX from 'xlsx';
-import * as FileSaver from 'file-saver';
+import XLSX from 'xlsx';
+import FileSaver from 'file-saver';
 
 export const ExportCSV = ({ csvData, fileName }) => {
   const fileType =
@@ -8,6 +8,7 @@ export const ExportCSV = ({ csvData, fileName }) => {
   const fileExtension = '.xlsx';
 
   const exportToCSV = (csvData, fileName) => {
+    console.log(csvData);
     const ws = XLSX.utils.aoa_to_sheet(csvData);
     const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
 
@@ -17,5 +18,9 @@ export const ExportCSV = ({ csvData, fileName }) => {
     FileSaver.saveAs(data, fileName + fileExtension);
   };
 
-  return <button onClick={() => exportToCSV(csvData, fileName)}>Export</button>;
+  return (
+    <button className="button" onClick={() => exportToCSV(csvData, fileName)}>
+      Excel
+    </button>
+  );
 };

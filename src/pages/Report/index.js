@@ -67,7 +67,7 @@ function Report() {
     const excel = [['Mes', 'Total']].concat(
       response.mesAgendamentos.map((t) => [
         `${format(mes, 'MMMM', { locale: brasilLocal })}`,
-        ,
+
         t.count,
       ])
     );
@@ -96,7 +96,16 @@ function Report() {
       setViewPdf(true);
     });
   };
-  const exportaXLSX = () => {};
+  const exportaXLSX = (value) => {
+    return (
+      <ExportCSV
+        csvData={value}
+        fileName={format(mesAtual, 'MMMM/yyyy', {
+          locale: brasilLocal,
+        })}
+      />
+    );
+  };
   if (isLoading) {
     return <Loading />;
   }
@@ -108,6 +117,7 @@ function Report() {
           close={fechar}
           report={state}
           exportarPdf={exportaPdf}
+          exportarExcel={exportaXLSX}
         />
       )}
       {!detalhes && !viewPdf && (
@@ -155,7 +165,6 @@ function Report() {
                 >
                   Detalhes
                 </button>
-
                 <button
                   className="button"
                   type="submit"
@@ -163,15 +172,7 @@ function Report() {
                 >
                   Pdf
                 </button>
-                <button className="button" type="submit">
-                  excel
-                </button>
-                <ExportCSV
-                  csvData={dataToExcel}
-                  fileName={format(mesAtual, 'MMMM/yyyy', {
-                    locale: brasilLocal,
-                  })}
-                />
+                {exportaXLSX(dataToExcel)}
               </div>
             </div>
             <div className="chart"> </div>
@@ -195,7 +196,7 @@ function Report() {
     </div>
   );
 }
-const Detalhes = ({ value, close, report, exportarPdf }) => {
+const Detalhes = ({ value, close, report, exportarPdf, exportarExcel }) => {
   if (value === 'agendamento') {
     return (
       <>
@@ -228,9 +229,7 @@ const Detalhes = ({ value, close, report, exportarPdf }) => {
           >
             Pdf
           </button>
-          <button type="submit" className="button">
-            excel
-          </button>
+          {exportarExcel(report.data[1])}
         </div>
       </>
     );
