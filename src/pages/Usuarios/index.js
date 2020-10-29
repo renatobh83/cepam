@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import InputForm from '../../components/InputForm';
+import { FiDownload } from 'react-icons/fi';
 import {
   getGruposUsuario,
   getUsers,
@@ -12,6 +13,8 @@ import './styles.css';
 import Loading from '../../components/Loading';
 import { setToEdit, create, update } from '../../utils/actions';
 
+import generatePDF from '../../utils/exportJSPDF';
+
 function Usuarios() {
   const history = useHistory();
   const [users, setUsers] = useState([]);
@@ -19,9 +22,15 @@ function Usuarios() {
   const [userEdit, setUserEdit] = useState(null);
   const [filter, setFilter] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [state, setState] = useState({
+    pdf: null,
+    showDownload: false,
+  });
   const fetchUsers = useCallback(async () => {
     try {
       const { data: usersBD } = await getUsers();
+
       setUsers(usersBD.message);
       setIsLoading(false);
     } catch (error) {
@@ -45,7 +54,6 @@ function Usuarios() {
   };
 
   const userUpdate = (e) => {
-    console.log(e);
     update(users, e, setUsers, setNewUser, setUserEdit);
   };
   const closeForm = () => {
@@ -59,13 +67,17 @@ function Usuarios() {
     setFilter(true);
   }, [userEdit]);
 
+  const exportCadastro = () => {
+    const pdfInfo = users.map((a) => [a.name, a.email, a.nickname, a.ativo]);
+    generatePDF([['Nome', 'E-mail', 'Usuario', 'Ativo']], 'Usuarios', pdfInfo);
+  };
   if (isLoading) {
     return <Loading />;
   }
 
   return (
     <div className="main">
-      {!newUser && (
+      {!newUser && !state.showDownload && (
         <ListUsers users={users} editUser={userToEdit} filter={filter}>
           <div className="children">
             <button
@@ -75,16 +87,22 @@ function Usuarios() {
             >
               Novo Ususario
             </button>
-            <label htmlFor="ativo">Ativo</label>
-            <select name="ativo" id="ativo" onChange={filterUsers}>
-              <option value="true" defaultValue>
-                Sim
-              </option>
-              <option value="false">Nao</option>
-            </select>
+            <div className="grupo_user">
+              <label htmlFor="ativo">Ativo</label>
+              <select name="ativo" id="ativo" onChange={filterUsers}>
+                <option value="true" defaultValue>
+                  Sim
+                </option>
+                <option value="false">Nao</option>
+              </select>
+              <span>
+                <FiDownload size={18} onClick={() => exportCadastro()} />
+              </span>
+            </div>
           </div>
         </ListUsers>
       )}
+
       {newUser && (
         <FormUser
           close={closeForm}
@@ -106,7 +124,7 @@ const ListUsers = ({ users, children, editUser, filter }) => {
     <div className="listOfPatients">
       <h2>Usuarios</h2>
       {children}
-      <div className="cardUsers">
+      <div className="cardUsers" id="listOfUsers">
         {showUsers.map((user) => (
           <div className="userContent" key={user._id}>
             <header className="dados">

@@ -8,7 +8,6 @@ export const ExportCSV = ({ csvData, fileName }) => {
   const fileExtension = '.xlsx';
 
   const exportToCSV = (csvData, fileName) => {
-    console.log(csvData);
     const ws = XLSX.utils.aoa_to_sheet(csvData);
     const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
 

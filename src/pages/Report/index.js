@@ -6,16 +6,15 @@ import { reportGet } from '../../services/API';
 import './styles.css';
 import { addMonths, format, subMonths } from 'date-fns';
 import brasilLocal from 'date-fns/locale/pt-BR';
-import { exporta } from '../../utils/pdfExport';
 import { ExportCSV } from '../../utils/xlsExport';
-import { pdf, PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import generatePDF from '../../utils/exportJSPDF';
 
 function Report() {
   const [detalhes, setDetalhes] = useState(false);
   const [valueDetalhes, setValueDetalhes] = useState('');
   const [mesAtual, setMesAtual] = useState(new Date());
   const [isLoading, setIsLoading] = useState(true);
-  const [viewPdf, setViewPdf] = useState(false);
+
   const [dataToExcel, setDataExcel] = useState([]);
   const [state, setState] = useState({
     data: null,
@@ -83,18 +82,15 @@ function Report() {
     setDetalhes(true);
   };
   const fechar = () => setDetalhes(false);
-  const closeViewPdf = () => setViewPdf(false);
+
   const info = `Relatório periodo ${format(mesAtual, 'MMMM/yyyy', {
     locale: brasilLocal,
   })}
 `;
-  const exportaPdf = (e) => {
-    setIsLoading(true);
-    exporta(e, info, mesAtual, (res) => {
-      setState({ ...state, pdf: res });
-      setIsLoading(false);
-      setViewPdf(true);
-    });
+  const exportaPdf = (e, value) => {
+    const head = value[0];
+    value.shift();
+    generatePDF([head], info, value);
   };
   const exportaXLSX = (value) => {
     return (
@@ -120,7 +116,7 @@ function Report() {
           exportarExcel={exportaXLSX}
         />
       )}
-      {!detalhes && !viewPdf && (
+      {!detalhes && (
         <>
           <h2>
             {`Periodo ${format(mesAtual, 'MMMM/yyyy', {
@@ -168,7 +164,8 @@ function Report() {
                 <button
                   className="button"
                   type="submit"
-                  onClick={() => exportaPdf('agendamento')}
+                  onClick={() => exportaPdf('agendamento', state.data[0])}
+                  // onClick={() => generatePDF('report', 'agendamento')}
                 >
                   Pdf
                 </button>
@@ -177,20 +174,6 @@ function Report() {
             </div>
             <div className="chart"> </div>
           </div>
-        </>
-      )}
-      {viewPdf && (
-        <>
-          <PDFViewer width="100%" height="400px">
-            {state.pdf}
-          </PDFViewer>
-          <button
-            type="submit"
-            className="button button-danger"
-            onClick={closeViewPdf}
-          >
-            Sair
-          </button>
         </>
       )}
     </div>
@@ -225,7 +208,7 @@ const Detalhes = ({ value, close, report, exportarPdf, exportarExcel }) => {
           <button
             type="submit"
             className="button"
-            onClick={() => exportarPdf('chart')}
+            onClick={() => exportarPdf('chart', report.data[1])}
           >
             Pdf
           </button>
