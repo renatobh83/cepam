@@ -4,6 +4,7 @@ import './styles.css';
 import ModalConfirm from '../../components/ModalConfirm';
 import InputForm from '../../components/InputForm';
 import Loading from '../../components/Loading';
+import { FiDownload } from 'react-icons/fi';
 import {
   getProcedimentos,
   getSetoresCadastro,
@@ -11,6 +12,7 @@ import {
   procedimentoApagar,
   putProcedimento,
 } from '../../services/API';
+import generatePDF from '../../utils/exportJSPDF';
 
 function Procedimentos() {
   const [newProcedimento, setNewProcedimento] = useState(false);
@@ -123,6 +125,17 @@ const ListProcedimentos = ({
     setProcedimentofilter(e);
   };
 
+  const exportarPdf = () => {
+    setores.filter((s) => {
+      return exibirProcedimentos.forEach((a, index) => {
+        if (s._id === a.setor) {
+          exibirProcedimentos[index].setorName = s.name;
+        }
+      });
+    });
+    const data = exibirProcedimentos.map((p) => [p.setorName, p.name, p.ativo]);
+    generatePDF([['Setor', 'Exame', 'Ativo']], 'Lista de procedimentos', data);
+  };
   const exibirProcedimentos =
     !procedimentoFilter || procedimentoFilter === '#'
       ? procedimentos
@@ -143,6 +156,11 @@ const ListProcedimentos = ({
           </option>
         ))}
       </select>
+      <FiDownload
+        size={20}
+        style={{ cursor: 'pointer' }}
+        onClick={exportarPdf}
+      />
       <ul>
         {exibirProcedimentos.map((procedimento) => (
           <li key={procedimento._id}>

@@ -6,32 +6,50 @@ import autoTable from 'jspdf-autotable';
 //
 const generatePDF = (tHead, fileName, values) => {
   const doc = new jsPDF();
-  const pages = doc.internal.getNumberOfPages();
+
   const pageWidth = doc.internal.pageSize.width; //Optional
   const pageHeight = doc.internal.pageSize.height; //Optional
   const tableHead = tHead;
   doc.text(`${fileName}`, 14, 15);
   doc.setFontSize(9);
-  doc.text(
-    ` ${format(new Date(), 'PPPpp', {
-      locale: brasilLocal,
-    })}`,
-    14,
-    pageHeight - 10
-  );
-  autoTable(doc, { theme: 'grid', head: tableHead, body: values, startY: 20 });
 
-  doc.setFontSize(10); //Optional
+  if (tHead) {
+    autoTable(doc, {
+      theme: 'grid',
+      head: tableHead,
+      body: values,
 
-  for (let j = 1; j < pages + 1; j++) {
+      startY: 20,
+    });
+  } else {
+    autoTable(doc, { body: values, startY: 20 });
+  }
+  const addFooters = (doc) => {
     let horizontalPos = pageWidth / 2; //Can be fixed number
     let verticalPos = pageHeight - 10; //Can be fixed number
-    doc.setPage(j);
-    doc.text(`${j} de ${pages}`, horizontalPos, verticalPos, {
-      align: 'center',
-    });
-  }
+    const pageCount = doc.internal.getNumberOfPages();
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(8);
+    for (var i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.text(
+        'Página ' + String(i) + ' de ' + String(pageCount),
+        horizontalPos,
+        287,
+        {
+          align: 'center',
+        }
+      );
+      doc.text(
+        ` ${format(new Date(), 'PPPpp', {
+          locale: brasilLocal,
+        })}`,
+        14,
+        pageHeight - 10
+      );
+    }
+  };
+  addFooters(doc);
   doc.save(`${fileName.trim()}.pdf`);
-  // doc.save(`${fileName}.pdf`);
 };
 export default generatePDF;

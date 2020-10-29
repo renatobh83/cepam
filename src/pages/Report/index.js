@@ -15,7 +15,7 @@ function Report() {
   const [mesAtual, setMesAtual] = useState(new Date());
   const [isLoading, setIsLoading] = useState(true);
 
-  const [dataToExcel, setDataExcel] = useState([]);
+  const [withoutAnnotation, setWithoutAnnotation] = useState([]);
   const [state, setState] = useState({
     data: null,
     pdf: null,
@@ -56,21 +56,21 @@ function Report() {
 
     const detalhesMes =
       response.detalhesAgendadoMes.length > 0
-        ? [['Mes', 'Total']].concat(
+        ? [['Setor', 'Total']].concat(
             response.detalhesAgendadoMes.map((t) => [t._id.name, t.count])
           )
         : [
-            ['Mes', 'Total'],
+            ['Setor', 'Total'],
             [0, 0],
           ];
-    const excel = [['Mes', 'Total']].concat(
+    const withoutAnnotation = [['Mes', 'Total']].concat(
       response.mesAgendamentos.map((t) => [
         `${format(mes, 'MMMM', { locale: brasilLocal })}`,
 
         t.count,
       ])
     );
-    setDataExcel(excel);
+    setWithoutAnnotation(withoutAnnotation);
     setState({ ...state, data: [totalMes, detalhesMes] });
     setIsLoading(false);
   };
@@ -83,14 +83,18 @@ function Report() {
   };
   const fechar = () => setDetalhes(false);
 
-  const info = `Relatório periodo ${format(mesAtual, 'MMMM/yyyy', {
-    locale: brasilLocal,
-  })}
+  const info = (title) => `Relatório ${title} periodo ${format(
+    mesAtual,
+    'MMMM/yyyy',
+    {
+      locale: brasilLocal,
+    }
+  )}
 `;
   const exportaPdf = (e, value) => {
     const head = value[0];
     value.shift();
-    generatePDF([head], info, value);
+    generatePDF([head], info(e), value);
   };
   const exportaXLSX = (value) => {
     return (
@@ -164,12 +168,13 @@ function Report() {
                 <button
                   className="button"
                   type="submit"
-                  onClick={() => exportaPdf('agendamento', state.data[0])}
-                  // onClick={() => generatePDF('report', 'agendamento')}
+                  onClick={() =>
+                    exportaPdf('Agendamento Mes', withoutAnnotation)
+                  }
                 >
                   Pdf
                 </button>
-                {exportaXLSX(dataToExcel)}
+                {exportaXLSX(withoutAnnotation)}
               </div>
             </div>
             <div className="chart"> </div>
@@ -208,7 +213,7 @@ const Detalhes = ({ value, close, report, exportarPdf, exportarExcel }) => {
           <button
             type="submit"
             className="button"
-            onClick={() => exportarPdf('chart', report.data[1])}
+            onClick={() => exportarPdf('Agendamento setor', report.data[1])}
           >
             Pdf
           </button>

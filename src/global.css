@@ -170,6 +170,7 @@ button {
 .forms .inputGroup {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 .forms .inputGroup button {
   width: 40%;

@@ -68,8 +68,18 @@ function Usuarios() {
   }, [userEdit]);
 
   const exportCadastro = () => {
-    const pdfInfo = users.map((a) => [a.name, a.email, a.nickname, a.ativo]);
-    generatePDF([['Nome', 'E-mail', 'Usuario', 'Ativo']], 'Usuarios', pdfInfo);
+    const pdfInfo = users.map((a) => [
+      a.name,
+      a.email,
+      a.nickname,
+      a.grupo.name,
+      a.ativo,
+    ]);
+    generatePDF(
+      [['Nome', 'E-mail', 'Usuario', 'grupo', 'Ativo']],
+      'Usuarios',
+      pdfInfo
+    );
   };
   if (isLoading) {
     return <Loading />;
@@ -131,7 +141,7 @@ const ListUsers = ({ users, children, editUser, filter }) => {
               <h2>{user.name}</h2>
               <h6>Usuario - {user.nickname}</h6>
               <p>{user.email}</p>
-              <strong>{user.grupo}</strong>
+              <strong>{user.grupo.name}</strong>
             </header>
             <button
               type="submit"
@@ -193,8 +203,8 @@ const FormUser = ({ close, newUser, editUser, updateDate }) => {
       editUser.email = email;
       editUser.ativo = userAtivo;
       try {
-        const { data: user } = await putUser(editUser.email, data);
-        updateDate(user.message);
+        await putUser(editUser.email, data);
+        updateDate(editUser);
       } catch (error) {}
     } else {
       try {

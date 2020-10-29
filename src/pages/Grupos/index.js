@@ -1,18 +1,19 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from 'react';
 
-import InputForm from "../../components/InputForm";
-import ModalConfirm from "../../components/ModalConfirm";
+import InputForm from '../../components/InputForm';
+import ModalConfirm from '../../components/ModalConfirm';
+
 import {
   postGrupo,
   getGrupos,
   apagarGrupo,
   putGrupo,
-} from "../../services/API";
-import Loading from "../../components/Loading";
-import { setToEdit, create, update } from "../../utils/actions";
-import PermissoesGrupo from "../PermissaoGrupo/";
-import { useHistory } from "react-router-dom";
-import ErroPermission from "../../utils/chekPermission";
+} from '../../services/API';
+import Loading from '../../components/Loading';
+import { setToEdit, create, update } from '../../utils/actions';
+import PermissoesGrupo from '../PermissaoGrupo/';
+import { useHistory } from 'react-router-dom';
+import ErroPermission from '../../utils/chekPermission';
 
 function Grupos() {
   const history = useHistory();
@@ -106,7 +107,7 @@ const ListGroups = ({ grupos, children, editGroup, deleteGrupo, history }) => {
       <ul>
         {grupos.map((grupo) => (
           <li key={grupo._id}>
-            <span className="descGrupo" style={{ textTransform: "uppercase" }}>
+            <span className="descGrupo" style={{ textTransform: 'uppercase' }}>
               {grupo.name}
             </span>
 
@@ -133,7 +134,7 @@ const ListGroups = ({ grupos, children, editGroup, deleteGrupo, history }) => {
   );
 };
 const FormGrupos = ({ cancel, newGroup, editGroup }) => {
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const history = useHistory();
   const handleSetName = (e) => {
     setName(e.target.value);

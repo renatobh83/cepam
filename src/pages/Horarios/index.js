@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import './styles.css';
 import ModalConfirm from '../../components/ModalConfirm';
 import Loading from '../../components/Loading';
+import { FiDownload } from 'react-icons/fi';
 import { useState } from 'react';
 import { useCallback } from 'react';
 import {
@@ -11,6 +12,7 @@ import {
   deleteHorario,
 } from '../../services/API';
 import { getHours } from '../../utils/getHours';
+import generatePDF from '../../utils/exportJSPDF';
 
 function Horarios() {
   const [isLoading, setIsLoading] = useState(true);
@@ -81,6 +83,23 @@ function Horarios() {
       setHorarios(fitler);
     });
   };
+  const exportPDF = () => {
+    if (horarios.length) {
+      const data = horarios.map((h) => [
+        h.data,
+        setDiaSemana(h.diaSemana),
+        h.timeInterval,
+        h.horaInicio,
+      ]);
+      const salaName = salas.find((s) => s._id === sala);
+
+      generatePDF(
+        [['Periodo', 'Dia Semana', 'Intervalo', 'Hora']],
+        `Sala ${salaName.name}`,
+        data
+      );
+    }
+  };
 
   useEffect(() => {
     setIsLoading(true);
@@ -121,6 +140,11 @@ function Horarios() {
           <span>Data</span>
           <span>Dia Sem.</span>
           <span>Intervalo</span>
+          <FiDownload
+            size={20}
+            onClick={exportPDF}
+            style={{ cursor: 'pointer' }}
+          />
         </div>
         <ul>
           {horarios.map((horario) => (

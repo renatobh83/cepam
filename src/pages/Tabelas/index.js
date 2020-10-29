@@ -3,7 +3,7 @@ import InputForm from '../../components/InputForm';
 
 import './styles.css';
 import InputMask from 'react-input-mask';
-import { FiSearch, FiTrash2 } from 'react-icons/fi';
+import { FiSearch, FiTrash2, FiDownload } from 'react-icons/fi';
 import { moeda } from '../../utils/formatCurrency';
 import ModalConfirm from '../../components/ModalConfirm';
 import Loading from '../../components/Loading';
@@ -15,6 +15,7 @@ import {
   tabelaApagar,
   putTabelas,
 } from '../../services/API';
+import generatePDF from '../../utils/exportJSPDF';
 
 function Tabelas() {
   const [novaTabela, setNovaTabela] = useState(false);
@@ -100,6 +101,15 @@ const ListTabelas = ({ children, configList }) => {
       tabelaSelect(null);
     }
   };
+  const exportPdf = () => {
+    const data = tabelaExames[0].exames.map((e) => [
+      e.exame.name,
+      moeda(e.valor),
+    ]);
+
+    const info = `Relatório tabela ${tabelaExames[0].name}`;
+    generatePDF([['Exames', 'Valor']], info, data);
+  };
   const handleClose = () => {
     setTabelaExames([]);
     tabelaSelect(null);
@@ -109,7 +119,6 @@ const ListTabelas = ({ children, configList }) => {
   return (
     <div className="listPage">
       <h2>Tabelas</h2>
-
       {children}
       {!cadastrar && (
         <div className="forms">
@@ -129,9 +138,18 @@ const ListTabelas = ({ children, configList }) => {
             </select>
 
             {tabelaExames.length > 0 && (
-              <button className="button" onClick={() => setCadastrar(true)}>
-                Inserir/Excluir exames
-              </button>
+              <>
+                <span>
+                  <FiDownload
+                    size={20}
+                    style={{ cursor: 'pointer' }}
+                    onClick={exportPdf}
+                  />
+                </span>
+                <button className="button" onClick={() => setCadastrar(true)}>
+                  Inserir/Excluir exames
+                </button>
+              </>
             )}
           </div>
 

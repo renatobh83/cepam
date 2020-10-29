@@ -5,7 +5,8 @@ import '../PermissaoGrupo/styles.css';
 import logoLoading from '../../assets/loading.svg';
 import { getPermissoes, includePermissao } from '../../services/API';
 import Loading from '../../components/Loading';
-
+import { FiDownload } from 'react-icons/fi';
+import generatePDF from '../../utils/exportJSPDF';
 export default function PermissoesGrupo({ grupo, close }) {
   const [permissoes, setPermissao] = useState([]);
   const [permissaoCheck, setChecked] = useState([]);
@@ -92,6 +93,15 @@ export default function PermissoesGrupo({ grupo, close }) {
 
     handleClose();
   };
+  const exportaPdf = () => {
+    let counter = 0;
+    const data = permissaoLiberada.map((p) => {
+      counter++;
+      return [counter, p.name];
+    });
+
+    generatePDF([['#', 'Permissoes Liberadas']], grupo.name, data);
+  };
 
   useEffect(() => {
     handlePermissao();
@@ -103,6 +113,7 @@ export default function PermissoesGrupo({ grupo, close }) {
   return (
     <div className="permissaoGrupo">
       <h2>{grupo.name}</h2>
+
       <div className="permissoesList">
         {permissoes.length >= 1 && (
           <div className="permissoesDisponiveis">
@@ -125,7 +136,22 @@ export default function PermissoesGrupo({ grupo, close }) {
         )}
         {permissaoLiberada.length >= 1 && (
           <div className="permissoesLiberadas">
-            <h1>Permissoes Liberadas</h1>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '100%',
+              }}
+            >
+              <h1>Permissoes Liberadas</h1>
+              <FiDownload
+                size={20}
+                style={{ cursor: 'pointer' }}
+                onClick={exportaPdf}
+              />
+            </div>
+
             <div className="listPermiss">
               {permissaoLiberada.map((permissao) => (
                 <div className="permissoes">
