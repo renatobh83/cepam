@@ -18,7 +18,6 @@ function Report() {
   const [withoutAnnotation, setWithoutAnnotation] = useState([]);
   const [state, setState] = useState({
     data: null,
-    pdf: null,
   });
 
   const changeMonth = async () => {
@@ -57,10 +56,63 @@ function Report() {
     const detalhesMes =
       response.detalhesAgendadoMes.length > 0
         ? [['Setor', 'Total']].concat(
-            response.detalhesAgendadoMes.map((t) => [t._id.name, t.count])
+            response.detalhesAgendadoMes.map((t) => [t._id, t.count])
           )
         : [
             ['Setor', 'Total'],
+            [0, 0],
+          ];
+    const agendamentoPorPlano =
+      response.detalhesAgendadoMes.length > 0
+        ? [['Plano', 'Total']].concat(
+            response.agendadoPlano.map((p) => [p._id, p.count])
+          )
+        : [
+            ['Plano', 'Total'],
+            [0, 0],
+          ];
+
+    const examesAgendados =
+      response.ExamesAgendado.length > 0
+        ? [['Exame', 'Total']].concat(
+            response.ExamesAgendado.map((p) => [p._id, p.count])
+          )
+        : [
+            ['Exame', 'Total'],
+            [0, 0],
+          ];
+    const horariosVsAgendado =
+      response.HorarioXAgendamento.length > 0
+        ? [['Setor', 'Total Horario', 'Total Agendado']].concat(
+            response.HorarioXAgendamento.map((p) => p)
+          )
+        : [
+            ['Setor', 'Total Horario', 'Total Agendado'],
+            [0, 0, 0],
+          ];
+
+    const txOcupacao =
+      response.TaxaOcupacao.length > 0
+        ? [['Setor', '%']].concat(
+            response.TaxaOcupacao.map((t) => [t.setor, parseFloat(t.taxa)])
+          )
+        : [
+            ['Setor', '%'],
+            [0, 0],
+          ];
+
+    const txOcupacaoGeral =
+      response.TaxaOcupacaoGeral.length > 0
+        ? [['Mes', '%']].concat([
+            [
+              `${format(mesAtual, 'MMMM', {
+                locale: brasilLocal,
+              })}`,
+              parseFloat(response.TaxaOcupacaoGeral),
+            ],
+          ])
+        : [
+            ['Mes', '%'],
             [0, 0],
           ];
     const withoutAnnotation = [['Mes', 'Total']].concat(
@@ -71,9 +123,21 @@ function Report() {
       ])
     );
     setWithoutAnnotation(withoutAnnotation);
-    setState({ ...state, data: [totalMes, detalhesMes] });
+    setState({
+      ...state,
+      data: [
+        totalMes,
+        detalhesMes,
+        agendamentoPorPlano,
+        examesAgendados,
+        horariosVsAgendado,
+        txOcupacao,
+        txOcupacaoGeral,
+      ],
+    });
     setIsLoading(false);
   };
+
   useEffect(() => {
     fetchReports();
   }, []);
@@ -81,13 +145,9 @@ function Report() {
     setValueDetalhes(value);
     setDetalhes(true);
   };
+
   const fechar = () => setDetalhes(false);
-  const data = [
-    {
-      name: 'Page A',
-      uv: 4000,
-    },
-  ];
+
   const info = (title) => `Relatório ${title} periodo ${format(
     mesAtual,
     'MMMM/yyyy',
@@ -96,11 +156,13 @@ function Report() {
     }
   )}
 `;
+
   const exportaPdf = (e, value) => {
     const head = value[0];
     value.shift();
     generatePDF([head], info(e), value);
   };
+
   const exportaXLSX = (value) => {
     return (
       <ExportCSV
@@ -182,7 +244,99 @@ function Report() {
                 {exportaXLSX(withoutAnnotation)}
               </div>
             </div>
-            <div className="chart"> </div>
+            <div className="chart">
+              <div id="Horarios">
+                <h2>Horario Gerado Vs Agendado</h2>
+                <Chart
+                  chartType="ScatterChart"
+                  loader={<div>Loading Chart</div>}
+                  data={state.data[4]}
+                  options={{
+                    legend: 'none',
+                  }}
+                />
+              </div>
+              <div className="grupExport">
+                <button
+                  className="button"
+                  type="submit"
+                  onClick={() => handleDetalhes('MaxHvsA')}
+                >
+                  Maximizar
+                </button>
+                <button
+                  className="button"
+                  type="submit"
+                  onClick={() =>
+                    exportaPdf('Horarios Gerados X Agendado ', state.data[4])
+                  }
+                >
+                  Pdf
+                </button>
+                {exportaXLSX(state.data[4])}
+              </div>
+            </div>
+            <div className="chart">
+              <div id="tx">
+                <h2>Taxa Ocupcao Setores</h2>
+                <Chart
+                  chartType="AreaChart"
+                  loader={<div>Loading Chart</div>}
+                  data={state.data[5]}
+                  options={{
+                    legend: 'none',
+                  }}
+                />
+              </div>
+              <div className="grupExport">
+                <button
+                  className="button"
+                  type="submit"
+                  onClick={() => handleDetalhes('MaxTx')}
+                >
+                  Maximizar
+                </button>
+                <button
+                  className="button"
+                  type="submit"
+                  onClick={() =>
+                    exportaPdf('Taxa ocupacao setores', state.data[5])
+                  }
+                >
+                  Pdf
+                </button>
+                {exportaXLSX(state.data[5])}
+              </div>
+            </div>
+            <div className="chart">
+              <div id="txGeral">
+                <h2>Taxa Ocupcao Geral</h2>
+                <Chart
+                  chartType="ColumnChart"
+                  loader={<div>Loading Chart</div>}
+                  data={state.data[6]}
+                  options={{
+                    legend: 'none',
+                    vAxis: {
+                      minValue: 0,
+                      maxValue: 100,
+                    },
+                  }}
+                />
+              </div>
+              <div className="grupExport">
+                <button
+                  className="button"
+                  type="submit"
+                  onClick={() =>
+                    exportaPdf('Taxa ocupacao Geral ', state.data[6])
+                  }
+                >
+                  Pdf
+                </button>
+                {exportaXLSX(state.data[6])}
+              </div>
+            </div>
           </div>
         </>
       )}
@@ -190,24 +344,57 @@ function Report() {
   );
 }
 const Detalhes = ({ value, close, report, exportarPdf, exportarExcel }) => {
+  const [title, setTitle] = useState('Setor');
+  const [index, setIndex] = useState(1);
+  const onChangeFilter = (e) => {
+    if (e !== '#') {
+      setIndex(e);
+      switch (e) {
+        case '1':
+          setTitle('Setor');
+          break;
+        case '2':
+          setTitle('Plano');
+          break;
+        case '3':
+          setTitle('Exame');
+          break;
+
+        default:
+          break;
+      }
+    }
+  };
+
   if (value === 'agendamento') {
     return (
       <>
         <div id="chart">
-          Agendamentos dia
+          <select
+            name="filter"
+            className="selectFilter"
+            onChange={(e) => onChangeFilter(e.target.value)}
+          >
+            <option value="#">Filtro</option>
+            <option value="1">Setor</option>
+            <option value="2">Plano</option>
+            <option value="3">Exame</option>
+          </select>
+          <h2> {title} </h2>
           <Chart
-            chartType="ColumnChart"
+            chartType="Bar"
             loader={<div>Loading Chart</div>}
-            data={report.data[1]}
+            data={report.data[index]}
             options={{
-              legend: 'none',
+              chartArea: { width: '50%' },
               hAxis: {
-                title: 'Setor',
+                title,
               },
               vAxis: {
                 title: 'Total',
                 minValue: 0,
               },
+              bars: 'horizontal',
             }}
           />
         </div>
@@ -218,11 +405,63 @@ const Detalhes = ({ value, close, report, exportarPdf, exportarExcel }) => {
           <button
             type="submit"
             className="button"
-            onClick={() => exportarPdf('Agendamento setor', report.data[1])}
+            onClick={() => exportarPdf('Agendamento setor', report.data[index])}
           >
             Pdf
           </button>
-          {exportarExcel(report.data[1])}
+          {exportarExcel(report.data[index])}
+        </div>
+      </>
+    );
+  } else if (value === 'MaxHvsA') {
+    return (
+      <>
+        <Chart
+          chartType="ScatterChart"
+          loader={<div>Loading Chart</div>}
+          data={report.data[4]}
+          options={{
+            legend: 'none',
+          }}
+        />
+        <div className="detalhesGrupo">
+          <button type="submit" className="button" onClick={close}>
+            Voltar
+          </button>
+          <button
+            type="submit"
+            className="button"
+            onClick={() => exportarPdf('Agendamento setor', report.data[4])}
+          >
+            Pdf
+          </button>
+          {exportarExcel(report.data[4])}
+        </div>
+      </>
+    );
+  } else if (value === 'MaxTx') {
+    return (
+      <>
+        <Chart
+          chartType="AreaChart"
+          loader={<div>Loading Chart</div>}
+          data={report.data[5]}
+          options={{
+            legend: 'none',
+          }}
+        />
+        <div className="detalhesGrupo">
+          <button type="submit" className="button" onClick={close}>
+            Voltar
+          </button>
+          <button
+            type="submit"
+            className="button"
+            onClick={() => exportarPdf('Agendamento setor', report.data[5])}
+          >
+            Pdf
+          </button>
+          {exportarExcel(report.data[5])}
         </div>
       </>
     );
