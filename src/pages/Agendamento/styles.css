@@ -31,7 +31,7 @@
   background: #fff;
   list-style: none;
   width: 99%;
-  font: 600 2.4rem Poppins;
+  font: 600 1.4rem Poppins;
   overflow: hidden;
   overflow-y: scroll;
   position: relative;
@@ -128,4 +128,10 @@ input:checked ~ .dados {
 }
 .concluiragendamento ul li {
   padding: 10px 0;
+}
+
+@media (min-width: 810px) {
+  .agendamentoContainer .screenContainer .screenContent ul {
+    font-size: 2.4rem;
+  }
 }
