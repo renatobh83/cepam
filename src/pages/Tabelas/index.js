@@ -147,7 +147,7 @@ const ListTabelas = ({ children, configList }) => {
                   />
                 </span>
                 <button className="button" onClick={() => setCadastrar(true)}>
-                  Inserir/Excluir exames
+                  Exames
                 </button>
               </>
             )}
@@ -253,10 +253,7 @@ const InserirExame = ({ tabela, close }) => {
       <ul>
         {result.map((exame) => (
           <li key={exame._id}>
-            <label
-              htmlFor={exame._id}
-              style={{ cursor: 'pointer', fontSize: '2.3rem' }}
-            >
+            <label htmlFor={exame._id} style={{ cursor: 'pointer' }}>
               <input
                 type="checkbox"
                 id={exame._id}

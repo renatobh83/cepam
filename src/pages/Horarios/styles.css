@@ -1,6 +1,6 @@
 .header {
   display: grid;
-  font-size: 19px;
+  font: 500 1rem Archivo;
   align-items: center;
   grid-template-columns: 1fr 1fr 1fr 2fr;
 }
@@ -30,7 +30,17 @@
   margin: 3rem 0;
   gap: 10px;
 }
-
+.listPage #horarios li {
+  font-size: 1rem;
+}
 .main .listPage .interval .button {
   width: 100%;
+}
+@media (min-width: 810px) {
+  .header {
+    font-size: 2rem;
+  }
+  .listPage #horarios li {
+    font-size: 2rem;
+  }
 }

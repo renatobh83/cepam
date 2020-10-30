@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
-import InputForm from "../../components/InputForm";
+import React, { useCallback, useEffect, useState } from 'react';
+import InputForm from '../../components/InputForm';
 
-import "./styles.css";
-import ModalConfirm from "../../components/ModalConfirm";
-import Loading from "../../components/Loading";
+import './styles.css';
+import ModalConfirm from '../../components/ModalConfirm';
+import Loading from '../../components/Loading';
 
 import {
   getTabelasCadastro,
@@ -11,9 +11,9 @@ import {
   postPlanos,
   putPlanos,
   planosApagar,
-} from "../../services/API";
-import ErroPermission from "../../utils/chekPermission";
-import { useHistory } from "react-router-dom";
+} from '../../services/API';
+import ErroPermission from '../../utils/chekPermission';
+import { useHistory } from 'react-router-dom';
 
 function Planos() {
   const history = useHistory();
@@ -96,7 +96,7 @@ const ListPLanos = ({ children, config }) => {
     <div className="listPage">
       <h2>Planos</h2>
       {children}
-      <ul>
+      <ul className="planos">
         {planos.map((plano) => (
           <li key={plano._id} style={{ padding: 0 }}>
             <span>{plano.name}</span>
@@ -132,7 +132,7 @@ const ListPLanos = ({ children, config }) => {
 const FormsPlanos = ({ config }) => {
   const { cancel, novoPlano, planoEdit, history } = config;
 
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [tabelas, setTabelas] = useState([]);
   const [tabela, setTabela] = useState(null);
   const [particular, setParticular] = useState(false);
@@ -179,7 +179,7 @@ const FormsPlanos = ({ config }) => {
         if (plano.statusCode === 200) {
           novoPlano(plano.message);
         } else {
-          alert("Plano ja cadastrado");
+          alert('Plano ja cadastrado');
         }
       } catch (error) {
         ErroPermission(error, history);
@@ -229,7 +229,7 @@ const FormsPlanos = ({ config }) => {
           <label htmlFor="particular">Particular</label>
           <input
             type="checkbox"
-            style={{ display: "block" }}
+            style={{ display: 'block' }}
             id="particular"
             defaultChecked={planoEdit ? planoEdit.particular : particular}
             onChange={(e) => setParticular(e.target.checked)}

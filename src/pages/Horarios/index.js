@@ -140,13 +140,15 @@ function Horarios() {
           <span>Data</span>
           <span>Dia Sem.</span>
           <span>Intervalo</span>
-          <FiDownload
-            size={20}
-            onClick={exportPDF}
-            style={{ cursor: 'pointer' }}
-          />
+          <span>
+            <FiDownload
+              size={20}
+              onClick={exportPDF}
+              style={{ cursor: 'pointer' }}
+            />
+          </span>
         </div>
-        <ul>
+        <ul id="horarios">
           {horarios.map((horario) => (
             <li key={horario.id}>
               <div className="interval">

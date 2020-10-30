@@ -8,13 +8,16 @@
 .grpBtn {
   display: flex;
   flex-direction: column;
-  width: 20%;
+  width: 45%;
+}
+.setor .infoSetor {
+  width: 45%;
 }
 .setor ul li .grpBtn button {
   width: 100%;
 }
 .setor ul li span {
-  font-size: 15px;
+  font-size: 1.2rem;
 }
 @media (min-width: 810px) {
   .grpBtn {
@@ -24,5 +27,8 @@
   }
   .setor ul li .grpBtn button {
     width: 30%;
+  }
+  .setor ul li span {
+    font-size: 15px;
   }
 }

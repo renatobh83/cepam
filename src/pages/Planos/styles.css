@@ -15,3 +15,19 @@
 .divGroup input {
   margin: 0 10px;
 }
+
+.main .listPage .planos li {
+  font-size: 1rem;
+}
+.main .listPage .planos li button {
+  width: 30%;
+}
+
+@media (min-width: 810px) {
+  .main .listPage .planos li {
+    font-size: 2rem;
+  }
+  .main .listPage .planos li button {
+    width: 20%;
+  }
+}

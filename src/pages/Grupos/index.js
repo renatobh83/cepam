@@ -111,7 +111,11 @@ const ListGroups = ({ grupos, children, editGroup, deleteGrupo, history }) => {
               {grupo.name}
             </span>
 
-            <button className="button f-1" onClick={() => groupForEdit(grupo)}>
+            <button
+              style={{ width: '30%' }}
+              className="button f-1"
+              onClick={() => groupForEdit(grupo)}
+            >
               Permissoes
             </button>
             <ModalConfirm

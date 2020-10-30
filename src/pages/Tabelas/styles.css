@@ -10,7 +10,7 @@
   display: flex;
 }
 .listPage .buscarExame input {
-  font: 500 3rem Acrhivo;
+  font: 500 1rem Acrhivo;
   padding: 1.17rem;
   width: 90%;
   height: 50px;
@@ -47,13 +47,16 @@
   overflow: hidden;
   overflow-y: scroll;
 }
+.examesSelecionados h3 {
+  margin-top: 4px;
+}
 .examesSelecionados::-webkit-scrollbar {
   display: none;
 }
 .tableProcContent {
   margin-top: 4rem;
   width: 100%;
-  font: 600 2rem Archivo;
+  font: 600 1rem Archivo;
   display: flex;
   justify-content: space-between;
 }
@@ -65,7 +68,7 @@
 }
 .examesSelecionados .examesSelect {
   display: flex;
-  font: 500 2rem Archivo;
+  font: 500 1rem Archivo;
   align-items: center;
   margin: 0 10px;
 }
@@ -89,4 +92,16 @@
 }
 .examesSelecionados .examesSelect .delete button:hover {
   filter: opacity(0.6);
+}
+
+@media (min-width: 810px) {
+  .tableProcContent {
+    font-size: 2rem;
+  }
+  .main label {
+    font-size: 2.4rem;
+  }
+  .examesSelecionados .examesSelect {
+    font-size: 2rem;
+  }
 }

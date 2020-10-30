@@ -8,6 +8,15 @@ import { addMonths, format, subMonths } from 'date-fns';
 import brasilLocal from 'date-fns/locale/pt-BR';
 import { ExportCSV } from '../../utils/xlsExport';
 import generatePDF from '../../utils/exportJSPDF';
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 
 function Report() {
   const [detalhes, setDetalhes] = useState(false);
@@ -82,7 +91,12 @@ function Report() {
     setDetalhes(true);
   };
   const fechar = () => setDetalhes(false);
-
+  const data = [
+    {
+      name: 'Page A',
+      uv: 4000,
+    },
+  ];
   const info = (title) => `Relatório ${title} periodo ${format(
     mesAtual,
     'MMMM/yyyy',

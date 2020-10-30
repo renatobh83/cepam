@@ -163,7 +163,7 @@ const ListProcedimentos = ({
       />
       <ul>
         {exibirProcedimentos.map((procedimento) => (
-          <li key={procedimento._id}>
+          <li key={procedimento._id} className="procedimentosLi">
             <span>{procedimento.name}</span>
             <div
               className="label"

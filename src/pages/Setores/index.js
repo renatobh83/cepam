@@ -1,18 +1,18 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from 'react';
 
-import "./styles.css";
+import './styles.css';
 
-import ModalConfirm from "../../components/ModalConfirm";
-import InputForm from "../../components/InputForm";
-import InputMask from "react-input-mask";
-import { setToEdit, create, update } from "../../utils/actions";
+import ModalConfirm from '../../components/ModalConfirm';
+import InputForm from '../../components/InputForm';
+import InputMask from 'react-input-mask';
+import { setToEdit, create, update } from '../../utils/actions';
 import {
   getSetores,
   postSetores,
   putSetores,
   setorDelete,
-} from "../../services/API";
-import Loading from "../../components/Loading";
+} from '../../services/API';
+import Loading from '../../components/Loading';
 
 function Setores() {
   const [newSetor, setNewSetor] = useState(false);
@@ -86,8 +86,10 @@ const ListSetor = ({ children, setores, editSetor, deleteSetor }) => {
       <ul>
         {setores.map((setor) => (
           <li key={setor._id}>
-            <span>{setor.name}</span>
-            <h5>Tempo {setor.time}</h5>
+            <div className="infoSetor">
+              <span>{setor.name}</span>
+              <h5>Tempo {setor.time}</h5>
+            </div>
             <div className="grpBtn">
               <button
                 type="submit"
@@ -118,8 +120,8 @@ const ListSetor = ({ children, setores, editSetor, deleteSetor }) => {
   );
 };
 const FormSetor = ({ cancel, newSetor, editSetor }) => {
-  const [name, setName] = useState("");
-  const [time, setTime] = useState("");
+  const [name, setName] = useState('');
+  const [time, setTime] = useState('');
 
   const handleSetName = (e) => {
     setName(e.target.value);
