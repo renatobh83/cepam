@@ -9,8 +9,10 @@
   list-style: none;
   font: 500 1rem Archivo;
   display: flex;
-  /* width: 400px; */
-  overflow-x: scroll;
+  width: 80%;
+  margin: 0 auto;
+  overflow: auto;
+  align-items: center;
 }
 .main .agenda ul li {
   padding: 4px 10px;
@@ -27,7 +29,17 @@
 }
 
 #horarios {
+  width: 100%;
   flex-direction: column;
+  font: 600 1.4rem Archivo;
+}
+#horarios li {
+  width: 100%;
+  padding: 10px;
+}
+input:checked ~ .cardHorario {
+  background: var(--rich-blue);
+  color: #fff;
 }
 @media (min-width: 810px) {
   .main #sala {
@@ -35,5 +47,8 @@
   }
   .main .agenda ul {
     font-size: 1.6rem;
+  }
+  #horarios {
+    font-size: 1.9rem;
   }
 }
