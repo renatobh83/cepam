@@ -244,6 +244,11 @@ function Header() {
                       Horarios
                     </NavLink>
                   </DropdownItem>
+                  <DropdownItem>
+                    <NavLink className="link" tag={RouterNavLink} to="/agenda">
+                      Consulta agenda
+                    </NavLink>
+                  </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
               {stateMenuOpt.RELATORIOS && (

@@ -251,6 +251,10 @@ export const cancelaAgendamento = (data) => {
   return instance.post(`/agendamento/cancela/`, data);
 };
 
+export const getAgendamentos = () => {
+  headerDefaults();
+  return instance.get('/agendamento/agenda/');
+};
 export const searchHorario = (id) => {
   headerDefaults();
   const data = {

@@ -9,7 +9,6 @@ import {
   updateHorario,
 } from '../../services/API';
 
-import { AgendamentosFuturos } from '../../utils/showAgendamentoFuturos';
 import './styles.css';
 
 export default function Agendamentos(props) {

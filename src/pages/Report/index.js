@@ -105,7 +105,7 @@ function Report() {
       response.TaxaOcupacaoGeral.length > 0
         ? [['Mes', '%']].concat([
             [
-              `${format(mesAtual, 'MMMM', {
+              `${format(mes, 'MMMM', {
                 locale: brasilLocal,
               })}`,
               parseFloat(response.TaxaOcupacaoGeral),
@@ -115,6 +115,16 @@ function Report() {
             ['Mes', '%'],
             [0, 0],
           ];
+    const periodo =
+      response.Periodo.length > 0
+        ? [['Mes', 'Horarios Gerados', 'Agendamentos']].concat(
+            response.Periodo.map((p) => [p.mes, p.horarios, p.agendados])
+          )
+        : [
+            ['Mes', 'Horarios Gerados', 'Agendamentos'],
+            [0, 0, 0],
+          ];
+
     const withoutAnnotation = [['Mes', 'Total']].concat(
       response.mesAgendamentos.map((t) => [
         `${format(mes, 'MMMM', { locale: brasilLocal })}`,
@@ -133,6 +143,7 @@ function Report() {
         horariosVsAgendado,
         txOcupacao,
         txOcupacaoGeral,
+        periodo,
       ],
     });
     setIsLoading(false);
@@ -246,7 +257,7 @@ function Report() {
             </div>
             <div className="chart">
               <div id="Horarios">
-                <h2>Horario Gerado Vs Agendado</h2>
+                <h2>Horário gerado/Agendado</h2>
                 <Chart
                   chartType="ScatterChart"
                   loader={<div>Loading Chart</div>}
@@ -278,7 +289,7 @@ function Report() {
             </div>
             <div className="chart">
               <div id="tx">
-                <h2>Taxa Ocupcao Setores</h2>
+                <h2>Taxa ocupção setor</h2>
                 <Chart
                   chartType="AreaChart"
                   loader={<div>Loading Chart</div>}
@@ -310,7 +321,7 @@ function Report() {
             </div>
             <div className="chart">
               <div id="txGeral">
-                <h2>Taxa Ocupcao Geral</h2>
+                <h2>Taxa ocupção mês</h2>
                 <Chart
                   chartType="ColumnChart"
                   loader={<div>Loading Chart</div>}
@@ -335,6 +346,32 @@ function Report() {
                   Pdf
                 </button>
                 {exportaXLSX(state.data[6])}
+              </div>
+            </div>
+            <div className="chart">
+              <div id="Periodo">
+                <h2>Período</h2>
+                <Chart
+                  chartType="ColumnChart"
+                  loader={<div>Loading Chart</div>}
+                  data={state.data[7]}
+                  options={{
+                    legend: 'bottom',
+                    hAxis: { viewWindow: { max: 12, min: 1 } },
+                  }}
+                />
+              </div>
+              <div className="grupExport">
+                <button
+                  className="button"
+                  type="submit"
+                  onClick={() =>
+                    exportaPdf('Taxa ocupacao Geral ', state.data[7])
+                  }
+                >
+                  Pdf
+                </button>
+                {exportaXLSX(state.data[7])}
               </div>
             </div>
           </div>

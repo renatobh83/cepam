@@ -22,6 +22,7 @@ import Profile from './pages/Profile/index';
 import Report from './pages/Report/index';
 import Permissoes from './components/permissoes';
 import Agendamentos from './pages/Agendamentos';
+import Agenda from './pages/Agenda';
 
 function Router() {
   const { isLoading, isAuthenticated } = useAppContext();
@@ -57,6 +58,7 @@ function Router() {
         <Route path="/relatorios" exact component={Report} />
         <Route path="/permissoes" exact component={Permissoes} />
         <Route path="/agendamentos" exact component={Agendamentos} />
+        <Route path="/agenda" exact component={Agenda} />
       </>
     );
   };

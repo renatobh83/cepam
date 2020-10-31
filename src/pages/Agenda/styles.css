@@ -1,0 +1,39 @@
+.main #sala {
+  margin: 10px;
+  font: 500 1rem Archivo;
+  width: 100%;
+  appearance: none;
+  padding: 10px;
+}
+.main .agenda ul {
+  list-style: none;
+  font: 500 1rem Archivo;
+  display: flex;
+  /* width: 400px; */
+  overflow-x: scroll;
+}
+.main .agenda ul li {
+  padding: 4px 10px;
+}
+.cardHorario {
+  border: 1px solid black;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.cardHorario:hover {
+  background: var(--rich-blue);
+  color: #fff;
+}
+
+#horarios {
+  flex-direction: column;
+}
+@media (min-width: 810px) {
+  .main #sala {
+    font-size: 1.4rem;
+  }
+  .main .agenda ul {
+    font-size: 1.6rem;
+  }
+}
