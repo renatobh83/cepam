@@ -223,7 +223,7 @@ export const getAllHorarios = () => {};
 
 export const getHorarioBySala = (id) => {
   headerDefaults();
-  return instance.get(`/horario/sala/${id}`);
+  return instance.get(`/horarios/sala/${id}`);
 };
 export const desativarHorario = (id) => {
   headerDefaults();

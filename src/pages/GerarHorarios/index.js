@@ -43,6 +43,7 @@ export default function GerarHorarios() {
   };
   const fetchSalas = useCallback(async () => {
     const { data: salas } = await getSalasCadastro();
+
     setSalas(salas.message);
   }, []);
   useEffect(() => {

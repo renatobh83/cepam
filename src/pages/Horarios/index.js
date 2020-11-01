@@ -10,10 +10,13 @@ import {
   getHorarioBySala,
   getSalasCadastro,
   deleteHorario,
+  checkAcessoGerarHorario,
+  getSalas,
 } from '../../services/API';
 import { getHours } from '../../utils/getHours';
 import generatePDF from '../../utils/exportJSPDF';
 import { useHistory } from 'react-router-dom';
+import ErroPermission from '../../utils/chekPermission';
 
 function Horarios() {
   const [isLoading, setIsLoading] = useState(true);
@@ -21,13 +24,18 @@ function Horarios() {
   const [sala, setSala] = useState(null);
   const [horarios, setHorarios] = useState([]);
   const history = useHistory();
+
   const fetchSalas = useCallback(async () => {
-    await getSalasCadastro().then((res) => {
-      if (res.data.statusCode === 200) {
-        setSalas(res.data.message);
-        setIsLoading(false);
-      }
-    });
+    try {
+      await getSalas().then((res) => {
+        if (res.data.statusCode === 200) {
+          setSalas(res.data.message);
+          setIsLoading(false);
+        }
+      });
+    } catch (error) {
+      ErroPermission(error, setIsLoading, history);
+    }
   }, []);
 
   const setDiaSemana = (dia) => {
@@ -62,7 +70,7 @@ function Horarios() {
           setIsLoading(false);
         });
       } catch (error) {
-        history.push('/');
+        ErroPermission(error, setIsLoading, history);
       }
     },
     [] // eslint-disable-line
@@ -116,6 +124,7 @@ function Horarios() {
       setHorarios([]);
     }
   }, [sala]); // eslint-disable-line
+
   useState(() => {
     fetchSalas();
   }, []);

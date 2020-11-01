@@ -2,20 +2,29 @@ import React, { useEffect, useState } from 'react';
 import { getAgendamentos, getSalasCadastro } from '../../services/API';
 import { FiArrowRight, FiArrowLeft } from 'react-icons/fi';
 import './styles.css';
+import ErroPermission from '../../utils/chekPermission';
+import { useHistory } from 'react-router-dom';
+import Loading from '../../components/Loading';
 export default function Agenda() {
   const [agendamentos, setAgendamentos] = useState([]);
   const [agendaSala, setAgendaSala] = useState([]);
   const [data, setData] = useState([]);
   const [salas, setSalas] = useState([]);
   const [horarios, setHorarios] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(true);
+  const history = useHistory();
   const fetchSalas = async () => {
     const { data: response } = await getSalasCadastro();
     setSalas(response.message);
   };
   const fetchAgendamentos = async () => {
-    const { data: response } = await getAgendamentos();
-    setAgendamentos(response.message);
+    try {
+      const { data: response } = await getAgendamentos();
+      setAgendamentos(response.message);
+      setIsLoading(false);
+    } catch (error) {
+      ErroPermission(error, setIsLoading, history);
+    }
   };
 
   const onChangeSala = (e) => {
@@ -45,6 +54,9 @@ export default function Agenda() {
     fetchSalas();
     fetchAgendamentos();
   }, []);
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div className="main">
       <select
