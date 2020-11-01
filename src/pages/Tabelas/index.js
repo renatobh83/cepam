@@ -14,14 +14,18 @@ import {
   putNomeTabela,
   tabelaApagar,
   putTabelas,
+  getTabelas,
 } from '../../services/API';
 import generatePDF from '../../utils/exportJSPDF';
+import ErroPermission from '../../utils/chekPermission';
+import { useHistory } from 'react-router-dom';
 
 function Tabelas() {
   const [novaTabela, setNovaTabela] = useState(false);
   const [tabelaSelect, setTabelaSelect] = useState(null);
   const [tabelas, setTabelas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const history = useHistory();
   const handleCriarNovaTabela = (e) => {
     setTabelas([...tabelas, e]);
     handlelCancel();
@@ -29,10 +33,13 @@ function Tabelas() {
 
   const fetchTabelas = useCallback(async () => {
     try {
-      const { data: tabelas } = await getTabelasCadastro();
+      const { data: tabelas } = await getTabelas();
+
       setTabelas(tabelas.message);
       setIsLoading(false);
-    } catch (error) {}
+    } catch (error) {
+      ErroPermission(error, setIsLoading, history);
+    }
   }, []);
   useEffect(() => {
     fetchTabelas();

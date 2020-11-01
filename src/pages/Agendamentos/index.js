@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import ModalConfirm from '../../components/ModalConfirm';
-
+import Loading from '../../components/Loading';
 import {
   cancelaAgendamento,
   getAgendamento,
@@ -13,7 +13,7 @@ import './styles.css';
 
 export default function Agendamentos(props) {
   const history = useHistory();
-
+  const [isLoading, setIsLoading] = useState(true);
   const [agendamentos, setAgendamentos] = useState([]);
   const paciente = props.location.state.user
     ? props.location.state.user
@@ -22,6 +22,8 @@ export default function Agendamentos(props) {
     try {
       await getAgendamento(paciente).then((res) => {
         setAgendamentos(res.data.message);
+        if (!res.data.message.length) close();
+        setIsLoading(false);
       });
     } catch (error) {}
   }, []);
@@ -49,6 +51,9 @@ export default function Agendamentos(props) {
   useEffect(() => {
     fetchAgendamentos();
   }, []);
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <>
       <ul className="agendamentos">

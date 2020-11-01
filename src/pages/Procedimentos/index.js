@@ -13,6 +13,8 @@ import {
   putProcedimento,
 } from '../../services/API';
 import generatePDF from '../../utils/exportJSPDF';
+import ErroPermission from '../../utils/chekPermission';
+import { useHistory } from 'react-router-dom';
 
 function Procedimentos() {
   const [newProcedimento, setNewProcedimento] = useState(false);
@@ -21,6 +23,7 @@ function Procedimentos() {
   const [procedimentos, setProcedimentos] = useState([]);
   const [setores, setSetores] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const history = useHistory();
   const fetchSetores = useCallback(async () => {
     const { data: setores } = await getSetoresCadastro();
     setSetores(setores.message);
@@ -28,11 +31,15 @@ function Procedimentos() {
   }, []);
 
   const fetchProcedimentos = useCallback(async () => {
-    const { data: procedimentos } = await getProcedimentos();
-    setProcedimentos(procedimentos.message);
+    try {
+      const { data: procedimentos } = await getProcedimentos();
+      setProcedimentos(procedimentos.message);
+      fetchSetores();
+    } catch (error) {
+      ErroPermission(error, setIsLoading, history);
+    }
   }, []);
   useEffect(() => {
-    fetchSetores();
     fetchProcedimentos();
   }, []);
   const handleNewProcedimento = () =>
@@ -57,11 +64,17 @@ function Procedimentos() {
     if (e) setSetorSelect(e);
   };
   const procedimentoToEdit = async (value, e) => {
+    const valueCheck = e.target;
     const data = {
       ativo: value,
     };
     try {
-      await putProcedimento(e, data);
+      await putProcedimento(valueCheck.value, data).then((res) => {
+        if (res.data.statusCode === 400) {
+          valueCheck.checked = true;
+          return alert(res.data.message);
+        }
+      });
     } catch (error) {}
   };
   if (isLoading) {
@@ -109,15 +122,20 @@ const ListProcedimentos = ({
 
   const desativarProcedimento = (e) => {
     if (e.target.checked) {
-      procedimetnoEdit(true, e.target.value);
+      procedimetnoEdit(true, e);
     } else {
-      procedimetnoEdit(false, e.target.value);
+      procedimetnoEdit(false, e);
     }
   };
   const apagarProcedimento = async (e) => {
     try {
-      await procedimentoApagar(e);
-      deleteProcedimento(e);
+      await procedimentoApagar(e).then((res) => {
+        if (res.data.statusCode === 400) {
+          return alert(res.data.message);
+        } else {
+          deleteProcedimento(e);
+        }
+      });
     } catch (error) {}
   };
   const filterChange = (e) => {

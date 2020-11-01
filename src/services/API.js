@@ -237,6 +237,11 @@ export const updateHorario = (data) => {
   headerDefaults();
   return instance.put('/horarios/', data);
 };
+
+export const checkAcessoGerarHorario = () => {
+  headerDefaults();
+  return instance.get('/gerarHorarios/');
+};
 // concluir agendamento
 export const postAgendamento = (data) => {
   headerDefaults();
@@ -271,5 +276,5 @@ export const deleteHorario = (data) => {
 // report
 export const reportGet = (data) => {
   headerDefaults();
-  return instance.get('/reports', { params: { data } });
+  return instance.get('/relatorios', { params: { data } });
 };

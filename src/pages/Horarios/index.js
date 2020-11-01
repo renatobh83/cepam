@@ -13,13 +13,14 @@ import {
 } from '../../services/API';
 import { getHours } from '../../utils/getHours';
 import generatePDF from '../../utils/exportJSPDF';
+import { useHistory } from 'react-router-dom';
 
 function Horarios() {
   const [isLoading, setIsLoading] = useState(true);
   const [salas, setSalas] = useState([]);
   const [sala, setSala] = useState(null);
   const [horarios, setHorarios] = useState([]);
-
+  const history = useHistory();
   const fetchSalas = useCallback(async () => {
     await getSalasCadastro().then((res) => {
       if (res.data.statusCode === 200) {
@@ -51,14 +52,18 @@ function Horarios() {
   };
   const handleHorarios = useCallback(
     async (sala) => {
-      await getHorarioBySala(sala).then((res) => {
-        getHours(res.data.message, (value) => {
-          setHorarios((oldValues) => [...oldValues, value].sort(compare));
+      try {
+        await getHorarioBySala(sala).then((res) => {
+          getHours(res.data.message, (value) => {
+            setHorarios((oldValues) => [...oldValues, value].sort(compare));
+            setIsLoading(false);
+          });
+
           setIsLoading(false);
         });
-
-        setIsLoading(false);
-      });
+      } catch (error) {
+        history.push('/');
+      }
     },
     [] // eslint-disable-line
   );

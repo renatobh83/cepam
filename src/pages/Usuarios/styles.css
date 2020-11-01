@@ -3,6 +3,7 @@
 }
 .children .grupo_user {
   display: flex;
+  align-items: center;
 }
 .children .grupo_user span {
   margin-left: auto;

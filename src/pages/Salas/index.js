@@ -11,6 +11,8 @@ import {
 } from '../../services/API';
 import { create } from '../../utils/actions';
 import Loading from '../../components/Loading';
+import ErroPermission from '../../utils/chekPermission';
+import { useHistory } from 'react-router-dom';
 
 function Salas() {
   const [newSala, setNewSala] = useState(false);
@@ -18,6 +20,7 @@ function Salas() {
   const [setorSelected, setSetorSeleted] = useState(null);
   const [salas, setSalas] = useState([]);
   const [setores, setSetores] = useState([]);
+  const history = useHistory();
 
   const fetchSetores = useCallback(async () => {
     const { data: setores } = await getSetoresCadastro();
@@ -26,12 +29,16 @@ function Salas() {
   }, []);
 
   const fetchSalas = useCallback(async () => {
-    const { data: setores } = await getSalas();
-    setSalas(setores.message);
+    try {
+      const { data: setores } = await getSalas();
+      setSalas(setores.message);
+      fetchSetores();
+    } catch (error) {
+      ErroPermission(error, setIsLoading, history);
+    }
   }, []);
 
   useEffect(() => {
-    fetchSetores();
     fetchSalas();
   }, []);
 

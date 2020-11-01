@@ -202,8 +202,9 @@ const FormUser = ({ close, newUser, editUser, updateDate }) => {
       editUser.nickname = username;
       editUser.email = email;
       editUser.ativo = userAtivo;
+
       try {
-        await putUser(editUser.email, data);
+        await putUser(editUser._id, data);
         updateDate(editUser);
       } catch (error) {}
     } else {

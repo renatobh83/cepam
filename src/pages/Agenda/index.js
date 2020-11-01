@@ -8,6 +8,7 @@ export default function Agenda() {
   const [data, setData] = useState([]);
   const [salas, setSalas] = useState([]);
   const [horarios, setHorarios] = useState([]);
+
   const fetchSalas = async () => {
     const { data: response } = await getSalasCadastro();
     setSalas(response.message);
@@ -61,7 +62,7 @@ export default function Agenda() {
       <div className="agenda">
         <ul>
           {data.map((periodo, index) => (
-            <li key={periodo}>
+            <li key={periodo + index}>
               <label htmlFor={index}>
                 <input
                   type="radio"

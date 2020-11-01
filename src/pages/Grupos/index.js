@@ -151,7 +151,6 @@ const FormGrupos = ({ cancel, newGroup, editGroup }) => {
     if (editGroup) {
       try {
         editGroup.name = name;
-
         await putGrupo(editGroup._id, data);
         cancel();
       } catch (error) {

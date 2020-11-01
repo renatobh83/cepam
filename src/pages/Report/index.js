@@ -9,6 +9,8 @@ import brasilLocal from 'date-fns/locale/pt-BR';
 import { ExportCSV } from '../../utils/xlsExport';
 import generatePDF from '../../utils/exportJSPDF';
 
+import { useHistory } from 'react-router-dom';
+
 function Report() {
   const [detalhes, setDetalhes] = useState(false);
   const [valueDetalhes, setValueDetalhes] = useState('');
@@ -19,6 +21,7 @@ function Report() {
   const [state, setState] = useState({
     data: null,
   });
+  const history = useHistory();
 
   const changeMonth = async () => {
     const next = addMonths(mesAtual, 1);
@@ -34,8 +37,12 @@ function Report() {
   };
 
   const fetchReports = useCallback(async () => {
-    const response = await reportGet();
-    processReport(response.data.message, mesAtual);
+    try {
+      const response = await reportGet();
+      processReport(response.data.message, mesAtual);
+    } catch (error) {
+      history.push('/');
+    }
   }, []);
 
   const processReport = (response, mes) => {
@@ -356,7 +363,14 @@ function Report() {
                   loader={<div>Loading Chart</div>}
                   data={state.data[7]}
                   options={{
-                    legend: 'bottom',
+                    legend: {
+                      position: 'in',
+                      textStyle: {
+                        color: 'blue',
+                        fontSize: 10,
+                        fontName: 'Archivo',
+                      },
+                    },
                     hAxis: { viewWindow: { max: 12, min: 1 } },
                   }}
                 />

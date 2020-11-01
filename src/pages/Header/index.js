@@ -34,6 +34,7 @@ function Header() {
     PLANOS: false,
     HORARIOS: false,
     RELATORIOS: false,
+    GERARHORARIOS: false,
     mFAturamento: false,
     mCadastro: false,
   });
@@ -86,8 +87,11 @@ function Header() {
             case 'HORARIOS':
               newState.HORARIOS = true;
               break;
-            case 'RELATÓRIOS':
+            case 'RELATORIOS':
               newState.RELATORIOS = true;
+              break;
+            case 'GERARHORARIOS':
+              newState.GERARHORARIOS = true;
               break;
 
             default:
@@ -224,7 +228,7 @@ function Header() {
                   Agenda
                 </DropdownToggle>
                 <DropdownMenu right style={{ font: '600 1.3rem Archivo' }}>
-                  {stateMenuOpt.HORARIOS && (
+                  {stateMenuOpt.GERARHORARIOS && (
                     <DropdownItem>
                       <NavLink
                         className="link"

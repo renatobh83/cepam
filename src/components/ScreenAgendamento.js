@@ -22,7 +22,6 @@ import {
   proximoIntervalo,
 } from '../utils/filterHorariosAgendamento';
 import Pagination from './Pagination';
-import Agendamento from '../pages/Agendamento';
 
 export default function ScreenAgendamento({ isPaciente, close }) {
   const history = useHistory();
@@ -637,7 +636,10 @@ const ConcluirAgendamento = ({ agendamento, update }) => {
   const { user } = useAppContext();
   const { dadosParticular, paciente, plano, dados } = agendamento;
   const history = useHistory();
+  const [active, setActive] = useState(true);
+
   const handleConfirma = useCallback(async () => {
+    setActive(false);
     const dadosForAgandamento = {
       paciente,
       agent: user.nickname,
@@ -671,9 +673,11 @@ const ConcluirAgendamento = ({ agendamento, update }) => {
             `Total a pagar: ${moeda(dadosParticular.total)}`}
         </li>
       </ul>
-      <button className="button" onClick={handleConfirma}>
-        Confirma agendamento
-      </button>
+      {active && (
+        <button className="button" onClick={handleConfirma}>
+          Confirma agendamento
+        </button>
+      )}
     </div>
   );
 };

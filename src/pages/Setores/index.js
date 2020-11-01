@@ -13,12 +13,15 @@ import {
   setorDelete,
 } from '../../services/API';
 import Loading from '../../components/Loading';
+import ErroPermission from '../../utils/chekPermission';
+import { useHistory } from 'react-router-dom';
 
 function Setores() {
   const [newSetor, setNewSetor] = useState(false);
   const [setorEdit, setSetorEdit] = useState(null);
   const [setores, setSetores] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const history = useHistory();
   const setorToEdit = (e) => {
     setToEdit(e, setSetorEdit, setNewSetor);
   };
@@ -27,7 +30,9 @@ function Setores() {
       const { data: setor } = await getSetores();
       setSetores(setor.message);
       setIsLoading(false);
-    } catch (error) {}
+    } catch (error) {
+      ErroPermission(error, setIsLoading, history);
+    }
   }, []);
   useEffect(() => {
     fetchSetores();
@@ -76,7 +81,13 @@ const ListSetor = ({ children, setores, editSetor, deleteSetor }) => {
   };
   const apagarSetor = async (e) => {
     try {
-      await setorDelete(e).then(() => deleteSetor(e));
+      await setorDelete(e).then((res) => {
+        if (res.data.statusCode === 400) {
+          return alert(res.data.message);
+        } else {
+          deleteSetor(e);
+        }
+      });
     } catch (error) {}
   };
   return (
