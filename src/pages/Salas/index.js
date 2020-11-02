@@ -26,7 +26,7 @@ function Salas() {
     const { data: setores } = await getSetoresCadastro();
     setSetores(setores.message);
     setIsLoading(false);
-  }, []);
+  }, []); // eslint-disable-line
 
   const fetchSalas = useCallback(async () => {
     try {
@@ -36,11 +36,11 @@ function Salas() {
     } catch (error) {
       ErroPermission(error, setIsLoading, history);
     }
-  }, []);
+  }, []); // eslint-disable-line
 
   useEffect(() => {
     fetchSalas();
-  }, []);
+  }, []); // eslint-disable-line
 
   const handleNewSala = () =>
     setorSelected ? setNewSala(!newSala) : alert('Selecione um setor');

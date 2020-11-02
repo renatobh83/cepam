@@ -23,10 +23,6 @@ function Usuarios() {
   const [filter, setFilter] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [state, setState] = useState({
-    pdf: null,
-    showDownload: false,
-  });
   const fetchUsers = useCallback(async () => {
     try {
       const { data: usersBD } = await getUsers();
@@ -41,10 +37,10 @@ function Usuarios() {
         history.push('/');
       }
     }
-  }, []);
+  }, []); // eslint-disable-line
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, []); // eslint-disable-line
 
   const userToEdit = (e) => {
     setToEdit(e, setUserEdit, setNewUser);
@@ -87,7 +83,7 @@ function Usuarios() {
 
   return (
     <div className="main">
-      {!newUser && !state.showDownload && (
+      {!newUser && (
         <ListUsers users={users} editUser={userToEdit} filter={filter}>
           <div className="children">
             <button
@@ -170,10 +166,10 @@ const FormUser = ({ close, newUser, editUser, updateDate }) => {
       const { data: grupos } = await getGruposUsuario();
       setGrupos(grupos.message);
     } catch (error) {}
-  }, []);
+  }, []); // eslint-disable-line
   useEffect(() => {
     fetchGrupos();
-  }, []);
+  }, []); // eslint-disable-line
   const handleSubmit = async (e) => {
     e.preventDefault();
     let data;
@@ -222,10 +218,10 @@ const FormUser = ({ close, newUser, editUser, updateDate }) => {
       setUsername(editUser.nickname);
       setGrupo(editUser.grupoId);
     }
-  }, []);
+  }, []); // eslint-disable-line
   useEffect(() => {
     dateUserEdit();
-  }, []);
+  }, []); // eslint-disable-line
   return (
     <form className="forms" onSubmit={handleSubmit}>
       <h2>{editUser ? 'Editar usuario' : 'Cadastro novo usuario'}</h2>

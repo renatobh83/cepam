@@ -14,9 +14,9 @@ export default function Pagination({ limitHorario, totalHorarios, paginate }) {
         <ul className="page">
           {pageNumbers.map((number) => (
             <li key={number} className="page-item">
-              <a onClick={() => paginate(number)} className="page-link">
+              <button onClick={() => paginate(number)} className="page-link">
                 {number}
-              </a>
+              </button>
             </li>
           ))}
         </ul>

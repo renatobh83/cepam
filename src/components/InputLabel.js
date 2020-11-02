@@ -39,29 +39,3 @@ export default function InputLabel({
     </>
   );
 }
-
-{
-  /* <input
-type="search"
-value={searchPaciente}
-name="pesquisapaciente"
-id="pesquisapaciente"
-placeholder="Pesquisa"
-onChange={handleChangePesquisa}
-/>
-<ul>
-{filterSearch.map((paciente) => (
-  <li key={paciente._id}>
-    <input
-      type="radio"
-      name="paciente"
-      id={paciente._id}
-      className="regular-radio"
-      value={paciente._id}
-      onChange={onChangePaciente}
-    />
-    <label htmlFor={paciente._id}>{paciente.name}</label>
-  </li>
-))}
-</ul> */
-}

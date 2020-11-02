@@ -40,7 +40,7 @@ function Pacientes(props) {
       setDtNascimento(dtNascimento);
       setTelefone(telefone);
     }
-  }, []);
+  }, []); // eslint-disable-line
   const handleCancel = () => {
     history.push('/agendar');
   };
@@ -56,10 +56,7 @@ function Pacientes(props) {
 
     if (props.location.state.pacienteEdit) {
       const data = { name, email, telefone, dtNascimento };
-      const paciente = await putUser(
-        props.location.state.pacienteEdit.email,
-        data
-      );
+      await putUser(props.location.state.pacienteEdit.email, data);
 
       setProsseguir(true);
     } else {
@@ -72,7 +69,7 @@ function Pacientes(props) {
   };
   useEffect(() => {
     loadDate();
-  }, []);
+  }, []); // eslint-disable-line
   if (isLoading) {
     return <Loading />;
   }

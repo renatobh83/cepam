@@ -6,13 +6,7 @@ import Loading from '../../components/Loading';
 import { FiDownload } from 'react-icons/fi';
 import { useState } from 'react';
 import { useCallback } from 'react';
-import {
-  getHorarioBySala,
-  getSalasCadastro,
-  deleteHorario,
-  checkAcessoGerarHorario,
-  getSalas,
-} from '../../services/API';
+import { getHorarioBySala, deleteHorario, getSalas } from '../../services/API';
 import { getHours } from '../../utils/getHours';
 import generatePDF from '../../utils/exportJSPDF';
 import { useHistory } from 'react-router-dom';
@@ -36,7 +30,7 @@ function Horarios() {
     } catch (error) {
       ErroPermission(error, setIsLoading, history);
     }
-  }, []);
+  }, []); // eslint-disable-line
 
   const setDiaSemana = (dia) => {
     switch (dia) {
@@ -58,23 +52,20 @@ function Horarios() {
         break;
     }
   };
-  const handleHorarios = useCallback(
-    async (sala) => {
-      try {
-        await getHorarioBySala(sala).then((res) => {
-          getHours(res.data.message, (value) => {
-            setHorarios((oldValues) => [...oldValues, value].sort(compare));
-            setIsLoading(false);
-          });
-
+  const handleHorarios = useCallback(async (sala) => {
+    try {
+      await getHorarioBySala(sala).then((res) => {
+        getHours(res.data.message, (value) => {
+          setHorarios((oldValues) => [...oldValues, value].sort(compare));
           setIsLoading(false);
         });
-      } catch (error) {
-        ErroPermission(error, setIsLoading, history);
-      }
-    },
-    [] // eslint-disable-line
-  );
+
+        setIsLoading(false);
+      });
+    } catch (error) {
+      ErroPermission(error, setIsLoading, history);
+    }
+  }, []); //eslint-disable-line
   const compare = (a, b) => {
     return (
       Date.parse(

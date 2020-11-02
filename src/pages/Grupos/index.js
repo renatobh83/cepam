@@ -10,7 +10,7 @@ import {
   putGrupo,
 } from '../../services/API';
 import Loading from '../../components/Loading';
-import { setToEdit, create, update } from '../../utils/actions';
+import { create } from '../../utils/actions';
 import PermissoesGrupo from '../PermissaoGrupo/';
 import { useHistory } from 'react-router-dom';
 import ErroPermission from '../../utils/chekPermission';
@@ -31,10 +31,10 @@ function Grupos() {
     } catch (error) {
       ErroPermission(error, setIsLoading, history);
     }
-  }, []);
+  }, []); // eslint-disable-line
   useEffect(() => {
     fethcGrupos();
-  }, []);
+  }, []); // eslint-disable-line
   const permissaoGrupo = (e) => {
     setPermissao(true);
     setGrupoSelect(e);
@@ -169,10 +169,10 @@ const FormGrupos = ({ cancel, newGroup, editGroup }) => {
     if (editGroup) {
       setName(editGroup.name);
     }
-  }, []);
+  }, []); // eslint-disable-line
   useEffect(() => {
     dateGroupEdit();
-  }, []);
+  }, []); // eslint-disable-line
   return (
     <div className="forms">
       <h2>Cadastro novo grupo</h2>

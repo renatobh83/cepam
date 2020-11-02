@@ -1,9 +1,9 @@
 import { format } from 'date-fns';
 import brasilLocal from 'date-fns/locale/pt-BR';
-import html2canvas from 'html2canvas';
+
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-//
+
 const generatePDF = (tHead, fileName, values) => {
   const doc = new jsPDF();
 
@@ -26,7 +26,7 @@ const generatePDF = (tHead, fileName, values) => {
   }
   const addFooters = (doc) => {
     let horizontalPos = pageWidth / 2; //Can be fixed number
-    let verticalPos = pageHeight - 10; //Can be fixed number
+
     const pageCount = doc.internal.getNumberOfPages();
     doc.setFont('helvetica', 'italic');
     doc.setFontSize(8);

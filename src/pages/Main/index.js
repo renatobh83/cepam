@@ -1,15 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useAppContext } from '../../store/context';
-import Loading from '../../components/Loading';
+
 import './styles.css';
 import { useHistory } from 'react-router-dom';
 import Profile from '../Profile/index';
-import Agendamentos from '../Agendamentos';
-import { getPacientes, userInfoDash } from '../../services/API';
-import InputLabel from '../../components/InputLabel';
+
+import { userInfoDash } from '../../services/API';
 
 function Main() {
-  const { isLoading, user, isAuthenticated } = useAppContext();
+  const { user, isAuthenticated } = useAppContext();
 
   if (isAuthenticated) {
     if (user.paciente) {
@@ -36,11 +35,7 @@ const Pacientes = () => {
       <button onClick={toggleAgendar} className="button hover">
         Agendar
       </button>
-      <button
-        className="button"
-        className="button hover"
-        onClick={toggleGetAgendamentos}
-      >
+      <button className="button hover" onClick={toggleGetAgendamentos}>
         Agendamentos
       </button>
     </div>

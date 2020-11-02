@@ -5,7 +5,7 @@ import './styles.css';
 import ModalConfirm from '../../components/ModalConfirm';
 import InputForm from '../../components/InputForm';
 import InputMask from 'react-input-mask';
-import { setToEdit, create, update } from '../../utils/actions';
+import { setToEdit, create } from '../../utils/actions';
 import {
   getSetores,
   postSetores,
@@ -33,10 +33,10 @@ function Setores() {
     } catch (error) {
       ErroPermission(error, setIsLoading, history);
     }
-  }, []);
+  }, []); // eslint-disable-line
   useEffect(() => {
     fetchSetores();
-  }, []);
+  }, []); // eslint-disable-line
   const handleNewSetor = () => setNewSetor(!newSetor);
   const createdSetor = (e) => {
     create(setores, e, setSetores, setNewSetor, setSetorEdit);
@@ -162,10 +162,10 @@ const FormSetor = ({ cancel, newSetor, editSetor }) => {
       setName(editSetor.name);
       setTime(editSetor.time);
     }
-  }, []);
+  }, []); // eslint-disable-line
   useEffect(() => {
     dateSetorEdit();
-  }, []);
+  }, []); // eslint-disable-line
   return (
     <div className="forms">
       <h2>Cadastro novo setor</h2>

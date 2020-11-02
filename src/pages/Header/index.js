@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { Link, NavLink as RouterNavLink } from 'react-router-dom';
+import { NavLink as RouterNavLink } from 'react-router-dom';
 import {
-  Button,
   Collapse,
-  Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
@@ -11,18 +9,16 @@ import {
   Navbar,
   NavLink,
   NavbarBrand,
-  NavbarText,
   NavbarToggler,
   NavItem,
   UncontrolledDropdown,
 } from 'reactstrap';
 import { useAppContext } from '../../store/context';
 import { FiHeart, FiLogOut, FiUser } from 'react-icons/fi';
-import { getPermissoes, getGrupoPermissoes } from '../../services/API';
 import { useEffect } from 'react';
 
 function Header() {
-  const { logout, isAuthenticated, user } = useAppContext();
+  const { logout, user, menuOptions } = useAppContext();
   const [isOpen, setIsOpen] = useState(false);
   const [stateMenuOpt, setSate] = useState({
     USUARIOS: false,
@@ -39,74 +35,74 @@ function Header() {
     mCadastro: false,
   });
   const toggle = () => setIsOpen(!isOpen);
-  const userPermissoes = async () => {
-    if (!user.paciente) {
-      const idPermissao = await getPermissoes();
-      const grupo = await getGrupoPermissoes(user.grupoId);
-      if (grupo && idPermissao) {
-        const permissaoFiltered = idPermissao.data.message.filter((el) => {
-          return grupo.data.message.permissaoId.some((f) => {
-            return f === el._id;
-          });
-        });
-        let newState = Object.assign({}, stateMenuOpt);
+  // const userPermissoes = async () => {
+  //   if (!user.paciente) {
+  //     const idPermissao = await getPermissoes();
+  //     const grupo = await getGrupoPermissoes(user.grupoId);
+  //     if (grupo && idPermissao) {
+  //       const permissaoFiltered = idPermissao.data.message.filter((el) => {
+  //         return grupo.data.message.permissaoId.some((f) => {
+  //           return f === el._id;
+  //         });
+  //       });
+  //       let newState = Object.assign({}, stateMenuOpt);
 
-        permissaoFiltered.map((p) => {
-          switch (p.name) {
-            case 'GRUPOS':
-              newState.GRUPOS = true;
-              newState.mCadastro = true;
-              break;
-            case 'USUARIOS':
-              newState.USUARIOS = true;
-              newState.mCadastro = true;
-              break;
-            case 'SETORES':
-              newState.SETORES = true;
-              newState.mCadastro = true;
-              break;
-            case 'SALAS':
-              newState.SALAS = true;
-              newState.mCadastro = true;
-              break;
-            case 'PROCEDIMENTOS':
-              newState.mFAturamento = true;
-              newState.PROCEDIMENTOS = true;
-              break;
+  //       permissaoFiltered.map((p) => {
+  //         switch (p.name) {
+  //           case 'GRUPOS':
+  //             newState.GRUPOS = true;
+  //             newState.mCadastro = true;
+  //             break;
+  //           case 'USUARIOS':
+  //             newState.USUARIOS = true;
+  //             newState.mCadastro = true;
+  //             break;
+  //           case 'SETORES':
+  //             newState.SETORES = true;
+  //             newState.mCadastro = true;
+  //             break;
+  //           case 'SALAS':
+  //             newState.SALAS = true;
+  //             newState.mCadastro = true;
+  //             break;
+  //           case 'PROCEDIMENTOS':
+  //             newState.mFAturamento = true;
+  //             newState.PROCEDIMENTOS = true;
+  //             break;
 
-            case 'TABELAS':
-              newState.mFAturamento = true;
-              newState.TABELAS = true;
-              break;
+  //           case 'TABELAS':
+  //             newState.mFAturamento = true;
+  //             newState.TABELAS = true;
+  //             break;
 
-            case 'PLANOS':
-              newState.mFAturamento = true;
-              newState.PLANOS = true;
-              break;
+  //           case 'PLANOS':
+  //             newState.mFAturamento = true;
+  //             newState.PLANOS = true;
+  //             break;
 
-            case 'HORARIOS':
-              newState.HORARIOS = true;
-              break;
-            case 'RELATORIOS':
-              newState.RELATORIOS = true;
-              break;
-            case 'GERARHORARIOS':
-              newState.GERARHORARIOS = true;
-              break;
+  //           case 'HORARIOS':
+  //             newState.HORARIOS = true;
+  //             break;
+  //           case 'RELATORIOS':
+  //             newState.RELATORIOS = true;
+  //             break;
+  //           case 'GERARHORARIOS':
+  //             newState.GERARHORARIOS = true;
+  //             break;
 
-            default:
-              break;
-          }
-        });
+  //           default:
+  //             break;
+  //         }
+  //       });
 
-        setSate(newState);
-      }
-    }
-  };
+  //       // setSate(newState);
+  //     }
+  //   }
+  // };
 
   useEffect(() => {
-    userPermissoes();
-  }, []);
+    setSate(menuOptions.menu);
+  }, []); // eslint-disable-line
   return (
     <Navbar
       color="#f5f5f5"

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
 import InputMask from 'react-input-mask';
 import { useAppContext } from '../../store/context';
 import './styles.css';
@@ -18,7 +17,6 @@ const Paciente = ({ user }) => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
-  const history = useHistory();
   const [dtNascimento, setDtNascimento] = useState('');
 
   const handleSubmit = async (e) => {
@@ -157,7 +155,7 @@ const Empresa = () => {
             id="telefone"
             inputMode="numeric"
             required
-            value={telefone}
+            value={telefone || ''}
             onChange={(e) => setTelefone(e.target.value)}
           />
           <label htmlFor="telefone">Telefone </label>

@@ -45,10 +45,10 @@ export default function GerarHorarios() {
     const { data: salas } = await getSalasCadastro();
 
     setSalas(salas.message);
-  }, []);
+  }, []); // eslint-disable-line
   useEffect(() => {
     fetchSalas();
-  }, []);
+  }, []); // eslint-disable-line
   const pushDays = (day, e) => {
     if (e.target.checked) {
       setDia([...dia, day]);
@@ -91,7 +91,7 @@ export default function GerarHorarios() {
   };
   useEffect(() => {
     verificarAcesso();
-  }, []);
+  }, []); //eslint-disable-line
   if (isLoading) {
     return <Loading />;
   }

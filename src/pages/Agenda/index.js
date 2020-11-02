@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getAgendamentos, getSalasCadastro } from '../../services/API';
-import { FiArrowRight, FiArrowLeft } from 'react-icons/fi';
+
 import './styles.css';
 import ErroPermission from '../../utils/chekPermission';
 import { useHistory } from 'react-router-dom';
@@ -53,7 +53,7 @@ export default function Agenda() {
   useEffect(() => {
     fetchSalas();
     fetchAgendamentos();
-  }, []);
+  }, []); //eslint-disable-line
   if (isLoading) {
     return <Loading />;
   }

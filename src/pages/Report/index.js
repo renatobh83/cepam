@@ -43,7 +43,7 @@ function Report() {
     } catch (error) {
       history.push('/');
     }
-  }, []);
+  }, []); // eslint-disable-line
 
   const processReport = (response, mes) => {
     const totalMes =
@@ -158,7 +158,7 @@ function Report() {
 
   useEffect(() => {
     fetchReports();
-  }, []);
+  }, []); //eslint-disable-line
   const handleDetalhes = (value) => {
     setValueDetalhes(value);
     setDetalhes(true);

@@ -150,7 +150,7 @@ export default function ScreenAgendamento({ isPaciente, close }) {
         setPaciente({ paciente: isPaciente._id, selected: true });
       }
     }
-  }, []);
+  }, []); // eslint-disable-line
   return (
     <div className="agendamentoContainer">
       {!isPaciente && !paciente.selected && (
@@ -220,7 +220,7 @@ const ChoosePaciente = ({ setPaciente }) => {
       setIsLoading(false);
       if (res.data.statusCode === 200) setPacientes(res.data.message);
     });
-  }, []);
+  }, []); // eslint-disable-line
 
   const consultaAgendamento = useCallback(async (paciente) => {
     await getAgendamento(paciente).then((res) => {
@@ -230,13 +230,13 @@ const ChoosePaciente = ({ setPaciente }) => {
         setIsAgendamentos(false);
       }
     });
-  }, []);
+  }, []); // eslint-disable-line
   const handleConsultaAgandamento = () =>
     history.push({ pathname: '/agendamentos', state: { user: pSelecionado } });
 
   useEffect(() => {
     fetchPacientes();
-  }, []);
+  }, []); // eslint-disable-line
 
   const onChangePaciente = (e) => {
     if (e.target.checked) {
@@ -323,11 +323,11 @@ const Plano = ({ setPlano }) => {
       setPlanos(planos.message);
       setIsLoading(false);
     } catch (error) {}
-  }, []);
+  }, []); // eslint-disable-line
 
   useEffect(() => {
     fetchPlanos();
-  }, []);
+  }, []); // eslint-disable-line
   const handleChangePesquisa = (e) => {
     setSearchPlano(e.target.value);
   };
@@ -382,10 +382,10 @@ const Exame = ({ setExame, plano, horariosAgendamento, particularSet }) => {
       setExames(exames.message[0].ex.exames);
       setIsLoading(false);
     }
-  });
+  }, []); //eslint-disable-line
   useEffect(() => {
     fetchExames();
-  }, []);
+  }, []); // eslint-disable-line
 
   let newState = Object.assign([], examesSelecionados);
 
@@ -522,7 +522,6 @@ const SelectHorario = ({ setHorario, horarios, update }) => {
   const [horarioSelect, setHorarioSelect] = useState([]);
   const [isCloncluir, setIsConcluir] = useState(false);
   const [horario, setHorarioChoose] = useState('');
-  const [horarioForUpdate, setHorarioForUpdate] = useState([]);
 
   const setHorarioSelecionado = (e) => {
     setHorarioChoose(e);
@@ -579,7 +578,7 @@ const SelectHorario = ({ setHorario, horarios, update }) => {
 
   useEffect(() => {
     getHorarios();
-  }, [stop]);
+  }, [stop]); //eslint-disable-line
 
   //pagination
   const indexOfLastPage = currentPage * limitHorario;
@@ -658,7 +657,7 @@ const ConcluirAgendamento = ({ agendamento, update }) => {
         });
       });
     } catch (error) {}
-  }, []);
+  }, []); // eslint-disable-line
 
   return (
     <div className="screenContainer concluiragendamento">

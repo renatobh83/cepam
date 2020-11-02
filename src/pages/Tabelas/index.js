@@ -1,4 +1,4 @@
-import React, { Children, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import InputForm from '../../components/InputForm';
 
 import './styles.css';
@@ -8,7 +8,6 @@ import { moeda } from '../../utils/formatCurrency';
 import ModalConfirm from '../../components/ModalConfirm';
 import Loading from '../../components/Loading';
 import {
-  getTabelasCadastro,
   procedimentoTabela,
   postTabelas,
   putNomeTabela,
@@ -40,10 +39,10 @@ function Tabelas() {
     } catch (error) {
       ErroPermission(error, setIsLoading, history);
     }
-  }, []);
+  }, []); // eslint-disable-line
   useEffect(() => {
     fetchTabelas();
-  }, []);
+  }, []); // eslint-disable-line
   const tabelaSelecionada = (e) => {
     setTabelaSelect(e);
   };
@@ -68,11 +67,7 @@ function Tabelas() {
   return (
     <div className="main">
       {!novaTabela && (
-        <ListTabelas
-          // tabelas={tabelas}
-          // tabelaSelect={tabelaSelecionada}
-          configList={propsList}
-        >
+        <ListTabelas configList={propsList}>
           <button
             className={tabelaSelect ? 'button edit' : 'button'}
             onClick={() => setNovaTabela(true)}
@@ -81,14 +76,7 @@ function Tabelas() {
           </button>
         </ListTabelas>
       )}
-      {novaTabela && (
-        <FormTabela
-          configProp={propsForm}
-          // cancel={handlelCancel}
-          // create={handleCriarNovaTabela}
-          // edit={tabelaSelect}
-        />
-      )}
+      {novaTabela && <FormTabela configProp={propsForm} />}
     </div>
   );
 }
@@ -182,10 +170,10 @@ const InserirExame = ({ tabela, close }) => {
     const { data: proc } = await procedimentoTabela();
     setExames(proc.message);
     selectInitialExames(proc.message);
-  }, []);
+  }, []); // eslint-disable-line
   useEffect(() => {
     fetchExames();
-  }, []);
+  }, []); // eslint-disable-line
 
   const [examesSelecionados, setExamesSelecionados] = useState([]);
   const [filterSearch, setFilterSearch] = useState(null);
@@ -358,7 +346,7 @@ const FormTabela = ({ configProp }) => {
   };
   useEffect(() => {
     if (configProp.edit) setName(configProp.edit[0].name);
-  }, []);
+  }, []); // eslint-disable-line
   return (
     <div className="forms">
       <h2>Cadastro nova tabela</h2>

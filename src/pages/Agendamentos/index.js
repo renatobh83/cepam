@@ -26,7 +26,7 @@ export default function Agendamentos(props) {
         setIsLoading(false);
       });
     } catch (error) {}
-  }, []);
+  }, []); // eslint-disable-line
 
   const handleCancelarAgendamento = async (e) => {
     const data = {
@@ -50,7 +50,7 @@ export default function Agendamentos(props) {
 
   useEffect(() => {
     fetchAgendamentos();
-  }, []);
+  }, []); // eslint-disable-line
   if (isLoading) {
     return <Loading />;
   }

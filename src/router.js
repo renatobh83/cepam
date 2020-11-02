@@ -9,7 +9,7 @@ import Header from './pages/Header';
 import Agendamento from './pages/Agendamento';
 import Pacientes from './pages/Pacientes';
 import Usuarios from './pages/Usuarios/index';
-import Callback from './utils/callback';
+import Callback from './components/callback';
 import Grupos from './pages/Grupos/index';
 import Setores from './pages/Setores/index';
 import Salas from './pages/Salas/index';

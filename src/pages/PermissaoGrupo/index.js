@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 
 import '../PermissaoGrupo/styles.css';
 
-import logoLoading from '../../assets/loading.svg';
 import { getPermissoes, includePermissao } from '../../services/API';
 import Loading from '../../components/Loading';
 import { FiDownload } from 'react-icons/fi';

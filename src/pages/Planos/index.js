@@ -31,10 +31,10 @@ function Planos() {
     } catch (error) {
       ErroPermission(error, setIsLoading, history);
     }
-  }, []);
+  }, []); // eslint-disable-line
   useEffect(() => {
     fetchPlanos();
-  }, []);
+  }, []); // eslint-disable-line
   const cancel = () => {
     setNovoPlano(false);
     setPlanoEdit(null);
@@ -144,15 +144,15 @@ const FormsPlanos = ({ config }) => {
         setTabelas(tabelas.message);
       }
     } catch (error) {}
-  }, []);
+  }, []); // eslint-disable-line
 
   const handleSetName = (e) => {
     setName(e.target.value);
   };
-  const inputCheck = (e) => {
-    console.log(e.target);
-    setParticular(e.target.checked);
-  };
+  // const inputCheck = (e) => {
+  //   console.log(e.target);
+  //   setParticular(e.target.checked);
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -196,7 +196,7 @@ const FormsPlanos = ({ config }) => {
   useEffect(() => {
     fetchTabelas();
     handleEditPlano(planoEdit);
-  }, []);
+  }, []); // eslint-disable-line
   return (
     <div className="forms">
       <h2>Cadastro novo plano</h2>

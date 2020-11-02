@@ -28,7 +28,7 @@ function Procedimentos() {
     const { data: setores } = await getSetoresCadastro();
     setSetores(setores.message);
     setIsLoading(false);
-  }, []);
+  }, []); // eslint-disable-line
 
   const fetchProcedimentos = useCallback(async () => {
     try {
@@ -38,10 +38,10 @@ function Procedimentos() {
     } catch (error) {
       ErroPermission(error, setIsLoading, history);
     }
-  }, []);
+  }, []); // eslint-disable-line
   useEffect(() => {
     fetchProcedimentos();
-  }, []);
+  }, []); // eslint-disable-line
   const handleNewProcedimento = () =>
     setorSelect
       ? setNewProcedimento(!newProcedimento)
@@ -248,10 +248,10 @@ const FormProcedimento = ({
     if (editProcedimento) {
       setName(editProcedimento.name);
     }
-  }, []);
+  }, []); // eslint-disable-line
   useEffect(() => {
     dateprocedimentoEdit();
-  }, []);
+  }, []); // eslint-disable-line
   return (
     <div className="forms">
       <h2>Cadastro novo procedimento</h2>
