@@ -46,6 +46,7 @@ function Salas() {
     setorSelected ? setNewSala(!newSala) : alert('Selecione um setor');
 
   const createdSala = (e) => {
+    setSetorSeleted(null);
     create(salas, e, setSalas, setNewSala);
   };
   const handleCancel = () => {
@@ -55,6 +56,7 @@ function Salas() {
   const handleDeleteSala = (e) => {
     const filteSalas = salas.filter((g) => g._id !== e);
     setSalas(filteSalas);
+    setSetorSeleted(null);
   };
   const selectedSetor = (e) => {
     if (e) setSetorSeleted(e);
@@ -91,8 +93,7 @@ const ListSalas = ({ children, salas, deleteSala, setores, selectSetor }) => {
 
   const apagarSala = async (e) => {
     try {
-      await salaDelete(e);
-      deleteSala(e);
+      await salaDelete(e).then(() => deleteSala(e));
     } catch (error) {}
   };
   const filterChange = (e) => {

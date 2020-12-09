@@ -61,30 +61,32 @@ function Grupos() {
     return <Loading />;
   }
   return (
-    <div className="main">
-      {!newGroup && !permissao && (
-        <ListGroups
-          grupos={grupos}
-          editGroup={permissaoGrupo}
-          history
-          deleteGrupo={handleDeletGroup}
-        >
-          <button type="submit" onClick={handleNewGroup} className="button">
-            Novo Grupo
-          </button>
-        </ListGroups>
-      )}
-      {newGroup && !permissao && (
-        <FormGrupos
-          cancel={handleCancelar}
-          newGroup={createdGroup}
-          editGroup={groupEdit}
-        />
-      )}
+    <>
+      <div className="main">
+        {!newGroup && !permissao && (
+          <ListGroups
+            grupos={grupos}
+            editGroup={permissaoGrupo}
+            history
+            deleteGrupo={handleDeletGroup}
+          >
+            <button type="submit" onClick={handleNewGroup} className="button">
+              Novo Grupo
+            </button>
+          </ListGroups>
+        )}
+        {newGroup && !permissao && (
+          <FormGrupos
+            cancel={handleCancelar}
+            newGroup={createdGroup}
+            editGroup={groupEdit}
+          />
+        )}
+      </div>
       {permissao && (
         <PermissoesGrupo grupo={grupoSelect} close={closeSetPermissao} />
       )}
-    </div>
+    </>
   );
 }
 const ListGroups = ({ grupos, children, editGroup, deleteGrupo, history }) => {

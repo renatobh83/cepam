@@ -112,7 +112,6 @@ export default function PermissoesGrupo({ grupo, close }) {
   return (
     <div className="permissaoGrupo">
       <h2>{grupo.name}</h2>
-
       <div className="permissoesList">
         {permissoes.length >= 1 && (
           <div className="permissoesDisponiveis">

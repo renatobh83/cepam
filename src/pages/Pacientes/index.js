@@ -57,14 +57,15 @@ function Pacientes(props) {
     if (props.location.state.pacienteEdit) {
       const data = { name, email, telefone, dtNascimento };
       await putUser(props.location.state.pacienteEdit.email, data);
-
       setProsseguir(true);
     } else {
-      try {
-        const paciente = await postPaciente(data);
+      const paciente = await postPaciente(data);
+      if (paciente.data.statusCode !== 400) {
         setIspaciente(paciente.data.message);
         setProsseguir(true);
-      } catch (error) {}
+      } else {
+        alert('Email já cadastrado');
+      }
     }
   };
   useEffect(() => {
