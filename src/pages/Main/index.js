@@ -47,6 +47,7 @@ const Empresa = () => {
   const { user } = useAppContext();
   const [agendadoDia, setAgendadoDia] = useState(0);
   const [agendadoMes, setAgendadoMes] = useState(0);
+
   const toggleAgendar = () => history.push('/agendar/');
 
   const fetchDash = async () => {
@@ -72,7 +73,7 @@ const Empresa = () => {
 
       <div className="cardUser">
         <h1>{user.name}</h1>
-        {() => new Date()}
+
         <p>Agendamento Dia : {agendadoDia}</p>
         <p>Total agendado Mes : {agendadoMes}</p>
         <span style={{ fontSize: '10px' }}>
