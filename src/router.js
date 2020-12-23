@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import Loading from './components/Loading';
 
 import Login from './pages/Login/';
@@ -23,6 +23,7 @@ import Report from './pages/Report/index';
 import Permissoes from './components/permissoes';
 import Agendamentos from './pages/Agendamentos';
 import Agenda from './pages/Agenda';
+import NotFound from './pages/NotFound';
 
 function Router() {
   const { isLoading, isAuthenticated } = useAppContext();
@@ -59,6 +60,8 @@ function Router() {
         <Route path="/permissoes" exact component={Permissoes} />
         <Route path="/agendamentos" exact component={Agendamentos} />
         <Route path="/agenda" exact component={Agenda} />
+        <Route path="/404" component={NotFound} />
+        <Redirect to="/404" />
       </>
     );
   };
