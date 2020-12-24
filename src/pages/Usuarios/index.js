@@ -96,7 +96,7 @@ function Usuarios() {
             <div className="grupo_user">
               <label htmlFor="ativo">Ativo</label>
               <select name="ativo" id="ativo" onChange={filterUsers}>
-                <option value="true" defaultValue>
+                <option value="true" selected>
                   Sim
                 </option>
                 <option value="false">Nao</option>

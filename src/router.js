@@ -60,16 +60,23 @@ function Router() {
         <Route path="/permissoes" exact component={Permissoes} />
         <Route path="/agendamentos" exact component={Agendamentos} />
         <Route path="/agenda" exact component={Agenda} />
-        <Route path="/404" component={NotFound} />
-        <Redirect to="/404" />
+        <Route component={RouteNotFound} />
       </>
     );
   };
-
+const RouteNotFound = () => {
+  return (
+    <>
+    <Redirect from='*'   to="/" />
+    </>
+  )
+}
   return (
     <BrowserRouter>
       <Switch>
-        <PrivateRoute auth={isAuthenticated} component={RouteWithNav} />
+        
+      <PrivateRoute auth={isAuthenticated} component={RouteWithNav} />
+      
       </Switch>
     </BrowserRouter>
   );
