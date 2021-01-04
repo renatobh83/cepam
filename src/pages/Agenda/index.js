@@ -46,8 +46,8 @@ export default function Agenda() {
     }
   };
   const chooseData = (e,a) => {
-   console.log(agendaSala)
-    //const horarios = agendaSala.filter((data) => data.dados.horario.data === e);
+  
+    const horarios = agendaSala.filter((data) => data.dados.horario.data === e);
     setHorarios(horarios);
   };
 
