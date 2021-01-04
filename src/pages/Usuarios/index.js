@@ -164,6 +164,7 @@ const FormUser = ({ close, newUser, editUser, updateDate }) => {
   const fetchGrupos = useCallback(async () => {
     try {
       const { data: grupos } = await getGruposUsuario();
+      if(editUser) setAtivo(editUser.ativo)
       setGrupos(grupos.message);
     } catch (error) {}
   }, []); // eslint-disable-line
@@ -197,10 +198,10 @@ const FormUser = ({ close, newUser, editUser, updateDate }) => {
       editUser.grupoId = grupo;
       editUser.nickname = username;
       editUser.email = email;
-      editUser.ativo = userAtivo;
+      editUser.ativo = userAtivo
 
       try {
-        await putUser(editUser._id, data);
+       await putUser(editUser._id, data);
         updateDate(editUser);
       } catch (error) {}
     } else {
