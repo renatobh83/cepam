@@ -91,7 +91,7 @@ function Usuarios() {
               className="button"
               onClick={() => setNewUser(true)}
             >
-              Novo Ususario
+              Novo Usuario
             </button>
             <div className="grupo_user">
               <label htmlFor="ativo">Ativo</label>
