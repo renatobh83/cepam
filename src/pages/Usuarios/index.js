@@ -96,7 +96,7 @@ function Usuarios() {
             <div className="grupo_user">
               <label htmlFor="ativo">Ativo</label>
               <select name="ativo" id="ativo" onChange={filterUsers}>
-                <option value="true" selected>
+                <option value="true" defaultValue>
                   Sim
                 </option>
                 <option value="false">Nao</option>
@@ -137,7 +137,7 @@ const ListUsers = ({ users, children, editUser, filter }) => {
               <h2>{user.name}</h2>
               <h6>Usuario - {user.nickname}</h6>
               <p>{user.email}</p>
-              <strong>{user.grupo.name}</strong>
+              {/* <strong>{user.grupo.name}</strong> */}
             </header>
             <button
               type="submit"
@@ -272,8 +272,9 @@ const FormUser = ({ close, newUser, editUser, updateDate }) => {
           name="grupo"
           id="grupo"
           onChange={(e) => setGrupo(e.target.value)}
+          required
         >
-          <option value="000"> Selecione um grupo</option>
+          <option defaultValue=""> Selecione um grupo</option>
           {grupos.map((g) => (
             <option value={g._id} key={g._id} selected={g._id === grupo}>
               {g.name}

@@ -45,8 +45,9 @@ export default function Agenda() {
       setAgendaSala(agendamentoSala);
     }
   };
-  const chooseData = (e) => {
-    const horarios = agendaSala.filter((data) => data.dados.horario.data === e);
+  const chooseData = (e,a) => {
+   console.log(agendaSala)
+    //const horarios = agendaSala.filter((data) => data.dados.horario.data === e);
     setHorarios(horarios);
   };
 
@@ -80,7 +81,7 @@ export default function Agenda() {
                   type="radio"
                   name="horario"
                   id={index}
-                  onChange={() => chooseData(periodo)}
+                  onChange={(e) => chooseData(periodo,e)}
                 />
                 <div className="cardHorario">{periodo}</div>
               </label>
