@@ -252,7 +252,7 @@ const FormUser = ({ close, newUser, editUser, updateDate }) => {
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            label="Ususario"
+            label="Usuario"
           />
         </div>
       ) : (
