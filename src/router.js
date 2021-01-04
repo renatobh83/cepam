@@ -64,19 +64,17 @@ function Router() {
       </>
     );
   };
-const RouteNotFound = () => {
-  return (
-    <>
-    <Redirect from='*'   to="/" />
-    </>
-  )
-}
+  const RouteNotFound = () => {
+    return (
+      <>
+        <Redirect from="/*" to="/" />
+      </>
+    );
+  };
   return (
     <BrowserRouter>
       <Switch>
-        
-      <PrivateRoute auth={isAuthenticated} component={RouteWithNav} />
-      
+        <PrivateRoute auth={isAuthenticated} component={RouteWithNav} />
       </Switch>
     </BrowserRouter>
   );
