@@ -59,7 +59,8 @@ function Pacientes(props) {
       await putUser(props.location.state.pacienteEdit.email, data);
       setProsseguir(true);
     } else {
-      const paciente = await postPaciente(data);
+       const paciente = await postPaciente(data);
+     console.log(data) 
       if (paciente.data.statusCode !== 400) {
         setIspaciente(paciente.data.message);
         setProsseguir(true);
@@ -74,12 +75,13 @@ function Pacientes(props) {
   if (isLoading) {
     return <Loading />;
   }
-  return (
+  return (  
     <div className="agendamentoContainer">
       {!prosseguir && (
         <>
           <h1>{name ? 'Editar Paciente' : 'Cadastro de Paciente'}</h1>
-          <div className="floating-label-input">
+        <form style={{width:"100%"}}>
+            <div className="floating-label-input">
             <input
               type="text"
               id="nome"
@@ -143,10 +145,13 @@ function Pacientes(props) {
               Cancelar
             </button>
           </div>
-        </>
+</form>
+          
+                 </>
       )}
       {prosseguir && <ScreenAgendamento isPaciente={isPaciente} />}
     </div>
+   
   );
 }
 
