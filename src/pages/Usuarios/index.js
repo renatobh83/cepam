@@ -274,7 +274,7 @@ const FormUser = ({ close, newUser, editUser, updateDate }) => {
           onChange={(e) => setGrupo(e.target.value)}
           required
         >
-          <option defaultValue=""> Selecione um grupo</option>
+          <option value=""> Selecione um grupo</option>
           {grupos.map((g) => (
             <option value={g._id} key={g._id} selected={g._id === grupo}>
               {g.name}
