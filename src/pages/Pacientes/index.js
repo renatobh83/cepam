@@ -20,6 +20,7 @@ function Pacientes(props) {
 
   const [userAuth, setUserAuth] = useState(true);
   const loadDate = useCallback(() => {
+  
     if (props.location.state.pacienteEdit) {
       setIspaciente(props.location.state.pacienteEdit);
       const {
@@ -44,7 +45,9 @@ function Pacientes(props) {
   const handleCancel = () => {
     history.push('/agendar');
   };
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+ 
+    e.preventDefault();
     const data = {
       name,
       nickname: name,
@@ -80,7 +83,7 @@ function Pacientes(props) {
       {!prosseguir && (
         <>
           <h1>{name ? 'Editar Paciente' : 'Cadastro de Paciente'}</h1>
-        <form style={{width:"100%"}}>
+        <form style={{width:"100%"}} onSubmit={handleSubmit}>
             <div className="floating-label-input">
             <input
               type="text"
@@ -138,7 +141,7 @@ function Pacientes(props) {
             </div>
           </div>
           <div className="groupInputs">
-            <button className="button " onClick={handleSubmit}>
+            <button className="button">
               Gravar
             </button>
             <button className="button button-danger" onClick={handleCancel}>
