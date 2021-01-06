@@ -117,6 +117,7 @@ function Pacientes(props) {
               <InputMask
                 mask="99/99/9999"
                 type="text"
+                minLength="10"
                 id="dtNascimento"
                 inputMode="numeric"
                 required
