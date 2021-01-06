@@ -7,6 +7,7 @@ import {
 import { desativarHorario } from '../services/API';
 
 export const getHours = (props, callback) => {
+  
   props.forEach((element) => {
     element.periodo.filter(async (dia) => {
       const date = stringDate(dia);
@@ -32,6 +33,7 @@ export const getHours = (props, callback) => {
     });
   });
 };
+
 const stringDate = (value) => {
   const parts = value.data.split('/');
   const splitTime = value.horaInicio.split(':');

@@ -221,9 +221,9 @@ export const includePermissao = (data) => {
 
 export const getAllHorarios = () => {};
 
-export const getHorarioBySala = (id) => {
+export const getHorarioBySala = (id,pg=10) => {
   headerDefaults();
-  return instance.get(`/horarios/sala/${id}`);
+  return instance.get(`/horarios/sala/${id}/${pg}`);
 };
 export const desativarHorario = (id) => {
   headerDefaults();

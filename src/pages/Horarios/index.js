@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import './styles.css';
 import ModalConfirm from '../../components/ModalConfirm';
 import Loading from '../../components/Loading';
-import { FiDownload } from 'react-icons/fi';
+import { FiDownload, FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 import { useState } from 'react';
 import { useCallback } from 'react';
 import { getHorarioBySala, deleteHorario, getSalas } from '../../services/API';
@@ -11,13 +11,16 @@ import { getHours } from '../../utils/getHours';
 import generatePDF from '../../utils/exportJSPDF';
 import { useHistory } from 'react-router-dom';
 import ErroPermission from '../../utils/chekPermission';
+import Pagination from '../../components/Pagination';
 
 function Horarios() {
   const [isLoading, setIsLoading] = useState(true);
   const [salas, setSalas] = useState([]);
   const [sala, setSala] = useState(null);
   const [horarios, setHorarios] = useState([]);
+ 
   const history = useHistory();
+  const [skip, setSkip] =useState(10)
 
   const fetchSalas = useCallback(async () => {
     try {
@@ -52,9 +55,9 @@ function Horarios() {
         break;
     }
   };
-  const handleHorarios = useCallback(async (sala) => {
+  const handleHorarios = useCallback(async (sala,pg) => {
     try {
-      await getHorarioBySala(sala).then((res) => {
+      await getHorarioBySala(sala,pg).then((res) => {
         getHours(res.data.message, (value) => {
           setHorarios((oldValues) => [...oldValues, value].sort(compare));
           setIsLoading(false);
@@ -87,6 +90,29 @@ function Horarios() {
       setHorarios(fitler);
     });
   };
+    //pagination
+  
+    const Direita = () => {
+      setIsLoading(true);
+      setHorarios([]);
+      const next = skip + 10
+      handleHorarios(sala,next)
+      setSkip(skip+ 10)
+    
+    };
+    const Esquerda = () => {
+      const rewind = skip - 10
+     
+      if(rewind >=10){
+    
+        setIsLoading(true);
+        setHorarios([]);
+        handleHorarios(sala,rewind)
+        setSkip(skip - 10)
+      }
+    };
+
+    
   const exportPDF = () => {
     if (horarios.length) {
       const data = horarios.map((h) => [
@@ -177,9 +203,26 @@ function Horarios() {
                 </ModalConfirm>
               </div>
             </li>
+       
           ))}
+               
         </ul>
+      
       </div>
+     
+ {horarios.length > 0 &&
+  <>
+  <div>
+  <FiArrowLeft size={30} onClick={Esquerda}/> 
+ 
+   <FiArrowRight size={30}onClick={Direita}/>
+  </div>
+ 
+   </>
+ }
+
+            
+         
     </div>
   );
 }
