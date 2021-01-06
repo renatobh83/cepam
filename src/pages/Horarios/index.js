@@ -212,7 +212,7 @@ function Horarios() {
      
  {horarios.length > 0 &&
   <>
-  <div>
+  <div className="arrow">
   <FiArrowLeft size={30} onClick={Esquerda}/> 
  
    <FiArrowRight size={30}onClick={Direita}/>

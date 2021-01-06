@@ -584,7 +584,7 @@ const SelectHorario = ({ setHorario, horarios, update }) => {
   const indexOfLastPage = currentPage * limitHorario;
   const indexOfFirstPage = indexOfLastPage - limitHorario;
   const current = horariosExame.slice(indexOfFirstPage, indexOfLastPage);
-
+console.log(current)
   return (
     <>
       <div className="screenContainer">
@@ -604,7 +604,7 @@ const SelectHorario = ({ setHorario, horarios, update }) => {
                 <div className="dados">
                   <div className="day">{a.periodo.data}</div>
                   <div className="intervalo">Hora: {a.periodo.horaInicio}</div>
-                  <div className="intervalo">Duração exame: minutos.</div>
+                  <div className="intervalo">Duração exame: {a.periodo.timeInterval} minutos.</div>
                 </div>
               </label>
             </div>
