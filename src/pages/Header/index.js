@@ -262,30 +262,30 @@ function Header() {
                   </NavLink>
                 </NavItem>
               )}
-              <NavItem>
+              {/* <NavItem>
                 <NavLink className="link" tag={RouterNavLink} to="/permissoes">
                   Permissoes
                 </NavLink>
-              </NavItem>
+              </NavItem> */}
             </>
           )}
         </Nav>
         <Nav navbar>
           <UncontrolledDropdown nav inNavbar>
             <DropdownToggle nav caret>
-              Profile
+              Perfil
             </DropdownToggle>
             <DropdownMenu right style={{ font: '600 1.2rem Archivo' }}>
               <DropdownItem>
                 <NavLink className="link" tag={RouterNavLink} to="/profile">
                   <FiUser size={30} className="mr-2" />
-                  Profile
+                  Alterar dados
                 </NavLink>
               </DropdownItem>
               <DropdownItem divider />
               <DropdownItem fontSize={32} onClick={() => logout()}>
                 <FiLogOut size={30} className="mr-2" />
-                Logout
+                Sair
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
