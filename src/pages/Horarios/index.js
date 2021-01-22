@@ -6,12 +6,14 @@ import Loading from '../../components/Loading';
 import { FiDownload, FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 import { useState } from 'react';
 import { useCallback } from 'react';
-import { getHorarioBySala, deleteHorario, getSalas } from '../../services/API';
+import { deleteHorario, getSalas, getHorarios } from '../../services/API';
 import { getHours } from '../../utils/getHours';
 import generatePDF from '../../utils/exportJSPDF';
 import { useHistory } from 'react-router-dom';
 import ErroPermission from '../../utils/chekPermission';
 import Pagination from '../../components/Pagination';
+
+
 
 function Horarios() {
   const [isLoading, setIsLoading] = useState(true);
@@ -21,6 +23,9 @@ function Horarios() {
  
   const history = useHistory();
   const [skip, setSkip] =useState(10)
+
+const [currentPage, setCurrentPage] = useState(1);
+const [limitHorario] = useState(5);
 
   const fetchSalas = useCallback(async () => {
     try {
@@ -55,30 +60,33 @@ function Horarios() {
         break;
     }
   };
+   const indexOfLastPage = currentPage * limitHorario;
+  const indexOfFirstPage = indexOfLastPage - limitHorario;
+  const current = horarios.slice(indexOfFirstPage, indexOfLastPage);
+
+  const pageNumbers = [];
+  const totalPages = Math.ceil(horarios.length / limitHorario);
+
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
+
+
+
   const handleHorarios = useCallback(async (sala,pg) => {
     try {
-      await getHorarioBySala(sala,pg).then((res) => {
+      await getHorarios(sala).then((res) => {
         getHours(res.data.message, (value) => {
-          setHorarios((oldValues) => [...oldValues, value].sort(compare));
+         setHorarios(value)
           setIsLoading(false);
         });
-
         setIsLoading(false);
       });
+ 
     } catch (error) {
       ErroPermission(error, setIsLoading, history);
     }
   }, []); //eslint-disable-line
-  const compare = (a, b) => {
-    return (
-      Date.parse(
-        a.data + a.horaInicio.slice(0, -2) + ' ' + a.horaInicio.slice(-2)
-      ) -
-      Date.parse(
-        b.data + b.horaInicio.slice(0, -2) + ' ' + b.horaInicio.slice(-2)
-      )
-    );
-  };
   const apagarHorario = (date) => {
     const data = {
       deleteHorary: [date],
@@ -93,23 +101,15 @@ function Horarios() {
     //pagination
   
     const Direita = () => {
-      setIsLoading(true);
-      setHorarios([]);
-      const next = skip + 10
-      handleHorarios(sala,next)
-      setSkip(skip+ 10)
-    
+    if(currentPage <= pageNumbers.length){
+       setCurrentPage(currentPage + 1 )
+    }
+  
     };
     const Esquerda = () => {
-      const rewind = skip - 10
-     
-      if(rewind >=10){
-    
-        setIsLoading(true);
-        setHorarios([]);
-        handleHorarios(sala,rewind)
-        setSkip(skip - 10)
-      }
+     if(currentPage > 1){
+        setCurrentPage(currentPage - 1 )
+     }
     };
 
     
@@ -180,7 +180,7 @@ function Horarios() {
           </span>
         </div>
         <ul id="horarios">
-          {horarios.map((horario) => (
+          {current.map((horario) => (
             <li key={horario.id}>
               <div className="interval">
                 <span>{horario.data}</span>

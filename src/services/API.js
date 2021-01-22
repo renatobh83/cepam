@@ -221,6 +221,10 @@ export const includePermissao = (data) => {
 
 export const getAllHorarios = () => {};
 
+export const getHorarios= (id) => {
+  headerDefaults()
+   return instance.get(`/horarios/sala/${id}`);
+}
 export const getHorarioBySala = (id,pg=10) => {
   headerDefaults();
   return instance.get(`/horarios/sala/${id}/${pg}`);
