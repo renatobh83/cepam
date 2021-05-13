@@ -262,11 +262,6 @@ function Header() {
                   </NavLink>
                 </NavItem>
               )}
-//                <NavItem>
-//                 <NavLink className="link" tag={RouterNavLink} to="/permissoes">
-//                   Permissoes
-//                 </NavLink>
-//               </NavItem> 
             </>
           )}
         </Nav>
