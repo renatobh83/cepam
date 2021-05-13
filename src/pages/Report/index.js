@@ -371,7 +371,7 @@ function Report() {
                         fontName: 'Archivo',
                       },
                     },
-                    hAxis: { viewWindow: { max: 12, min: 1 } },
+                    hAxis: { viewWindow: { max: 12, min: 0 } },
                   }}
                 />
               </div>
